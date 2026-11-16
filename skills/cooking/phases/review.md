@@ -1,8 +1,8 @@
 # Review
 
-Record what this run showed, for the `tasty` skill to act on later. Ask the user nothing. Change only the two logs and the ledger.
+Record what this run showed, for the `improve` skill to act on later. Ask the user nothing. Change only the two logs and the ledger.
 
-Read the ledger, `verify.md` and the evidence folder.
+Read the ledger, `taste.md` and the evidence folder.
 
 ## 1. Observations
 
@@ -17,26 +17,26 @@ Give each observation a category and a short **tag** that names the failure. Reu
 | steering | Text in `AGENTS.md` stated a mechanical rule, or changed no behaviour. |
 | tool | An expensive call has a cheaper form. |
 | access | The agent could not reach a fact. |
-| workflow | A cheese step was missing, unclear or wasted. |
+| workflow | A cooking step was missing, unclear or wasted. |
 | lesson | A fact about this project, or a lesson that transfers, that is not obvious. |
 
 ## 2. Sizing verdict
 
 **Under** if any is true:
 
-- the size was raised during build;
+- the size was raised during saute;
 - a unit failed twice;
-- verify returned work to build;
+- taste returned work to saute;
 - a decision appeared after a gate;
 - the task was reopened.
 
 **Over** if every item that applies is true; a trivial task is never over:
 
-- the user accepted every grill recommendation;
-- the spec had one unit;
+- the user accepted every recommendation from the idea phase;
+- the recipe had one unit;
 - the two sketches matched;
 - a research note went unused;
-- independent verify found nothing beyond the builder's checks.
+- independent tasting found nothing beyond the builder's checks.
 
 Otherwise **right**. Name the signal that missed.
 
@@ -58,7 +58,7 @@ Append one line per observation to `review-log.md`:
 
 ## 4. Close
 
-Set the ledger phase to `done`. Tell the user in one line: the number of `open` observations in `review-log.md`, and each tag or missed signal that now appears twice.
+Set the ledger phase to `done`. Tell the user in one line: the number of `open` observations in `review-log.md`, each tag or missed signal that now appears twice, and each tag that recurs after an `applied` change.
 
 ## 5. Outcome
 

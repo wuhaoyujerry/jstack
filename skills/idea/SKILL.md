@@ -1,16 +1,16 @@
 ---
-name: grill
-description: "Interview me until every decision is settled, then write a brief. Invoke /grill TOPIC."
+name: idea
+description: "Interview me until every decision is settled, then write a brief. Invoke /idea TOPIC."
 disable-model-invocation: true
 metadata:
   author: Jerry Wu
 ---
 
-# Grill
+# Idea
 
 Interview the user until every decision is settled, then write the brief.
 
-`.jstack/` is at the repo root. `<slug>` is the cheese task's slug, or a short one you choose.
+`.jstack/` is at the repo root. `<slug>` is the cooking task's slug, or a short one you choose.
 
 ## Steps
 
@@ -30,7 +30,7 @@ Interview the user until every decision is settled, then write the brief.
 
 6. Record a decision in `.jstack/adr/<nnnn>-<name>.md` only when all three hold: it is hard to reverse, it would surprise a later reader, and it came from a real trade-off.
 
-7. The grill is done when the frontier is empty. Read `technical-writing/SKILL.md` and `unslop/SKILL.md` in `~/.agents/skills/`, then complete `.jstack/<slug>/brief.md` to both standards:
+7. The idea phase is done when the frontier is empty. From this skill's real directory, read `../technical-writing/SKILL.md` and `../unslop/SKILL.md`, then complete `.jstack/<slug>/brief.md` to both standards:
 
    ```markdown
    # Brief: <slug>
@@ -43,4 +43,4 @@ Interview the user until every decision is settled, then write the brief.
    ## Open facts
    ```
 
-8. **Gate.** Show the brief. The grill ends when the user approves it.
+8. **Gate.** Show the brief. The idea phase ends when the user approves it.

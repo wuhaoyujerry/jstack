@@ -1,6 +1,6 @@
-# Spec
+# Recipe
 
-Turn the approved brief into `.jstack/<slug>/spec.md`: a shape, and ordered units that each carry a check.
+Turn the approved brief into `.jstack/<slug>/recipe.md`: a shape, and ordered units that each carry a check.
 
 ## 1. Ground
 
@@ -34,16 +34,16 @@ Keep checks **lean**. Attach each at the highest existing **seam** that shows th
 
 Mark each check that needs judgement, and each that changes a shared environment.
 
-## 4. Write the spec
+## 4. Write the recipe
 
 ```markdown
-# Spec: <slug>
+# Recipe: <slug>
 ## Problem
 ## Usage
 ## Shape
 ## Units
 | id | change | check | depends on | parallel |
-## Verify
+## Taste
 - surface: <where a user meets this change>
 - judgement checks: <ids>
 - mutating checks: <ids, each with its exact command>
@@ -55,4 +55,4 @@ Every done-check in the brief maps to a unit check. Name decisions and interface
 
 ## 5. Gate
 
-Show the spec. Wait for the user to approve it. Then copy the units into the ledger.
+Show the recipe. Wait for the user to approve it. Then copy the units into the ledger.

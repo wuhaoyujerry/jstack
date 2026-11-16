@@ -1,4 +1,4 @@
-# Verify
+# Taste
 
 Prove each done-check on the real surface. Every check ends in one of three states: **pass**, **fail**, or **not-run**.
 
@@ -10,11 +10,11 @@ Prove each done-check on the real surface. Every check ends in one of three stat
 | standard | a fresh `verifier` worker |
 | large, or any judgement check | a `judge` worker |
 
-The verifier receives the spec, the diff and the brief's done-checks, without the builder's reports.
+The verifier receives the recipe, the diff and the brief's done-checks, without the builder's reports.
 
-## 2. Find the drive recipe
+## 2. Find the drive script
 
-Use `.jstack/verify/<surface>.md` if it exists. If the surface will be checked again and has no recipe, the verifier writes one from the repo:
+Use `.jstack/taste/<surface>.md` if it exists. If the surface will be checked again and has no drive script, the verifier writes one from the repo:
 
 - **Launch**: the exact command, and the sign that the app is usable.
 - **Doctor**: one read-only check that the instance is worth driving.
@@ -22,7 +22,7 @@ Use `.jstack/verify/<surface>.md` if it exists. If the surface will be checked a
 - **Evidence**: what to capture and where.
 - **Cleanup**: stop only what the run started; keep the evidence.
 
-A recipe counts only after one full run of it.
+A drive script counts only after one full run of it.
 
 ## 3. Run the checks
 
@@ -30,7 +30,7 @@ The verifier's loop, for each done-check and each unit check:
 
 1. Start from a clean state: a fresh checkout or a rebuilt artifact.
 2. Run the check through the real user path. Capture the action, the resulting state and the side effects.
-3. Save the raw output to `.jstack/<slug>/evidence/<check>-verify.txt`.
+3. Save the raw output to `.jstack/<slug>/evidence/<check>-taste.txt`.
 4. Record the state. A check that was skipped, was unavailable, or could not fail is **not-run**, with the reason.
 
 Verification is **read-only**. A check that must change a shared environment is **not-run**, with its exact command, until the user approves it.
@@ -45,7 +45,7 @@ A **finding** names its case: this input or situation gives this wrong result. N
 
 ## 5. Read the raw output
 
-Read each evidence file yourself; the verifier's summary only points to it. Write `.jstack/<slug>/verify.md`, with the findings below the table:
+Read each evidence file yourself; the verifier's summary only points to it. Write `.jstack/<slug>/taste.md`, with the findings below the table:
 
 ```markdown
 | check | state | evidence | reason |
@@ -53,9 +53,9 @@ Read each evidence file yourself; the verifier's summary only points to it. Writ
 
 ## 6. Close
 
-- **fail** or **must-fix**: return the unit to build. It counts as a failure of that unit. Record the event.
+- **fail** or **must-fix**: return the unit to saute. It counts as a failure of that unit. Record the event.
 - **suggestion**: the user decides.
 - **not-run**: show the user the command. They approve the run, or accept the gap by name.
-- Verify is done when no check is `fail`, no `must-fix` is open, and each `not-run` is run or accepted.
+- Taste is done when no check is `fail`, no `must-fix` is open, and each `not-run` is run or accepted.
 
 Report the table to the user, then run review.

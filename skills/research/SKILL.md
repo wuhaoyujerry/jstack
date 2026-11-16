@@ -43,6 +43,6 @@ Open the original source yourself for every claim the answer depends on.
 - Every claim cites its source and date: a file path with its line, a commit, a ticket, or a URL.
 - End with **Unknowns**: what the evidence does not settle, how to check it, and each source's state: hits, empty (searched, nothing found) or unsearched.
 
-Inside a cheese task, also save the answer to `.jstack/<slug>/research/<question>.md`.
+Inside a cooking task, also save the answer to `.jstack/<slug>/research/<question>.md`.
 
 Research is done when the question has an answer or a named unknown, with every claim cited.
