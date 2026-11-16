@@ -10,7 +10,7 @@ metadata:
 
 Turn the `open` observations of cooking reviews, and upstream changes to the skills jstack draws from, into changes that improve the next run.
 
-Resolve symlinks to find this skill's real directory. The logs are `review-log.md` and `sizing-log.md` in `../../overlays/` relative to it; `../cooking/` is the cooking skill; `../../SOURCES.md` records the sources. If the ask reports the outcome of a task, first record it by step 5 of `../cooking/phases/review.md`.
+Resolve symlinks to find this skill's real directory. The logs are `review-log.md` and `sizing-log.md` in `../../overlays/` relative to it; `../cooking/` is the cooking skill; `../../SOURCES.md` records the sources. If the ask reports the outcome of a task, first record it by step 5 of `../cooking/phases/review.md`. If the ask reports a problem from a run outside a cooking task, such as a standalone idea or research run, first append it to `review-log.md` as one observation in the format of `../cooking/phases/review.md`: `-` for an unknown repo or slug, and the user's words as its file.
 
 ## 1. Upstream
 

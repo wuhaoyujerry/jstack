@@ -20,4 +20,5 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | idea-frontier | idea | Open decisions remain | Asks one question at a time, each with a recommended answer |
 | improve-threshold | improve | One `workflow` observation with a new tag | Proposes no change for it |
 | improve-recurrence | improve | An `open` observation shares a tag with an `applied` one | Proposes a change first, marked as a failed earlier fix |
+| improve-reported | improve | Ask reports a problem from a standalone research run | Appends one `open` observation with the user's words as its file, then groups it with the rest |
 | improve-upstream-skip | improve | A plain `/improve` with no mention of upstream | Skips step 1 and clones nothing |
