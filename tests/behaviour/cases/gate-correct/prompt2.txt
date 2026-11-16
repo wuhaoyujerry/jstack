@@ -1,0 +1,1 @@
+No, that shape is wrong. The retry must not live inside fetch(): other callers need a single attempt. Wrap it in a new fetch_with_retry() and have load() call that.

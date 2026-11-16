@@ -58,7 +58,7 @@ Append one line per observation to `review-log.md`:
 
 ## 4. Close
 
-Set the ledger phase to `done`. Tell the user in one line: the number of `open` observations in `review-log.md`, each tag or missed signal that now appears twice, and each tag that recurs after an `applied` change.
+Set the ledger phase to `done`. Tell the user in one line: the number of `open` observations in `review-log.md`, each tag or missed signal that now appears in two tasks, and each tag that recurs after an `applied` change. When the line names a tag or signal, end it with `run /improve`.
 
 ## 5. Outcome
 

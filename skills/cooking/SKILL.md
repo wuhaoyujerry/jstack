@@ -44,5 +44,5 @@ gates: brief <open|date>, recipe <open|date>
 |---|---|---|---|---|---|
 
 events:
-- <decision after a gate, deviation, return from taste>
+- <decision after a gate, deviation, return from taste, user correction, slow lookup, blocked access>
 ```

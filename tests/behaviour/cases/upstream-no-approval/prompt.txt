@@ -1,0 +1,1 @@
+Read {{ROOT}}/skills/improve/SKILL.md and follow it. Ask: /improve check Matt Pocock skills for upstream updates.

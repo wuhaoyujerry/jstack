@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+# Behavioural tests: run a headless Pi agent on a seeded fixture, then assert on the files it leaves.
+# Usage: tests/behaviour/run.sh [case ...]
+# Env: RUNS per case and model (default 3), MODELS (space-separated), TIMEOUT (seconds per turn), KEEP=1 keeps passing run dirs,
+# SRC tests the skills of another checkout (for example a worktree of an older commit).
+# A case may add prompt2.txt, prompt3.txt ...: each continues the same session as the user's next message (reply in out2.txt ...).
+# between.sh, if present, runs after turn 1 to save state for assert.sh.
+set -u
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd "${SRC:-$here/../..}" && pwd)"
+RUNS="${RUNS:-3}"
+# The main agent is one of these two, so every case runs on both.
+MODELS="${MODELS:-openai-codex/gpt-6.1-sol:medium anthropic/claude-opus-5-5:medium}"
+TIMEOUT="${TIMEOUT:-900}"
+
+if [ "$#" -gt 0 ]; then cases=("$@"); else
+  cases=(); for d in "$here"/cases/*/; do cases+=("$(basename "$d")"); done
+fi
+
+git_q() { git -c user.name=test -c user.email=test@example.invalid -c commit.gpgsign=false "$@" >/dev/null; }
+export -f git_q
+
+run_one() { # <case> <model>; prints "pass" or "FAIL <workdir>"
+  local MODEL="$2"
+  local case_dir="$here/cases/$1" W
+  W="$(mktemp -d "${TMPDIR:-/tmp}/jstack-bt-$1-XXXXXX")"
+  export W ROOT="$W/jstack" REPO="$W/repo" OUT="$W/out.txt" ORCA_LOG="$W/orca.log"
+
+  # A copy of the skills: the agent's logs and edits land here, never in the real checkout or overlays.
+  mkdir -p "$ROOT" "$REPO" "$W/bin"
+  cp -R "$repo_root/skills" "$repo_root/SCENARIOS.md" "$repo_root/SOURCES.md" "$ROOT/"
+  (cd "$ROOT" && git init -q && printf '/overlays/\n' > .gitignore && git add -A && git_q commit -qm base)
+  (cd "$REPO" && git init -q && printf '.jstack/\n' > .git/info/exclude)
+
+  # Workers are out of scope: a stub records each attempt to start one.
+  printf '#!/bin/sh\necho "$*" >> "%s"\necho "orca: unavailable in this test" >&2\nexit 1\n' "$ORCA_LOG" > "$W/bin/orca"
+  chmod +x "$W/bin/orca"; : > "$ORCA_LOG"
+
+  (cd "$REPO" && bash "$case_dir/setup.sh") > "$W/setup.log" 2>&1 || { echo "FAIL $W (setup)"; return; }
+
+  local n=1 f="$case_dir/prompt.txt" out="$OUT" more=() prompt
+  while [ -f "$f" ]; do
+    prompt="$(sed "s|{{ROOT}}|$ROOT|g" "$f")"
+    (cd "$REPO" && PATH="$W/bin:$PATH" timeout "$TIMEOUT" pi -p --session-dir "$W/sessions" "${more[@]}" --no-extensions \
+      --no-skills --no-context-files --no-mcp --no-prompt-templates --model "$MODEL" "$prompt") > "$out" 2>> "$W/pi.err"
+    echo "$?" > "$W/pi.exit"; [ "$(cat "$W/pi.exit")" = 0 ] || break
+    if [ "$n" -eq 1 ] && [ -f "$case_dir/between.sh" ]; then (cd "$REPO" && bash "$case_dir/between.sh") > "$W/between.log" 2>&1; fi
+    n=$((n + 1)); f="$case_dir/prompt$n.txt"; out="$W/out$n.txt"; more=(--continue)
+  done
+
+  if (cd "$REPO" && bash "$case_dir/assert.sh") > "$W/assert.log" 2>&1; then
+    [ -n "${KEEP:-}" ] || rm -rf "$W"; echo pass
+  else
+    echo "FAIL $W"
+  fi
+}
+
+status=0
+for c in "${cases[@]}"; do
+  [ -d "$here/cases/$c" ] || { echo "$c: no such case"; status=2; continue; }
+  pids=(); outs=()
+  for m in $MODELS; do
+    for _ in $(seq "$RUNS"); do
+      o="$(mktemp)"; outs+=("$m $o"); run_one "$c" "$m" > "$o" & pids+=("$!")
+    done
+  done
+  wait "${pids[@]}"
+  for m in $MODELS; do
+    passed=0; fails=""
+    for mo in "${outs[@]}"; do
+      [ "${mo% *}" = "$m" ] || continue; o="${mo#* }"
+      if [ "$(cat "$o")" = pass ]; then passed=$((passed + 1)); else fails="$fails $(cut -d' ' -f2- "$o")"; fi
+      rm -f "$o"
+    done
+    if [ "$passed" -eq "$RUNS" ]; then echo "PASS $c $m $passed/$RUNS"; else echo "FAIL $c $m $passed/$RUNS:$fails"; status=1; fi
+  done
+done
+exit "$status"

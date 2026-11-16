@@ -12,5 +12,6 @@ Jerry's dev workflow: size, idea, recipe, saute, taste, review. Each has a file 
 - Skillshare and agent skill folders link here; edits through those links change this repo.
 - `SOURCES.md` records the origins of each phase.
 - `SCENARIOS.md` lists behaviours that must hold; `/improve` checks each skill change against it.
+- `tests/behaviour/run.sh` runs scenarios as headless Pi agents on seeded fixtures and asserts on the files they leave. It runs each case three times on both main-agent models and spends model tokens; `tests/behaviour/run.sh <case>` runs one. A case is a folder in `tests/behaviour/cases/` with `setup.sh`, `prompt.txt` and `assert.sh`.
 - `skills/writing-for-agents/` is a copy of Matt Pocock's skill (MIT), without its Codex-only `agents/` folder; `SOURCES.md` records it, and `/improve` checks it for upstream changes. `AGENTS.md` requires it before edits to `skills/`.
 - Invoke: `/cooking <ask>`. An ask to continue a task resumes it from its ledger. An ask that reports what happened to a finished task adds it to the review log, and an issue to fix reopens the task at saute.

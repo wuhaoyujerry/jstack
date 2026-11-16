@@ -1,0 +1,1 @@
+Read {{ROOT}}/skills/improve/SKILL.md and follow it. Ask: /improve. End your reply with one line: `proposed: <number of changes you propose>`.

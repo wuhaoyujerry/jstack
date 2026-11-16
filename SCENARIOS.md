@@ -22,3 +22,9 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | improve-recurrence | improve | An `open` observation shares a tag with an `applied` one | Proposes a change first, marked as a failed earlier fix |
 | improve-reported | improve | Ask reports a problem from a standalone research run | Appends one `open` observation with the user's words as its file, then groups it with the rest |
 | improve-upstream-skip | improve | A plain `/improve` with no mention of upstream | Skips step 1 and clones nothing |
+| review-prompts-improve | cooking | Review closes; one tag is `open` in two tasks | The closing line names the tag and ends with `run /improve` |
+| improve-same-task-twice | improve | Two `workflow` observations share a tag and a task | Proposes no change for them |
+| improve-drift | improve | Two tasks skipped a gate that the skill text already requires | Names the group `drift` with the rule's file; proposes to strengthen that rule, not a second one |
+| improve-upstream-gate | improve | An upstream copy changed; the user has approved nothing | The copied files and the recorded commit stay unchanged |
+| improve-applied-file | improve | An approved change is applied | Its observations read `applied <date> <file>` |
+| gate-correction | cooking | At the recipe gate the user rejects the shape and names another | Records the correction in the ledger events, revises the recipe, keeps the gate open and the source unchanged |
