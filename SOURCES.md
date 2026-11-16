@@ -1,27 +1,35 @@
 # Sources
 
-jstack is a rewrite, not a fork. Each phase keeps mechanisms from the skills below and drops the rest.
+cheese is a rewrite, not a fork. Each phase keeps mechanisms from the skills below and drops the rest.
 
 | Collection | Upstream | Commit read |
 |---|---|---|
 | pstack | https://github.com/backnotprop/pstack | `4161d4ef5051574e825ffe70e2f43a2e49e4b3db` |
 | Matt Pocock skills | https://github.com/mattpocock/skills | `4ae2317ddb22b046e26455e4f9c9b3aaaf62212d` |
+| ponytail | https://github.com/DietrichGebert/ponytail | `96608e078b2d5ea607c5c3b8b5a54d1c1fba6846` |
 
-| jstack file (relative to `skills/jstack/`, except private overlays) | Source skill | Kept | Dropped |
+| cheese file (relative to `skills/cheese/`, except private overlays) | Source skill | Kept | Dropped |
 |---|---|---|---|
-| `phases/grill.md` | `grilling` (Matt Pocock) | Design tree, frontier, recommended answer, agent finds facts | Whole-frontier rounds: jstack asks one question at a time |
-| `phases/grill.md` | `domain-modeling` (Matt Pocock) | Challenge terms, edge-case scenarios, check against code, write glossary at once, three-part ADR test | In-repo `GLOSSARY.md` and `docs/adr/`, multi-context map, format files |
-| `phases/research.md` | `research` (Matt Pocock) | Primary sources, one cited note | Background-agent wording |
-| `phases/research.md` | `how` (pstack) | Simple and complex paths, 2 to 4 angles, five output sections | Model routing, per-harness spawn text, prompt reference files |
-| `phases/research.md` | `why` (pstack) | Code anchor first, one investigator per evidence source, record empty sources, stated versus inferred | MCP discovery procedure, analytics category, source playbooks, epistemics reference, synthesizer prompt |
-| `phases/spec.md` | `architect` (pstack) | Ground first, usage before shape, empty bodies, two blind sketches, red flags, deviation as signal | `arena` and cross-judging, always-two rule, rationale template, scrap procedure (jstack returns to the spec gate) |
-| `phases/spec.md` | `to-spec` (Matt Pocock) | Spec sections, no stale file paths | User stories, issue-tracker publishing, triage labels |
+| `../grill/SKILL.md` | `grilling` (Matt Pocock) | Design tree, frontier, recommended answer, agent finds facts | Whole-frontier rounds: cheese asks one question at a time |
+| `../grill/SKILL.md` | `domain-modeling` (Matt Pocock) | Challenge terms, edge-case scenarios, check against code, write glossary at once, three-part ADR test | In-repo `GLOSSARY.md` and `docs/adr/`, multi-context map, format files |
+| `../grill/SKILL.md` | `technical-writing`, `unslop` (pstack, read at https://github.com/cursor/plugins commit `3dbd22ff12742fb28c9700b9760baa29ed41dc13`) | The brief follows both, read by path from the installed skills | Nothing copied |
+| `../research/SKILL.md` | `research` (Matt Pocock) | Primary sources, one cited note | Background-agent wording |
+| `../research/SKILL.md` | `how` (pstack) | Simple and complex paths, 2 to 4 angles, five output sections | Model routing, per-harness spawn text, prompt reference files |
+| `../research/SKILL.md` | `why` (pstack) | Code anchor first, one investigator per evidence source, record empty sources, stated versus inferred | MCP discovery procedure, analytics category, source playbooks, epistemics reference, synthesizer prompt |
+| `../research/SKILL.md` | Investigation playbook (pstack `poteto-mode`) | Read-only, own the answer, trade-off table for a decision, stop on a wrong premise | Routing to `how` and `why` skills, throughput checkpoint, `unslop` call |
+| `../research/SKILL.md` | Jerry's earlier `research` skill | Pre-scan before researchers, open the original source for key claims, empty versus unsearched, two-codemode-worker limit | Work source list and tool names, run-report table, Hindsight and deep-research notes |
+| `phases/spec.md` | `architect` (pstack) | Ground first, usage before shape, empty bodies, two blind sketches, red flags, deviation as signal | `arena` and cross-judging, always-two rule, rationale template, scrap procedure (cheese returns to the spec gate) |
+| `phases/spec.md` | `to-spec` (Matt Pocock) | Spec sections, no stale file paths, checks at the highest existing seam, glossary terms and ADRs | User stories, issue-tracker publishing, triage labels |
 | `phases/build.md` | `implement-spec`, `implement` (Matt Pocock) | Task graph with a frontier, pointers instead of repeated context, worktree per parallel unit, merge then recheck | Ticket tracker, `tdd` and `code-review` calls, draft PR handling |
 | `phases/build.md` | Feature playbook, `principle-sequence-verifiable-units` (pstack) | Build, check and commit one unit before the next | Throughput checkpoint, arena delegation, PR steps |
+| `phases/build.md` | Bug fix playbook (pstack `poteto-mode`) | Reproduce first: the unit's check fails before the fix and passes after | Control skills, binary search for the cause, repro-before-fix commit order |
+| `phases/build.md` | `ponytail` (Dietrich Gebert) | Smallest complete change: reuse before new code, finish what the change breaks, the never-cut list, fix a defect once in shared code | Session mode and levels, reply footer, `shortcut:` comments, one-line preference, comment rule |
 | `phases/verify.md` | `create-verification-skill` (pstack) | Launch, doctor, drive, evidence, cleanup; prove the recipe once; proof standards; suspect the observation | Feature map, maintenance skill, per-harness skill folders (recipes live in `.jstack/verify/`) |
-| `phases/retro.md` | `retro` (Matt Pocock) | Finding categories, checks before written rules | Implementation-versus-review reference, file guide, `writing-for-agents` call |
+| `phases/verify.md` | `ponytail-review` (Dietrich Gebert) | Review of the diff and its callers, the order of importance, no case no finding, scale judged against the expected load | Six-category checklist, four-part finding template, numbered findings, verdict and lean-count lines |
+| `phases/review.md` | `retro` (Matt Pocock) | Finding categories, as observation categories | Any session as input, implementation-versus-review reference, file guide |
+| `../tasty/SKILL.md` | `retro` (Matt Pocock) | Checks before written rules, the user approves each change | `writing-for-agents` call |
 | `overlays/work.md` (private, repo-root relative) | Jerry's lessons in `~/Desktop/knowledge/lessons/` | Three-state checks, runtime evidence for removal, counting by a known-good list | The cases behind each lesson |
 
 Not carried over: the 24 pstack principle skills and the playbook library. Four principles are candidates for the evaluation: prove it works, sequence verifiable units, fix root causes, subtract before you add.
 
-New in jstack: sizing signals and the sizing log, the three-state verify table, the two-failure rule, the worker model table, evidence-backed lessons.
+New in cheese: resume from the ledger, review that only records and `tasty` that acts across tasks, sizing signals and the sizing log, the three-state verify table, the two-failure rule, lean test cases listed in the spec, the worker model table, evidence-backed lessons.

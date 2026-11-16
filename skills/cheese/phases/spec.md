@@ -30,6 +30,8 @@ A **unit** is the smallest change that can be built, checked and committed alone
 - the units it depends on;
 - `parallel: yes` only when its files overlap with no other parallel unit.
 
+Keep checks **lean**. Attach each at the highest existing **seam** that shows the behaviour; add a seam only when none does. Reuse an existing test when one shows it. A new test lists its cases in the unit: one per behaviour in the brief's done-checks, plus one per risky failure path in a parser or security code.
+
 Mark each check that needs judgement, and each that changes a shared environment.
 
 ## 4. Write the spec
@@ -49,8 +51,8 @@ Mark each check that needs judgement, and each that changes a shared environment
 ## Choice
 ```
 
-Every done-check in the brief maps to a unit check. Name decisions and interfaces; file paths go stale.
+Every done-check in the brief maps to a unit check. Name decisions and interfaces; file paths go stale. Use the terms in `.jstack/glossary.md` and keep to the decisions in `.jstack/adr/`.
 
 ## 5. Gate
 
-Show the spec. Wait for the user to approve it. Then answer the Units and Reach signals again, copy the units into the ledger, and record the date.
+Show the spec. Wait for the user to approve it. Then copy the units into the ledger.

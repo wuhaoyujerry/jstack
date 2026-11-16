@@ -6,7 +6,7 @@ Prove each done-check on the real surface. Every check ends in one of three stat
 
 | Size | Verifier |
 |---|---|
-| trivial | the builder already ran the check; go to step 4 |
+| trivial | the builder already ran the check; go to step 5 |
 | standard | a fresh `verifier` worker |
 | large, or any judgement check | a `judge` worker |
 
@@ -37,18 +37,25 @@ Verification is **read-only**. A check that must change a shared environment is 
 
 When a check fails, suspect the method of observation before the system.
 
-## 4. Read the raw output
+## 4. Review the diff
 
-Read each evidence file yourself; the verifier's summary only points to it. Write `.jstack/<slug>/verify.md`:
+The verifier then reads the diff and the code it touches: the tests, and every caller of a changed function or signature. It looks for a defect that no check covers, in this order: correct, safe, holds under load, tested, fast, lean. It finds the expected load in the repo and states which load it assumed.
+
+A **finding** names its case: this input or situation gives this wrong result. No case, no finding. A finding is `must-fix` when it is a bug, a security hole, data loss, or a break at the expected load; every other finding is a `suggestion`. Save the findings to `.jstack/<slug>/evidence/review.txt`.
+
+## 5. Read the raw output
+
+Read each evidence file yourself; the verifier's summary only points to it. Write `.jstack/<slug>/verify.md`, with the findings below the table:
 
 ```markdown
 | check | state | evidence | reason |
 ```
 
-## 5. Close
+## 6. Close
 
-- **fail**: return the unit to build. It counts as a failure of that unit. Record the event.
+- **fail** or **must-fix**: return the unit to build. It counts as a failure of that unit. Record the event.
+- **suggestion**: the user decides.
 - **not-run**: show the user the command. They approve the run, or accept the gap by name.
-- Verify is done when no check is `fail`, and each `not-run` is run or accepted.
+- Verify is done when no check is `fail`, no `must-fix` is open, and each `not-run` is run or accepted.
 
-Report the table to the user. For a standard or large task, run retro.
+Report the table to the user, then run review.
