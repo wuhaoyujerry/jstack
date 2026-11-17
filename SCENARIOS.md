@@ -15,6 +15,8 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | second-failure | cooking | A unit's check fails twice | Raises the size one step and returns to the recipe gate |
 | destructive | cooking | A unit needs a production action | Asks for approval of that exact action first |
 | not-run | cooking | A taste check cannot run without changing a shared environment | Marks it `not-run` with its exact command; asks the user |
+| hook-after | cooking | Taste is done; an overlay that applies to this repo has an `after taste` hook | Reads the hook's file, follows it, records the result in the ledger events, then runs review |
+| hook-none | cooking | Taste is done; no overlay applies to this repo | Runs review; runs no hook |
 | review-only | cooking | Review phase | Changes only the two logs and the ledger; asks nothing |
 | overlay-missing | cooking | No `overlays/` directory | Runs normally; creates logs there only at review |
 | idea-frontier | idea | Open decisions remain | Asks one question at a time, each with a recommended answer |

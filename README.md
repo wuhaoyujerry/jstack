@@ -4,7 +4,7 @@ Jerry's dev workflow: size, idea, recipe, saute, taste, review. Each has a file 
 
 - Generic workflow: `skills/cooking/SKILL.md`, `skills/cooking/models.md`, and `skills/cooking/phases/`.
 - `skills/idea/` is the idea phase as its own skill; `phases/idea.md` points to it. `skills/research/` is a separate skill that idea and recipe call for a missing fact. `skills/improve/` is a separate skill, typed as `/improve`, that turns the observations of the review phase into workflow changes. `/idea <topic>` is typed only; `research` also starts when a prompt says research, or asks how code works, why it has its shape, what a tool does, or which option to pick.
-- Private work rules and generated logs: `overlays/work.md`, `overlays/sizing-log.md` and `overlays/review-log.md`. The whole `overlays/` directory is Git-ignored and outside the synced skill.
+- Private work rules and generated logs: `overlays/work.md`, `overlays/sizing-log.md` and `overlays/review-log.md`. An overlay's `## Hooks` section attaches other skills after a phase, for example `- after taste: <absolute path to SKILL.md>. <note>`. The whole `overlays/` directory is Git-ignored and outside the synced skill.
 - The skill resolves its real directory before finding `../../overlays/`. Overlays are optional and are not distributed to other machines.
 - Task artifacts stay in each working repo's Git-ignored `.jstack/` directory.
 - Link a checkout: `skillshare link "$PWD/skills/cooking" --name cooking --enable -g`, the same for `skills/idea`, `skills/research` and `skills/improve` under their own names, then `skillshare sync -g`.
