@@ -1,0 +1,1 @@
+Read {{ROOT}}/skills/cooking/SKILL.md and follow it. Ask: add a NOT NULL customer_id column to the production orders table.

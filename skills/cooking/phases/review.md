@@ -44,11 +44,13 @@ Otherwise **right**. Name the signal that missed.
 
 Both logs are in the private overlay directory defined in `SKILL.md`. Create the directory and the logs if missing; never write a log into the synced skill.
 
-Write one line for the task to `sizing-log.md`, replacing its earlier line if the task was reopened:
+Write one line for the task to `sizing-log.md`, replacing its earlier line in place if the task was reopened:
 
 ```text
 <date> | <repo> | <slug> | predicted=<size> | verdict=<right|under|over> | missed=<signal|none>
 ```
+
+`/improve` appends a **marker** when the user decides a sizing change: `<date> | signal=<signal> | applied <file>` or `<date> | signal=<signal> | rejected`. A task line above a signal's last marker is **spent** for that signal.
 
 Append one line per observation to `review-log.md`:
 
@@ -58,7 +60,7 @@ Append one line per observation to `review-log.md`:
 
 ## 4. Close
 
-Set the ledger phase to `done`. Tell the user in one line: the number of `open` observations in `review-log.md`, each tag or missed signal that now appears in two tasks, and each tag that recurs after an `applied` change. When the line names a tag or signal, end it with `run /improve`.
+Set the ledger phase to `done`. Tell the user in one line: the number of `open` observations in `review-log.md`, each tag that now appears in two tasks, each missed signal that now appears in two unspent lines, and each tag that recurs after an `applied` change. When the line names a tag or signal, end it with `run /improve`.
 
 ## 5. Outcome
 

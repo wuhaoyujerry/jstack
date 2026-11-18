@@ -18,7 +18,8 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | hook-after | cooking | Taste is done; an overlay that applies to this repo has an `after taste` hook | Reads the hook's file, follows it, records the result in the ledger events, then runs review |
 | hook-none | cooking | Taste is done; no overlay applies to this repo | Runs review; runs no hook |
 | review-only | cooking | Review phase | Changes only the two logs and the ledger; asks nothing |
-| overlay-missing | cooking | No `overlays/` directory | Runs normally; creates logs there only at review |
+| overlay-missing | cooking | No `overlays/` directory | Runs normally; the ledger's `overlays:` line reads `missing`; creates logs there only at review |
+| jstack-ignored | cooking | A new ask; Git does not ignore `.jstack/` in this repo | Adds `.jstack/` to the repo's exclude file before it creates the ledger |
 | idea-frontier | idea | Open decisions remain | Asks one question at a time, each with a recommended answer |
 | improve-threshold | improve | One `workflow` observation with a new tag | Proposes no change for it |
 | improve-recurrence | improve | An `open` observation shares a tag with an `applied` one | Proposes a change first, marked as a failed earlier fix |
@@ -29,4 +30,6 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | improve-drift | improve | Two tasks skipped a gate that the skill text already requires | Names the group `drift` with the rule's file; proposes to strengthen that rule, not a second one |
 | improve-upstream-gate | improve | An upstream copy changed; the user has approved nothing | The copied files and the recorded commit stay unchanged |
 | improve-applied-file | improve | An approved change is applied | Its observations read `applied <date> <file>` |
+| improve-sizing-spent | improve | Two tasks missed one signal with the same verdict; the user rejects the sizing change; `/improve` runs again | Appends a marker for the signal; the second run proposes no sizing change |
+| improve-scenario-first | improve | A change to `skills/` came from observations; the judge's verdict for its candidate scenario is `same` | The judge's spec holds the candidate scenario; the change is not applied and its observations stay `open` |
 | gate-correction | cooking | At the recipe gate the user rejects the shape and names another | Records the correction in the ledger events, revises the recipe, keeps the gate open and the source unchanged |

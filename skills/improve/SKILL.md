@@ -27,7 +27,7 @@ The upstream step is done when every named skill has a diff and every upstream c
 
 ## 2. Group
 
-Read both logs. Group the `open` observations by tag, across tasks and repos. Group the `sizing-log.md` lines by missed signal and verdict.
+Read both logs. Group the `open` observations by tag, across tasks and repos. Group the unspent `sizing-log.md` lines by missed signal and verdict; step 3 of `../cooking/phases/review.md` defines **spent**.
 
 An `open` observation whose tag also has an `applied` observation from an earlier date is a **recurrence**: the earlier change did not hold. Read the file its `applied` entry names before you propose another.
 
@@ -56,13 +56,15 @@ Propose at most three changes, recurrences first, then most severe. Zero changes
 
 ## 4. Approve and apply
 
-Before you propose a change that edits a file in `skills/`, check it against `../../SCENARIOS.md`. Start one fresh read-only `judge` worker as `../cooking/models.md` describes. Give it the scenario file, the files the change touches and the proposed edit. It walks every scenario through the text before and after the edit, and reports each scenario whose result changes. The check is done when every scenario has a verdict: `same`, `fixed` or `broken`.
+Before you propose a change that edits a file in `skills/`, check it against `../../SCENARIOS.md`. If the change came from observations, first write its **candidate scenario**: one row that would have caught them, generic as that file requires. Start one fresh read-only `judge` worker as `../cooking/models.md` describes. Give it the scenario file, the files the change touches and the proposed edit. Put the candidate scenario in the judge's spec; it enters `SCENARIOS.md` only when the change is applied. The judge walks every scenario, the candidate included, through the text before and after the edit, and reports each scenario whose result changes. The check is done when every scenario has a verdict: `same`, `fixed` or `broken`.
 
-The user approves each change, one at a time through the question tool, with its `broken` scenarios shown. For a `broken` scenario the user chooses: revise the change, or accept it and update that scenario. Apply each approved change.
+A candidate scenario must be `fixed`. On `same` the edit does not address its observations: revise the edit and check again, or drop the change and leave its observations `open`.
 
-For each applied change that came from observations, add one scenario to `SCENARIOS.md` that would have caught them. Write it generic, as that file requires.
+The user approves each change, one at a time through the question tool, with its `broken` scenarios shown. A sizing change also shows the count of each verdict among the lines unspent for its signal. For a `broken` scenario the user chooses: revise the change, or accept it and update that scenario. Apply each approved change.
 
-In `review-log.md`, replace `open` on every observation of a proposed group with `applied <date> <file>`, naming the file the change edited, or `rejected <date>`. The other observations stay `open`.
+For each applied change that came from observations, add its candidate scenario to `SCENARIOS.md`; write one now for a change that had none.
+
+In `review-log.md`, replace `open` on every observation of a proposed group with `applied <date> <file>`, naming the file the change edited, or `rejected <date>`. The other observations stay `open`. In `sizing-log.md`, append a marker (step 3 of `../cooking/phases/review.md`) for the signal of each sizing change the user decided.
 
 For each collection checked, when the user has decided its every upstream change, set its commit in `SOURCES.md` to the `HEAD` you diffed. If any of its upstream changes is still undecided, keep the old commit so the next run sees it again.
 

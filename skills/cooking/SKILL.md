@@ -8,11 +8,11 @@ metadata:
 
 # cooking
 
-Task state lives in `.jstack/<slug>/` at the repo root; Git ignores it globally. Give workers absolute paths to it.
+Task state lives in `.jstack/<slug>/` at the repo root. Give workers absolute paths to it.
 
 ## 1. Resume or start
 
-If the ask reports what happened to a `done` task after its run, follow step 5 of `phases/review.md` on that ledger; if it reports an issue to fix, also **reopen** the task. Otherwise, if a `.jstack/*/ledger.md` matches this ask and is not `done`, **resume** it. Otherwise choose a short slug and create `.jstack/<slug>/ledger.md` from the template below.
+If the ask reports what happened to a `done` task after its run, follow step 5 of `phases/review.md` on that ledger; if it reports an issue to fix, also **reopen** the task. Otherwise, if a `.jstack/*/ledger.md` matches this ask and is not `done`, **resume** it. Otherwise choose a short slug and create `.jstack/<slug>/ledger.md` from the template below. Before you create it, run `git check-ignore -q .jstack/x`; if that fails, append `.jstack/` to the file that `git rev-parse --git-path info/exclude` prints.
 
 To **resume**, rebuild the position from disk, not from the session. Read the ledger and the task's files, then check `git status`, the task's worktrees and its workers. A gate is passed only when the ledger has its date. A unit is `pass` only when its evidence file exists; run the check of every other started unit again. If several open ledgers match, ask which. Tell the user the phase and the next step in one line, then continue.
 
@@ -40,6 +40,7 @@ ask: <one line>
 phase: <phase, or done>
 size: <size>, <five answers>
 size changes: <from> -> <to>, <reason>
+overlays: <directory>, <each overlay that applies|none applies|missing>
 gates: brief <open|date>, recipe <open|date>
 
 | unit | check | parallel | status | fails | evidence |
