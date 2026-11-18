@@ -1,14 +1,15 @@
 # Worker models
 
-Every worker is a Pi agent. The role sets the model and effort.
+Every worker is a Pi agent. The role sets the model and effort. For each saute builder you start, use the current size in the ledger.
 
 | Role | `<model>:<effort>` |
 |---|---|
 | researcher | `openai-codex/gpt-6-luna:low` |
 | sketcher A | `anthropic/claude-fable-5-2:medium` |
-| sketcher B | `openai-codex/gpt-6-astra:medium` |
-| builder | `openai-codex/gpt-6.1-sol:medium` |
-| verifier | `openai-codex/gpt-6.1-sol:medium` |
+| sketcher B | `openai-codex/gpt-6.2-astra:medium` |
+| builder (`large`) | `openai-codex/gpt-6.2-astra:medium` |
+| builder (`trivial` or `standard`) | `openai-codex/gpt-6.2-sol:medium` |
+| verifier | `openai-codex/gpt-6.2-sol:medium` |
 | judge | `anthropic/claude-fable-5-2:medium` |
 
 The **judge** is the strong model from the family that did not build. If the builder changes family, change the judge.
