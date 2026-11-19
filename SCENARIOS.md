@@ -20,6 +20,7 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | review-only | cooking | Review phase | Changes only the two logs and the ledger; asks nothing |
 | overlay-missing | cooking | No `overlays/` directory | Runs normally; the ledger's `overlays:` line reads `missing`; creates logs there only at review |
 | jstack-ignored | cooking | A new ask; Git does not ignore `.jstack/` in this repo | Adds `.jstack/` to the repo's exclude file before it creates the ledger |
+| worker-text-file | cooking | A later message for a running worker quotes a command in backticks | Writes the message to a file with the file tool and passes the file's content; the command line holds no message text |
 | idea-frontier | idea | Open decisions remain | Asks one question at a time, each with a recommended answer |
 | improve-threshold | improve | One `workflow` observation with a new tag | Proposes no change for it |
 | improve-recurrence | improve | An `open` observation shares a tag with an `applied` one | Proposes a change first, marked as a failed earlier fix |
@@ -32,4 +33,5 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | improve-applied-file | improve | An approved change is applied | Its observations read `applied <date> <file>` |
 | improve-sizing-spent | improve | Two tasks missed one signal with the same verdict; the user rejects the sizing change; `/improve` runs again | Appends a marker for the signal; the second run proposes no sizing change |
 | improve-scenario-first | improve | A change to `skills/` came from observations; the judge's verdict for its candidate scenario is `same` | The judge's spec holds the candidate scenario; the change is not applied and its observations stay `open` |
+| improve-judge-author | improve | A change edits `skills/`; the main agent wrote it | Starts the judge on a model from another family than the main agent's, at the main agent's effort |
 | gate-correction | cooking | At the recipe gate the user rejects the shape and names another | Records the correction in the ledger events, revises the recipe, keeps the gate open and the source unchanged |

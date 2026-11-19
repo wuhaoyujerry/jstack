@@ -10,9 +10,10 @@ Every worker is a Pi agent. The role sets the model and effort. For each saute b
 | builder (`large`) | `openai-codex/gpt-6.2-astra:medium` |
 | builder (`trivial` or `standard`) | `openai-codex/gpt-6.2-sol:medium` |
 | verifier | `openai-codex/gpt-6.2-sol:medium` |
-| judge | `anthropic/claude-fable-5-2:medium` |
+| judge (author is an OpenAI model) | `anthropic/claude-fable-5-2:medium` |
+| judge (author is an Anthropic model) | `openai-codex/gpt-6.2-astra:medium` |
 
-The **judge** is the strong model from the family that did not build. If the builder changes family, change the judge.
+The **author** is whose work the judge checks: the builder in taste, you in improve. Pick the judge row for the author's family. In improve, give the judge your own effort, `$PI_REASONING_LEVEL`, in place of the row's.
 
 ## Start a worker
 
@@ -28,6 +29,7 @@ orca orchestration worker-start --terminal <handle> --worktree <selector> \
 
 - `<selector>` is `current`, or `name:<worktree>` for a unit's own worktree.
 - Write the spec file in `.jstack/<slug>/workers/`: the target, absolute paths to read, what the worker may edit, and the evidence that proves it is done.
+- A worker's spec and every later message come from a file you wrote with your file tool: `--spec-file <file>` for the spec, `"$(cat <file>)"` for a message. The shell runs backticks typed inside double quotes; it leaves a file's content as data.
 - A read-only spec opens with: "Read-only: change nothing outside your report file."
 - Start every independent worker, then end your turn. Orca wakes you with each `worker_done`.
 - If Pi rejects a model id, stop and tell the user. Choose no substitute.

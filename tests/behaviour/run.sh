@@ -25,7 +25,7 @@ run_one() { # <case> <model>; prints "pass" or "FAIL <workdir>"
   local MODEL="$2"
   local case_dir="$here/cases/$1" W
   W="$(mktemp -d "${TMPDIR:-/tmp}/jstack-bt-$1-XXXXXX")"
-  export W ROOT="$W/jstack" REPO="$W/repo" OUT="$W/out.txt" ORCA_LOG="$W/orca.log"
+  export MODEL W ROOT="$W/jstack" REPO="$W/repo" OUT="$W/out.txt" ORCA_LOG="$W/orca.log"
 
   # A copy of the skills: the agent's logs and edits land here, never in the real checkout or overlays.
   mkdir -p "$ROOT" "$REPO" "$W/bin"

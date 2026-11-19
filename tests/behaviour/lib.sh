@@ -1,5 +1,6 @@
 # Assertion helpers. Each prints the reason and exits 1 on failure.
-# Available to assert.sh: $W (run dir), $ROOT (skills copy), $REPO (fixture repo, also cwd), $OUT (agent reply), $ORCA_LOG.
+# Available to assert.sh: $W (run dir), $ROOT (skills copy), $REPO (fixture repo, also cwd), $OUT (agent reply), $ORCA_LOG,
+# $MODEL (the main agent's <model>:<effort>).
 
 fail() { echo "ASSERT: $*"; exit 1; }
 
