@@ -1,4 +1,4 @@
-# One navigation observation: its change is a pointer in this repo, so no skill text changes.
+# One navigation observation: its change is a pointer in this repo, which is another repo than the home of /improve.
 mkdir -p tools .jstack/add-export/evidence
 printf 'check:\n\tpython -m pytest tests\n' > tools/Makefile
 echo '# shop-api' > AGENTS.md

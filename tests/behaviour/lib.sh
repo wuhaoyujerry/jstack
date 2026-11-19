@@ -1,6 +1,6 @@
 # Assertion helpers. Each prints the reason and exits 1 on failure.
-# Available to assert.sh: $W (run dir), $ROOT (skills copy), $REPO (fixture repo, also cwd), $OUT (agent reply), $ORCA_LOG,
-# $MODEL (the main agent's <model>:<effort>).
+# Available to assert.sh: $W (run dir), $ROOT (skills copy), $REPO (fixture repo, also cwd of assert.sh), $OUT (agent reply), $ORCA_LOG,
+# $MODEL (the main agent's <model>:<effort>). $W/pi-nested.log holds each attempt of the agent to start pi itself.
 
 fail() { echo "ASSERT: $*"; exit 1; }
 

@@ -5,6 +5,8 @@
 # SRC tests the skills of another checkout (for example a worktree of an older commit).
 # A case may add prompt2.txt, prompt3.txt ...: each continues the same session as the user's next message (reply in out2.txt ...).
 # between.sh, if present, runs after turn 1 to save state for assert.sh.
+# The agent starts in the fixture repo. A case whose prompt names the improve skill starts in the skills copy, the home of
+# /improve; a `from-repo` file in such a case starts it in the fixture repo.
 set -u
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -30,19 +32,24 @@ run_one() { # <case> <model>; prints "pass" or "FAIL <workdir>"
   # A copy of the skills: the agent's logs and edits land here, never in the real checkout or overlays.
   mkdir -p "$ROOT" "$REPO" "$W/bin"
   cp -R "$repo_root/skills" "$repo_root/SCENARIOS.md" "$repo_root/SOURCES.md" "$ROOT/"
-  (cd "$ROOT" && git init -q && printf '/overlays/\n' > .gitignore && git add -A && git_q commit -qm base)
+  (cd "$ROOT" && git init -q && printf '/overlays/\n' > .gitignore && printf '.jstack/\n' > .git/info/exclude && git add -A && git_q commit -qm base)
   (cd "$REPO" && git init -q && printf '.jstack/\n' > .git/info/exclude)
 
-  # Workers are out of scope: a stub records each attempt to start one.
+  # Workers and other sessions are out of scope: a stub records each attempt to start one, through orca or pi.
+  # Pi puts its own bin directory first on PATH, so the pi stub is a function that the agent's bash loads from BASH_ENV.
   printf '#!/bin/sh\necho "$*" >> "%s"\necho "orca: unavailable in this test" >&2\nexit 1\n' "$ORCA_LOG" > "$W/bin/orca"
+  printf 'pi() { echo "$*" >> "%s"; echo "pi: unavailable in this test" >&2; return 1; }\n' "$W/pi-nested.log" > "$W/bashenv"
   chmod +x "$W/bin/orca"; : > "$ORCA_LOG"
 
   (cd "$REPO" && bash "$case_dir/setup.sh") > "$W/setup.log" 2>&1 || { echo "FAIL $W (setup)"; return; }
 
+  local cwd="$REPO"
+  if grep -q 'skills/improve/SKILL.md' "$case_dir/prompt.txt" && [ ! -e "$case_dir/from-repo" ]; then cwd="$ROOT"; fi
+
   local n=1 f="$case_dir/prompt.txt" out="$OUT" more=() prompt
   while [ -f "$f" ]; do
     prompt="$(sed "s|{{ROOT}}|$ROOT|g" "$f")"
-    (cd "$REPO" && PATH="$W/bin:$PATH" timeout "$TIMEOUT" pi -p --session-dir "$W/sessions" "${more[@]}" --no-extensions \
+    (cd "$cwd" && PATH="$W/bin:$PATH" BASH_ENV="$W/bashenv" timeout "$TIMEOUT" pi -p --session-dir "$W/sessions" "${more[@]}" --no-extensions \
       --no-skills --no-context-files --no-mcp --no-prompt-templates --model "$MODEL" "$prompt") > "$out" 2>> "$W/pi.err"
     echo "$?" > "$W/pi.exit"; [ "$(cat "$W/pi.exit")" = 0 ] || break
     if [ "$n" -eq 1 ] && [ -f "$case_dir/between.sh" ]; then (cd "$REPO" && bash "$case_dir/between.sh") > "$W/between.log" 2>&1; fi

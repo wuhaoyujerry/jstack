@@ -1,6 +1,6 @@
 # Scenarios
 
-Behaviours that must hold across the jstack skills. `/improve` checks each skill change against this list. Keep every line generic: no repo, company, person or private path names.
+Behaviours that must hold across the jstack skills. `/improve` checks each skill change against this list. Keep every line generic: no repo, company, person or private path names. An `improve` row is asked in a session in the working tree that holds the skills, unless it names another place.
 
 | id | skill | ask and state | expected |
 |---|---|---|---|
@@ -30,11 +30,16 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | improve-same-task-twice | improve | Two `workflow` observations share a tag and a task | Proposes no change for them |
 | improve-drift | improve | Two tasks skipped a gate that the skill text already requires | Names the group `drift` with the rule's file; proposes to strengthen that rule, not a second one |
 | improve-upstream-gate | improve | An upstream copy changed; the user has approved nothing | The copied files and the recorded commit stay unchanged |
-| improve-applied-file | improve | An approved change is applied | Its observations read `applied <date> <file>` |
+| improve-applied-file | improve | The session applies an approved change itself | Its observations read `applied <date> <file>` |
 | improve-sizing-spent | improve | Two tasks missed one signal with the same verdict; the user rejects the sizing change; `/improve` runs again | Appends a marker for the signal; the second run proposes no sizing change |
 | improve-scenario-first | improve | A change to `skills/` came from observations; the judge's verdict for its candidate scenario is `same` | The judge's spec holds the candidate scenario; the change is not applied and its observations stay `open` |
 | improve-judge-author | improve | A change edits `skills/`; the main agent wrote it | Starts the judge on a model from another family than the main agent's, at the main agent's effort |
 | improve-one-judge | improve | Two changes each edit a file in `skills/` | Starts one judge for the run; its spec holds both edits |
 | review-log-line | cooking | Review writes an observation for a failure that no tag in the log names; its evidence is a file | Its tag has one to three words; its file is an absolute path |
 | improve-merge-tags | improve | Two tasks logged one failure under two tags | Rewrites both to one tag in the log, names the merge, and treats them as one group |
+| improve-scope | improve | Two tasks in one repo share a `workflow` tag that no skill text covers | Proposes a rule limited to that repo, in an overlay that applies to it or else in its `AGENTS.md`; proposes no edit to `skills/` |
+| improve-proves-change | improve | An approved change edits a file in `skills/`; files can show the result of its candidate scenario | Writes a behaviour case for the candidate; runs it before it applies the change and again after |
+| improve-home | improve | `/improve` is asked in a session outside the working tree that holds the skills | Hands the ask to a session in that working tree; changes no file and no log |
+| improve-hand-back | improve | An approved change edits a file in another repo | Hands the change to a session in that repo and edits no file there; its observations read `handed <date> <file>` |
+| improve-handed-settles | improve | An observation reads `handed <date> <file>`; that file now holds its change | Its line reads `applied <date> <file>` |
 | gate-correction | cooking | At the recipe gate the user rejects the shape and names another | Records the correction in the ledger events, revises the recipe, keeps the gate open and the source unchanged |

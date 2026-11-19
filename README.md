@@ -3,7 +3,7 @@
 Jerry's dev workflow: size, idea, recipe, saute, taste, review. Each has a file in `skills/cooking/phases/`.
 
 - Generic workflow: `skills/cooking/SKILL.md`, `skills/cooking/models.md`, and `skills/cooking/phases/`.
-- `skills/idea/` is the idea phase as its own skill; `phases/idea.md` points to it. `skills/research/` is a separate skill that idea and recipe call for a missing fact. `skills/improve/` is a separate skill, typed as `/improve`, that turns the observations of the review phase into workflow changes. `/idea <topic>` is typed only; `research` also starts when a prompt says research, or asks how code works, why it has its shape, what a tool does, or which option to pick.
+- `skills/idea/` is the idea phase as its own skill; `phases/idea.md` points to it. `skills/research/` is a separate skill that idea and recipe call for a missing fact. `skills/improve/` is a separate skill, typed as `/improve`, that turns the observations of the review phase into workflow changes. It runs in this repo: typed in another repo, it hands the ask to a session here, and it hands a change to another repo's file to a session there. `/idea <topic>` is typed only; `research` also starts when a prompt says research, or asks how code works, why it has its shape, what a tool does, or which option to pick.
 - Private work rules and generated logs: `overlays/work.md`, `overlays/sizing-log.md` and `overlays/review-log.md`. An overlay's `## Hooks` section attaches other skills after a phase, for example `- after taste: <absolute path to SKILL.md>. <note>`. The whole `overlays/` directory is Git-ignored and outside the synced skill.
 - The skill resolves its real directory before finding `../../overlays/`. Overlays are optional and are not distributed to other machines.
 - Task artifacts stay in each working repo's Git-ignored `.jstack/` directory.
@@ -11,7 +11,7 @@ Jerry's dev workflow: size, idea, recipe, saute, taste, review. Each has a file 
 - `skills/technical-writing/` and `skills/unslop/` are copies of pstack skills (MIT). `idea` reads them by path to write the brief; they need no link.
 - Skillshare and agent skill folders link here; edits through those links change this repo.
 - `SOURCES.md` records the origins of each phase.
-- `SCENARIOS.md` lists behaviours that must hold; `/improve` checks each skill change against it.
-- `tests/behaviour/run.sh` runs scenarios as headless Pi agents on seeded fixtures and asserts on the files they leave. It runs each case three times on both main-agent models and spends model tokens; `tests/behaviour/run.sh <case>` runs one. A case is a folder in `tests/behaviour/cases/` with `setup.sh`, `prompt.txt` and `assert.sh`.
+- `SCENARIOS.md` lists behaviours that must hold; `/improve` checks each skill change against it, then proves the change with behaviour cases.
+- `tests/behaviour/run.sh` runs scenarios as headless Pi agents on seeded fixtures and asserts on the files they leave. It runs each case three times on both main-agent models and spends model tokens; `tests/behaviour/run.sh <case>` runs one. A case is a folder in `tests/behaviour/cases/` with `setup.sh`, `prompt.txt` and `assert.sh`. The agent starts in the fixture repo; a case whose prompt names the improve skill starts in the skills copy, unless it has a `from-repo` file.
 - `skills/writing-for-agents/` is a copy of Matt Pocock's skill (MIT), without its Codex-only `agents/` folder; `SOURCES.md` records it, and `/improve` checks it for upstream changes. `AGENTS.md` requires it before edits to `skills/`.
 - Invoke: `/cooking <ask>`. An ask to continue a task resumes it from its ledger. An ask that reports what happened to a finished task adds it to the review log, and an issue to fix reopens the task at saute.
