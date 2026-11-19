@@ -37,7 +37,7 @@ An `open` observation whose tag also has an `applied` observation from an earlie
 
 ## 3. Choose
 
-A group becomes a candidate **change** when it has the observations its category needs. Read the file of each observation when it still exists.
+A group becomes a candidate **change** when it has the observations its category needs. Read the file of each observation when it still exists; in a session file, only the message that its event quotes.
 
 | Category | Change | Needs |
 |---|---|---|
