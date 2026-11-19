@@ -27,7 +27,7 @@ The upstream step is done when every named skill has a diff and every upstream c
 
 ## 2. Group
 
-Read both logs. Group the `open` observations by tag, across tasks and repos. Group the unspent `sizing-log.md` lines by missed signal and verdict; step 3 of `../cooking/phases/review.md` defines **spent**.
+Read both logs. First give `open` observations whose events show one failure one tag, and rewrite it on those lines in `review-log.md`: a **merge**. Keep the tag that an `applied` observation of that failure has, else the tag of the earliest line. Then group the `open` observations by tag, across tasks and repos. Group the unspent `sizing-log.md` lines by missed signal and verdict; step 3 of `../cooking/phases/review.md` defines **spent**.
 
 An `open` observation whose tag also has an `applied` observation from an earlier date is a **recurrence**: the earlier change did not hold. Read the file its `applied` entry names before you propose another.
 
@@ -56,9 +56,9 @@ Propose at most three changes, recurrences first, then most severe. Zero changes
 
 ## 4. Approve and apply
 
-Before you propose a change that edits a file in `skills/`, check it against `../../SCENARIOS.md`. If the change came from observations, first write its **candidate scenario**: one row that would have caught them, generic as that file requires. Start one fresh read-only `judge` worker as `../cooking/models.md` describes. Give it the scenario file, the files the change touches and the proposed edit. Put the candidate scenario in the judge's spec; it enters `SCENARIOS.md` only when the change is applied. The judge walks every scenario, the candidate included, through the text before and after the edit, and reports each scenario whose result changes. The check is done when every scenario has a verdict: `same`, `fixed` or `broken`.
+Before you propose changes that edit a file in `skills/`, check them against `../../SCENARIOS.md`. For each change that came from observations, first write its **candidate scenario**: one row that would have caught them, generic as that file requires. Start one fresh read-only `judge` worker for the whole run, as `../cooking/models.md` describes. Give it the scenario file, the files the changes touch and every proposed change. Put each candidate scenario in the judge's spec; it enters `SCENARIOS.md` only when its change is applied. The judge walks every scenario, the candidates included, through the text before and after each change alone, and reports each scenario whose result changes and each pair of changes that conflict. The check is done when every scenario has a verdict for every change: `same`, `fixed` or `broken`.
 
-A candidate scenario must be `fixed`. On `same` the edit does not address its observations: revise the edit and check again, or drop the change and leave its observations `open`.
+A candidate scenario must be `fixed` for its own change. On `same` the edit does not address its observations: revise the edit and send it to the same judge, or drop the change and leave its observations `open`.
 
 The user approves each change, one at a time through the question tool, with its `broken` scenarios shown. A sizing change also shows the count of each verdict among the lines unspent for its signal. For a `broken` scenario the user chooses: revise the change, or accept it and update that scenario. Apply each approved change.
 
@@ -68,4 +68,4 @@ In `review-log.md`, replace `open` on every observation of a proposed group with
 
 For each collection checked, when the user has decided its every upstream change, set its commit in `SOURCES.md` to the `HEAD` you diffed. If any of its upstream changes is still undecided, keep the old commit so the next run sees it again.
 
-Tell the user what changed, each `drift` group, and how many observations remain `open`; after step 1, also how many upstream changes remain undecided.
+Tell the user what changed, each merge with the tags it replaced, each `drift` group, and how many observations remain `open`; after step 1, also how many upstream changes remain undecided.

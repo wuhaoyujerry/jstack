@@ -8,7 +8,7 @@ Read the ledger, `taste.md` and the evidence folder.
 
 An **observation** is one event from this run and the file that shows it: an evidence file or the ledger. No file, no observation. Zero observations is a valid result.
 
-Give each observation a category and a short **tag** that names the failure. Reuse a tag from `review-log.md` when one fits.
+Give each observation a category and a **tag**: one to three words for what went wrong. Reuse a tag from `review-log.md` when it names the same failure, whatever its length.
 
 | Category | Event |
 |---|---|
@@ -57,6 +57,8 @@ Append one line per observation to `review-log.md`:
 ```text
 <date> | <repo> | <slug> | <category> | <tag> | <event> | <file> | open
 ```
+
+In `<file>`, give a path on disk as an absolute path.
 
 ## 4. Close
 

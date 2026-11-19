@@ -11,7 +11,7 @@ here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "${SRC:-$here/../..}" && pwd)"
 RUNS="${RUNS:-3}"
 # The main agent is one of these two, so every case runs on both.
-MODELS="${MODELS:-openai-codex/gpt-6.1-sol:medium anthropic/claude-opus-5-5:medium}"
+MODELS="${MODELS:-openai-codex/gpt-6.2-sol:medium anthropic/claude-fable-5-2:medium}"
 TIMEOUT="${TIMEOUT:-900}"
 
 if [ "$#" -gt 0 ]; then cases=("$@"); else

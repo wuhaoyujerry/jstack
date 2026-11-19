@@ -34,4 +34,7 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | improve-sizing-spent | improve | Two tasks missed one signal with the same verdict; the user rejects the sizing change; `/improve` runs again | Appends a marker for the signal; the second run proposes no sizing change |
 | improve-scenario-first | improve | A change to `skills/` came from observations; the judge's verdict for its candidate scenario is `same` | The judge's spec holds the candidate scenario; the change is not applied and its observations stay `open` |
 | improve-judge-author | improve | A change edits `skills/`; the main agent wrote it | Starts the judge on a model from another family than the main agent's, at the main agent's effort |
+| improve-one-judge | improve | Two changes each edit a file in `skills/` | Starts one judge for the run; its spec holds both edits |
+| review-log-line | cooking | Review writes an observation for a failure that no tag in the log names; its evidence is a file | Its tag has one to three words; its file is an absolute path |
+| improve-merge-tags | improve | Two tasks logged one failure under two tags | Rewrites both to one tag in the log, names the merge, and treats them as one group |
 | gate-correction | cooking | At the recipe gate the user rejects the shape and names another | Records the correction in the ledger events, revises the recipe, keeps the gate open and the source unchanged |

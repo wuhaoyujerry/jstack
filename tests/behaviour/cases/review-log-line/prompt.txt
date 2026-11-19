@@ -1,0 +1,1 @@
+Read {{ROOT}}/skills/cooking/SKILL.md and follow it. Ask: continue the rename of _parse in util.py.
