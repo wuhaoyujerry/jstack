@@ -13,5 +13,5 @@ lacks() { if grep -Eq -- "$2" "$1" 2>/dev/null; then fail "$1 has /$2/"; fi; }
 
 # No tracked or new file changed in a Git repo (the fixture excludes .jstack/, the skills copy excludes overlays/).
 clean_tree() { [ -z "$(git -C "$1" status --porcelain)" ] || fail "$1 changed: $(git -C "$1" status --porcelain | head -5)"; }
-# A call that only asks orca for its help or version starts nothing; any other call counts as a start.
-no_workers() { local s; s="$(grep -vE -- '^$|(^| )(--help|-h|--version)$' "$ORCA_LOG" 2>/dev/null | head -2)"; [ -z "$s" ] || fail "tried to start a worker: $s"; }
+# Only a call that starts a terminal, a worktree or a worker counts; a query such as `worktree list` starts nothing.
+no_workers() { local s; s="$(grep -E -- '(^| )(terminal (create|split)|worktree create|orchestration (worker-start|dispatch|coordinator-start))( |$)' "$ORCA_LOG" 2>/dev/null | head -2)"; [ -z "$s" ] || fail "tried to start a worker: $s"; }

@@ -23,7 +23,7 @@ printf '# Marker\n\nWrite the line `hook ran` to `.jstack/hook-ran.txt` at the r
 cat > "$ROOT/overlays/test.md" <<O
 # Test overlay
 
-Applies when the repo remote belongs to the org `acme-private`.
+Applies when the repo remote belongs to the org \`acme-private\`.
 
 ## Hooks
 
