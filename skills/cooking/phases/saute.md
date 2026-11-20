@@ -1,14 +1,17 @@
 # Saute
 
-Builders build every unit until its check passes; you supervise from the ledger.
+Every unit is built until its check passes: by you in order, or by parallel builders that you supervise from the ledger.
 
 ## 1. Plan the workers
 
-The units form a graph. The **frontier** is every unit whose dependencies have passed.
+The units form a graph. The **frontier** is every unit whose dependencies have passed. For a trivial task, write the one unit and its check into the ledger yourself.
 
-- **Trivial task**: write the one unit and its check into the ledger yourself. Start one builder.
-- **Coupled units**: one builder takes them in order, in the current worktree.
-- **`parallel: yes` units on the frontier**: one builder each, in its own worktree: `orca worktree create --name <slug>-<unit> --json`.
+1. Put frontier units that share files into one **group**; a unit that shares none is a group of its own.
+2. Estimate each group in minutes. Serial time is the sum. Parallel time is the longest group plus 10 to 15 minutes for worker starts, specs, merges and rechecks.
+3. Take the shorter plan.
+   - **Serial**: you are the builder, also for the judge rule in `models.md`. Take the units in order in the current worktree, by the loop in step 2, and handle each result as step 3 does.
+   - **Parallel**: one builder worker per group, each in its own worktree: `orca worktree create --name <slug>-<group> --json`.
+4. Record the groups, the estimates and the choice in the ledger events.
 
 ## 2. Brief each builder
 
@@ -30,7 +33,7 @@ The builder reports per unit: commit, check result, evidence path.
 
 ## 3. Handle each report
 
-- **Pass**: set the unit to `pass` in the ledger. For a parallel unit, merge its branch, then run the checks of every unit already merged. Start builders for the new frontier.
+- **Pass**: set the unit to `pass` in the ledger. When the last unit of a parallel group passes, merge its branch, then run the checks of every unit already merged. When no builder is working and units remain, plan the new frontier by step 1.
 - **Second failure**: the shape is wrong. Raise the size one step, record it, and return to the recipe gate with both outputs.
 - **Deviation**: decide which is true, and record the event.
   - The recipe was wrong: change it and return to the recipe gate.

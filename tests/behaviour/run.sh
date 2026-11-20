@@ -38,7 +38,8 @@ run_one() { # <case> <model>; prints "pass" or "FAIL <workdir>"
   # Workers and other sessions are out of scope: a stub records each attempt to start one, through orca or pi.
   # Pi puts its own bin directory first on PATH, so the pi stub is a function that the agent's bash loads from BASH_ENV.
   printf '#!/bin/sh\necho "$*" >> "%s"\necho "orca: unavailable in this test" >&2\nexit 1\n' "$ORCA_LOG" > "$W/bin/orca"
-  printf 'pi() { echo "$*" >> "%s"; echo "pi: unavailable in this test" >&2; return 1; }\n' "$W/pi-nested.log" > "$W/bashenv"
+  # A model query answers with a row, so the check of a model id before a worker start passes; it starts nothing and is not logged.
+  printf 'pi() { if [ "$1" = --list-models ]; then echo "provider model"; echo "$2" | tr / " "; return 0; fi; echo "$*" >> "%s"; echo "pi: unavailable in this test" >&2; return 1; }\n' "$W/pi-nested.log" > "$W/bashenv"
   chmod +x "$W/bin/orca"; : > "$ORCA_LOG"
 
   (cd "$REPO" && bash "$case_dir/setup.sh") > "$W/setup.log" 2>&1 || { echo "FAIL $W (setup)"; return; }

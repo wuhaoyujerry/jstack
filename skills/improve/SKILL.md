@@ -46,7 +46,7 @@ A group becomes a candidate **change** when it has the observations its category
 | steering | Move the rule into a check, or delete the text | one observation |
 | tool | Write the cheaper form where the agent reads it | one observation |
 | access | Give the agent that access | one observation |
-| workflow | Tasks in two repos: an edit to the cooking text. Tasks in one repo: a rule limited to that repo, in an **overlay** that applies to it (`../cooking/SKILL.md`, step 1); with none, in its `AGENTS.md` | the same tag in two tasks |
+| workflow | Tasks in two repos: an edit to the cooking text. Tasks in one repo: a rule limited to that repo, in an **overlay** that applies to it (`../cooking/SKILL.md`, step 1); with none, in its `AGENTS.md` | the same tag in two tasks, or one observation whose event records a rule the user stated or approved |
 | sizing | A change to the signal in `../cooking/phases/size.md` | the same signal missed twice with the same verdict |
 | upstream | Copy the upstream folder, or edit the jstack file of the row | one upstream change |
 | recurrence | Revise or replace the earlier change | one observation |

@@ -22,12 +22,12 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | jstack-ignored | cooking | A new ask; Git does not ignore `.jstack/` in this repo | Adds `.jstack/` to the repo's exclude file before it creates the ledger |
 | worker-text-file | cooking | A later message for a running worker quotes a command in backticks | Writes the message to a file with the file tool and passes the file's content; the command line holds no message text |
 | idea-frontier | idea | Three open decisions, none depending on another; the user has answered none | Asks all three in one round, each with a recommended answer marked; the brief gains no decision before the answers |
-| improve-threshold | improve | One `workflow` observation with a new tag | Proposes no change for it |
+| improve-threshold | improve | One `workflow` observation with a new tag; its event records no rule the user stated or approved | Proposes no change for it |
 | improve-recurrence | improve | An `open` observation shares a tag with an `applied` one | Proposes a change first, marked as a failed earlier fix |
 | improve-reported | improve | Ask reports a problem from a standalone research run | Appends one `open` observation with the user's words as its file, then groups it with the rest |
 | improve-upstream-skip | improve | A plain `/improve` with no mention of upstream | Skips step 1 and clones nothing |
 | review-prompts-improve | cooking | Review closes; one tag is `open` in two tasks | The closing line names the tag and ends with `run /improve` |
-| improve-same-task-twice | improve | Two `workflow` observations share a tag and a task | Proposes no change for them |
+| improve-same-task-twice | improve | Two `workflow` observations share a tag and a task; neither event records a rule the user stated or approved | Proposes no change for them |
 | improve-drift | improve | Two tasks skipped a gate that the skill text already requires | Names the group `drift` with the rule's file; proposes to strengthen that rule, not a second one |
 | improve-upstream-gate | improve | An upstream copy changed; the user has approved nothing | The copied files and the recorded commit stay unchanged |
 | improve-applied-file | improve | The session applies an approved change itself | Its observations read `applied <date> <file>` |
@@ -45,3 +45,10 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | gate-correction | cooking | At the recipe gate the user rejects the shape and names another | Records the correction in the ledger events, revises the recipe, keeps the gate open and the source unchanged |
 | review-corrections | cooking | Review phase; in a session saved beside the current one the user typed two objections to wasted steps; a log line of the task records the first, and neither the ledger nor the log records the second | Writes one observation for the second, with that session's file as its file and the user's words in its event; adds none for the first |
 | idea-derived-choice | idea | Research is back and the user has made one decision; the facts leave two more choices open, such as the order of the work and whether one part is done at all | Puts both to the user, each with a recommended answer marked, before it completes the brief; the brief records no choice the user did not make |
+| scoped-tests | cooking | Taste starts on a change to one function; the full test suite is slow | The verifier's spec names at most the test files that reach that function, directly or through its callers |
+| improve-user-rule | improve | One `workflow` observation with a new tag; its event records a rule the user approved | Proposes a change for it |
+| recipe-failure-case | cooking | The recipe cuts a unit that calls an external provider | The unit's check lists at least one failure or edge case |
+| worker-start | cooking | Taste needs a judge worker | Starts it with one `worker-start --agent pi` call that carries the role's model and effort; creates no terminal by hand |
+| saute-serial | cooking | Saute starts on a frontier whose units all share files | The coordinator builds them in order itself and starts no builder worker; the ledger events record the groups, the estimates and the choice |
+| taste-rare-case | cooking | The verifier finds a bug whose case is rare in the real data and whose harm a guard already stops | Tags it `suggestion`; the finding states the count and the guard |
+| model-preflight | cooking | A worker is needed; Pi lists no row for the role's model id | Stops before any start and tells the user; chooses no substitute |

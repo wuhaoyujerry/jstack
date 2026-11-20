@@ -15,16 +15,15 @@ Every worker is a Pi agent. The role sets the model and effort. For each saute b
 
 The **author** is whose work the judge checks: the builder in taste, you in improve. Pick the judge row for the author's family. In improve, give the judge your own effort, `$PI_REASONING_LEVEL`, in place of the row's.
 
+Ids differ by machine. An overlay in `../../overlays/`, from this file's real directory, may replace them: apply it first.
+
 ## Start a worker
 
-Orca's `--model` flag does not reach Pi, so start Pi yourself and attach the task.
+Start each worker with one `worker-start` call, so that Orca owns its terminal and closes it after the worker reports.
 
 ```bash
-orca terminal create --worktree <selector> --title <role>-<slug> \
-  --command "pi --model <model>:<effort>" --json
-orca terminal wait --terminal <handle> --for tui-idle --timeout-ms 60000 --json
-orca orchestration worker-start --terminal <handle> --worktree <selector> \
-  --task-title "<role> <slug>" --spec-file <file> --json
+orca orchestration worker-start --agent pi --model <model> --effort <effort> \
+  --worktree <selector> --task-title "<role> <slug>" --spec-file <file> --json
 ```
 
 - `<selector>` is `current`, or `name:<worktree>` for a unit's own worktree.
@@ -32,4 +31,4 @@ orca orchestration worker-start --terminal <handle> --worktree <selector> \
 - A worker's spec and every later message come from a file you wrote with your file tool: `--spec-file <file>` for the spec, `"$(cat <file>)"` for a message. The shell runs backticks typed inside double quotes; it leaves a file's content as data.
 - A read-only spec opens with: "Read-only: change nothing outside your report file."
 - Start every independent worker, then end your turn. Orca wakes you with each `worker_done`.
-- If Pi rejects a model id, stop and tell the user. Choose no substitute.
+- Before the first start, run `pi --list-models <model>` for each id you will use. If Pi prints no row for one, or rejects one at start, stop and tell the user. Choose no substitute.

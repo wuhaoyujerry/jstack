@@ -6,5 +6,5 @@ case "$MODEL" in
   anthropic/*) own='anthropic/'; other='openai-codex/' ;;
   *) own='openai-codex/'; other='anthropic/' ;;
 esac
-has "$ORCA_LOG" "pi --model ${other}[^ :]+:${effort}( |\$)"
+has "$ORCA_LOG" "pi --model ${other}[^ :]+ --effort ${effort}( |\$)"
 lacks "$ORCA_LOG" "pi --model $own"

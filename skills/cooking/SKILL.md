@@ -28,6 +28,8 @@ Keep work-specific rules and generated workflow logs in that private overlay dir
 
 A new task starts with the `size` phase, which chooses the phases that follow. On entering a phase, read `phases/<phase>.md` and set `phase` in the ledger. When idea or recipe lacks a fact, follow `../research/SKILL.md` from this skill's real directory. Before you start any worker, read [`models.md`](models.md).
 
+When you write a test command, in a check or a worker spec, write it **scoped**: at most the test files that reach the code the task changes, directly or through its callers. Find them by a search for callers; go wider only when that search is unreliable, and record the reason in the ledger events. Have the command print progress as it runs.
+
 When a phase ends, run its **hooks**: each `after <phase>` entry under `## Hooks` in an overlay that applies, in listed order. Read the file the entry names, follow it with the entry's note, and record the result in the ledger events. Then enter the next phase.
 
 The user approves at two **gates**: the brief and the recipe. At each gate, record its date in the ledger and correct the size (`phases/size.md`, step 2). Between gates, run to completion. Also stop for a destructive or production action, and for a recipe deviation.

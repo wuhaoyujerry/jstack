@@ -41,7 +41,7 @@ When a check fails, suspect the method of observation before the system.
 
 The verifier then reads the diff and the code it touches: the tests, and every caller of a changed function or signature. It looks for a defect that no check covers, in this order: correct, safe, holds under load, tested, fast, lean. It finds the expected load in the repo and states which load it assumed.
 
-A **finding** names its case: this input or situation gives this wrong result. No case, no finding. A finding is `must-fix` when it is a bug, a security hole, data loss, or a break at the expected load; every other finding is a `suggestion`. Save the findings to `.jstack/<slug>/evidence/review.txt`.
+A **finding** names its case: this input or situation gives this wrong result. No case, no finding. A finding is `must-fix` when it is a security hole, data loss, a break at the expected load, or a **live** bug; every other finding is a `suggestion`. A bug is live unless its case is rare in the real data the verifier can read and a guard already stops the harm; the finding then states the count and the guard. Save the findings to `.jstack/<slug>/evidence/review.txt`.
 
 ## 5. Read the raw output
 

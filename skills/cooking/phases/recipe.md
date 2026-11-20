@@ -30,7 +30,7 @@ A **unit** is the smallest change that can be built, checked and committed alone
 - the units it depends on;
 - `parallel: yes` only when its files overlap with no other parallel unit.
 
-Keep checks **lean**. Attach each at the highest existing **seam** that shows the behaviour; add a seam only when none does. Reuse an existing test when one shows it. A new test lists its cases in the unit: one per behaviour in the brief's done-checks, plus one per risky failure path in a parser or security code.
+Keep checks **lean**. Attach each at the highest existing **seam** that shows the behaviour; add a seam only when none does. Reuse an existing test when one shows it. A new test lists its cases in the unit: one per behaviour in the brief's done-checks, plus one per risky failure path in a parser or security code. A unit that writes state, enqueues work, calls an external provider or handles a webhook also lists at least one failure or edge case in its check: a partial failure, a retry or re-entry, or another caller path.
 
 Mark each check that needs judgement, and each that changes a shared environment.
 
