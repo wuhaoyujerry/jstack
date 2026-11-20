@@ -3,7 +3,7 @@
 echo 'def parse_line(s): return s.strip()' > util.py
 printf 'grep -q "def parse_line" util.py\n' > check.sh
 git add -A && git_q commit -qm 'rename _parse to parse_line'
-s=.jstack/rename-parse; mkdir -p "$s/evidence" "$ROOT/overlays" "$W/sessions"
+s=.jstack/rename-parse; mkdir -p "$s/evidence" "$ROOT/logs" "$W/sessions"
 echo 'sh check.sh: exit 0' > "$s/evidence/rename-saute.txt"
 cat > "$s/taste.md" <<'T'
 | check | state | evidence | reason |
@@ -39,5 +39,6 @@ cat > "$sess" <<'J'
 {"type":"message","id":"a10","parentId":"a9","timestamp":"2026-11-10T09:04:00.000Z","message":{"role":"assistant","content":[{"type":"text","text":"Stopped the worker. I renamed _parse to parse_line myself; sh check.sh passes."}]}}
 {"type":"message","id":"a11","parentId":"a10","timestamp":"2026-11-10T09:05:00.000Z","message":{"role":"user","content":[{"type":"text","text":"ok, continue tomorrow"}]}}
 J
-printf '%s\n' "2026-11-10 | - | rename-parse | workflow | repeat-approval | The agent asked again for an approval that the user had given. The user objected: \"I already approved this. Why are you asking again?\" | $sess | open" > "$ROOT/overlays/review-log.md"
-: > "$ROOT/overlays/sizing-log.md"
+eval "$("$ROOT/skills/cooking/logs.sh" ids rename-parse)"
+printf '%s\n' "2026-11-10 | $repo | $task | workflow | repeat-approval | The agent asked again for an approval that the user had given. The user objected: \"I already approved this. Why are you asking again?\" | $(basename "$sess") | open" > "$ROOT/logs/review-log.md"
+: > "$ROOT/logs/sizing-log.md"

@@ -1,6 +1,6 @@
 . "$(dirname "$0")/../../lib.sh"
 agent_ended
-log="$ROOT/overlays/review-log.md"
+log="$ROOT/logs/review-log.md"
 # Merge: both lines carry the tag of the earliest line.
 [ "$(awk -F' [|] ' '$5 == "brief-too-long"' "$log" | wc -l)" -eq 2 ] || fail "the two lines do not share the earliest tag: $(cut -d'|' -f3,5 "$log")"
 # One group: two tasks reach the workflow threshold, so a change went to the judge.

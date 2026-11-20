@@ -20,9 +20,9 @@ To **reopen**, add one unit to the ledger for each issue, with a check that fail
 
 Write each state change to the ledger before the next action.
 
-Resolve symlinks to find this skill's real directory. The optional private overlay directory is `../../overlays/` relative to it, outside the synced skill. Each `.md` file at the top of that directory, other than the two logs, is an **overlay** that starts with an applicability rule; apply an overlay only to the repos it matches. Missing overlays are normal. Give workers absolute overlay paths when needed.
+Resolve symlinks to find this skill's real directory. The optional private overlay directory is `../../overlays/` relative to it, outside the synced skill. Each `.md` file at the top of that directory is an **overlay** that starts with an applicability rule; apply an overlay only to the repos it matches. Missing overlays are normal. Give workers absolute overlay paths when needed.
 
-Keep work-specific rules and generated workflow logs in that private overlay directory, never inside this skill.
+Keep work-specific rules in that private overlay directory, never inside this skill.
 
 ## 2. Run the phases
 

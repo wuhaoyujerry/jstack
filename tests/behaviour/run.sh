@@ -29,10 +29,13 @@ run_one() { # <case> <model>; prints "pass" or "FAIL <workdir>"
   W="$(mktemp -d "${TMPDIR:-/tmp}/jstack-bt-$1-XXXXXX")"
   export MODEL W ROOT="$W/jstack" REPO="$W/repo" OUT="$W/out.txt" ORCA_LOG="$W/orca.log"
 
-  # A copy of the skills: the agent's logs and edits land here, never in the real checkout or overlays.
+  # A copy of the skills: the agent's logs and edits land here, never in the real checkout, overlays or logs.
+  # Its logs/ is a clone of an empty remote in the run dir, so a push of the logs stays there.
   mkdir -p "$ROOT" "$REPO" "$W/bin"
   cp -R "$repo_root/skills" "$repo_root/SCENARIOS.md" "$repo_root/SOURCES.md" "$ROOT/"
-  (cd "$ROOT" && git init -q && printf '/overlays/\n' > .gitignore && printf '.jstack/\n' > .git/info/exclude && git add -A && git_q commit -qm base)
+  (cd "$ROOT" && git init -q && printf '/overlays/\n/logs/\n' > .gitignore && printf '.jstack/\n' > .git/info/exclude && git add -A && git_q commit -qm base)
+  git init -q --bare "$W/logs.git" && git clone -q "$W/logs.git" "$ROOT/logs" 2>/dev/null
+  (cd "$ROOT/logs" && git config user.name test && git config user.email test@example.invalid && git config commit.gpgsign false)
   (cd "$REPO" && git init -q && printf '.jstack/\n' > .git/info/exclude)
 
   # Workers and other sessions are out of scope: a stub records each attempt to start one, through orca or pi.
@@ -43,6 +46,8 @@ run_one() { # <case> <model>; prints "pass" or "FAIL <workdir>"
   chmod +x "$W/bin/orca"; : > "$ORCA_LOG"
 
   (cd "$REPO" && bash "$case_dir/setup.sh") > "$W/setup.log" 2>&1 || { echo "FAIL $W (setup)"; return; }
+  # The logs that setup wrote are the pushed state: the agent's lines are the only new ones.
+  (cd "$ROOT/logs" && git add -A . && if ! git diff --cached --quiet; then git commit -qm fixture && git push -q -u origin HEAD; fi) >> "$W/setup.log" 2>&1
 
   local cwd="$REPO"
   if grep -q 'skills/improve/SKILL.md' "$case_dir/prompt.txt" && [ ! -e "$case_dir/from-repo" ]; then cwd="$ROOT"; fi
@@ -50,7 +55,7 @@ run_one() { # <case> <model>; prints "pass" or "FAIL <workdir>"
   local n=1 f="$case_dir/prompt.txt" out="$OUT" more=() prompt
   while [ -f "$f" ]; do
     prompt="$(sed "s|{{ROOT}}|$ROOT|g" "$f")"
-    (cd "$cwd" && PATH="$W/bin:$PATH" BASH_ENV="$W/bashenv" timeout "$TIMEOUT" pi -p --session-dir "$W/sessions" "${more[@]}" --no-extensions \
+    (cd "$cwd" && PATH="$W/bin:$PATH" BASH_ENV="$W/bashenv" timeout "$TIMEOUT" pi -p --session-dir "$W/sessions" ${more[@]+"${more[@]}"} --no-extensions \
       --no-skills --no-context-files --no-mcp --no-prompt-templates --model "$MODEL" "$prompt") > "$out" 2>> "$W/pi.err"
     echo "$?" > "$W/pi.exit"; [ "$(cat "$W/pi.exit")" = 0 ] || break
     if [ "$n" -eq 1 ] && [ -f "$case_dir/between.sh" ]; then (cd "$REPO" && bash "$case_dir/between.sh") > "$W/between.log" 2>&1; fi

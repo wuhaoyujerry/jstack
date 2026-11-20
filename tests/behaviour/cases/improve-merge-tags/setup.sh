@@ -1,8 +1,8 @@
 # Two tasks logged one failure under two tags. Merged, the group has two tasks: its change edits skills/ and needs the judge.
-mkdir -p "$ROOT/overlays"
-cat > "$ROOT/overlays/review-log.md" <<'L'
+mkdir -p "$ROOT/logs"
+cat > "$ROOT/logs/review-log.md" <<'L'
 2026-10-02 | shop-api | add-export | workflow | brief-too-long | the brief repeated the ask in three sections | .jstack/add-export/brief.md | open
 2026-10-20 | billing | fix-rounding | workflow | ask-restated-per-heading | the brief restated the ask under every heading | .jstack/fix-rounding/brief.md | open
 L
-: > "$ROOT/overlays/sizing-log.md"
+: > "$ROOT/logs/sizing-log.md"
 . "$(dirname "$0")/../../fake-judge.sh"

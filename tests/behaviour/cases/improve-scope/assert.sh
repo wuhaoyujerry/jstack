@@ -1,6 +1,6 @@
 . "$(dirname "$0")/../../lib.sh"
 agent_ended
-log="$ROOT/overlays/review-log.md"
+log="$ROOT/logs/review-log.md"
 # One-repo evidence stays out of the generic text: no skill file changed and no judge started.
 [ -z "$(git -C "$ROOT" status --porcelain -- skills)" ] || fail "a skill file changed: $(git -C "$ROOT" status --porcelain -- skills | head -3)"
 lacks "$ORCA_LOG" 'pi --model'

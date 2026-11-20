@@ -10,11 +10,13 @@ metadata:
 
 Turn the `open` observations of cooking reviews, and upstream changes to the skills jstack draws from, into changes that improve the next run.
 
-Resolve symlinks to find this skill's real directory. The logs are `review-log.md` and `sizing-log.md` in `../../overlays/` relative to it; `../cooking/` is the cooking skill; `../../SOURCES.md` records the sources.
+Resolve symlinks to find this skill's real directory. The logs are `review-log.md` and `sizing-log.md` in `../../logs/` relative to it; `../cooking/` is the cooking skill; `../../SOURCES.md` records the sources.
 
-The Git working tree that holds that directory is this skill's **home**; every step runs in a session there. You are in the home when `git rev-parse --show-toplevel` prints the same path here as in that directory. Outside the home, hand off the ask to the home, with this file's path to follow and your working directory, then end your turn. To **hand off** is to start a session in the named repo with the prompt, through the tool this session has for that; with none, or when the launch fails, give the user the prompt to paste.
+The Git working tree that holds this skill's real directory is its **home**; every step runs in a session there. You are in the home when `git rev-parse --show-toplevel` prints the same path here as in that directory. Outside the home, hand off the ask to the home, with this file's path to follow and your working directory, then end your turn. To **hand off** is to start a session in the named repo with the prompt, through the tool this session has for that; with none, or when the launch fails, give the user the prompt to paste.
 
-If the ask reports the outcome of a task, first record it by step 5 of `../cooking/phases/review.md`. If the ask reports a problem from a run outside a cooking task, such as a standalone idea or research run, first append it to `review-log.md` as one observation in the format of `../cooking/phases/review.md`: `-` for an unknown repo or slug, and the user's words as its file.
+If the ask reports the outcome of a task, first record it by step 5 of `../cooking/phases/review.md`. If the ask reports a problem from a run outside a cooking task, such as a standalone idea or research run, first append it to `review-log.md` as one observation in the format of `../cooking/phases/review.md`: `-` for an unknown repo id or task id, and the user's words as its file.
+
+Every device pushes its lines to the logs, so a line names its repo and task by id, a file of the task by its path in the task folder, and any other file by its path in its repo. The **task map**, `../../overlays/tasks.txt`, has one line for each task that ran on this device: `<repo id> | <task id> | <owner/repo> | <task folder>`. Find a line's repo and files through it; find a session file by its name under the parent of the directory of `$PI_SESSION_FILE`. An id that the map lacks is from another device: you cannot read its files, and a change for that one repo waits for that device, so its observations stay `open`.
 
 ## 1. Upstream
 
@@ -31,7 +33,7 @@ The upstream step is done when every named skill has a diff and every upstream c
 
 ## 2. Group
 
-Read both logs. Where an observation reads `handed <date> <file>` and that file now holds its change, replace `handed` with `applied`. First give `open` observations whose events show one failure one tag, and rewrite it on those lines in `review-log.md`: a **merge**. Keep the tag that an `applied` observation of that failure has, else the tag of the earliest line. Then group the `open` observations by tag, across tasks and repos. Group the unspent `sizing-log.md` lines by missed signal and verdict; step 3 of `../cooking/phases/review.md` defines **spent**.
+Run `../cooking/logs.sh pull`, then read both logs. Where an observation reads `handed <date> <file>` and that file now holds its change, replace `handed` with `applied`. First give `open` observations whose events show one failure one tag, and rewrite it on those lines in `review-log.md`: a **merge**. Keep the tag that an `applied` observation of that failure has, else the tag of the earliest line. Then group the `open` observations by tag, across tasks and repos. Group the unspent `sizing-log.md` lines by missed signal and verdict; step 3 of `../cooking/phases/review.md` defines **spent**.
 
 An `open` observation whose tag also has an `applied` observation from an earlier date is a **recurrence**: the earlier change did not hold. Read the file its `applied` entry names before you propose another.
 
@@ -56,7 +58,7 @@ Prefer an automated check to a drive script, and a drive script to cooking text.
 
 Before a `workflow` or `steering` change, search the skill text for a rule that already covers the tag. A hit makes the group **drift**: the rule exists and did not hold. A drift change takes the place of the row's change, for tasks in one repo too: it strengthens that rule where it stands, or moves it into a check; the text keeps one rule for it. Name the group `drift`, with the rule's file, when you propose it and in your last message.
 
-Propose at most three changes, recurrences first, then most severe. Zero changes is a valid result.
+Propose at most three changes, recurrences first, then most severe. Zero changes is a valid result: go to step 5.
 
 ## 4. Approve and apply
 
@@ -74,8 +76,12 @@ Apply each approved change by the file it edits:
 
 For each applied change that came from observations, add its candidate scenario to `SCENARIOS.md`; write one now for a change that had none.
 
-In `review-log.md`, replace `open` on every observation of a proposed group with `applied <date> <file>`, naming the file the change edited; with `handed <date> <file>` for a change you handed off, by a session you started or by a prompt you gave the user, naming the file it is to edit; or with `rejected <date>`. The other observations stay `open`. In `sizing-log.md`, append a marker (step 3 of `../cooking/phases/review.md`) for the signal of each sizing change the user decided.
+In `review-log.md`, replace `open` on every observation of a proposed group with `applied <date> <file>`, naming the file the change edited by its path in its repo; with `handed <date> <file>` for a change you handed off, by a session you started or by a prompt you gave the user, naming the file it is to edit; or with `rejected <date>`. The other observations stay `open`. In `sizing-log.md`, append a marker (step 3 of `../cooking/phases/review.md`) for the signal of each sizing change the user decided.
 
 For each collection checked, when the user has decided its every upstream change, set its commit in `SOURCES.md` to the `HEAD` you diffed. If any of its upstream changes is still undecided, keep the old commit so the next run sees it again.
+
+## 5. Publish
+
+Every run ends here, also a run with no change. Run `../cooking/logs.sh publish`: it checks the lines this run wrote for a repo name, a repo owner and a home path, then pushes the logs. On exit 1, rewrite the lines it prints and run it again. On exit 2, tell the user that the logs are not pushed.
 
 Tell the user what changed, the result of each case you ran and each candidate scenario without a case, each merge with the tags it replaced, each `drift` group, and how many observations remain `open`; after step 1, also how many upstream changes remain undecided.

@@ -5,9 +5,10 @@ printf 'check:\n\tpython -m pytest tests\n' > tools/Makefile
 echo '# shop-api' > AGENTS.md
 git add -A && git_q commit -qm init
 echo '14 searches before the test command was found: make -C tools check' > .jstack/add-export/evidence/nav.txt
-mkdir -p "$ROOT/overlays"
-cat > "$ROOT/overlays/review-log.md" <<L
-2026-10-02 | $REPO | add-export | navigation | test-command-hidden | the test command took 14 searches to find; it is make -C tools check | $REPO/.jstack/add-export/evidence/nav.txt | open
+mkdir -p "$ROOT/logs"
+eval "$("$ROOT/skills/cooking/logs.sh" ids add-export)"
+cat > "$ROOT/logs/review-log.md" <<L
+2026-10-02 | $repo | $task | navigation | test-command-hidden | the test command took 14 searches to find | evidence/nav.txt | open
 L
-: > "$ROOT/overlays/sizing-log.md"
-cp "$ROOT/overlays/review-log.md" "$W/log-before"
+: > "$ROOT/logs/sizing-log.md"
+cp "$ROOT/logs/review-log.md" "$W/log-before"

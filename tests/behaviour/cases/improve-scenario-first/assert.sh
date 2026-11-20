@@ -7,4 +7,4 @@ grep -E '[a-z0-9-]+ *\| *(cooking|improve|idea|research) *\|' "$W/spec-at-start"
   || fail "the judge's spec holds no candidate scenario"
 # Gate: a candidate scenario that is `same` blocks the change, even with approval given.
 clean_tree "$ROOT"
-has "$ROOT/overlays/review-log.md" 'add-export .* open$'; has "$ROOT/overlays/review-log.md" 'fix-rounding .* open$'
+has "$ROOT/logs/review-log.md" 'add-export .* open$'; has "$ROOT/logs/review-log.md" 'fix-rounding .* open$'

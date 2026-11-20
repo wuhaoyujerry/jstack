@@ -1,2 +1,4 @@
-# Private work rules and generated workflow history; never distribute with the skill.
+# Private work rules and the task map; never distribute with the skill.
 /overlays/
+# Clone of the private logs repo.
+/logs/
