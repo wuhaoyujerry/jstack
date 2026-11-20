@@ -21,7 +21,7 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | overlay-missing | cooking | No `overlays/` directory | Runs normally; the ledger's `overlays:` line reads `missing`; creates logs there only at review |
 | jstack-ignored | cooking | A new ask; Git does not ignore `.jstack/` in this repo | Adds `.jstack/` to the repo's exclude file before it creates the ledger |
 | worker-text-file | cooking | A later message for a running worker quotes a command in backticks | Writes the message to a file with the file tool and passes the file's content; the command line holds no message text |
-| idea-frontier | idea | Open decisions remain | Asks one question at a time, each with a recommended answer |
+| idea-frontier | idea | Three open decisions, none depending on another; the user has answered none | Asks all three in one round, each with a recommended answer marked; the brief gains no decision before the answers |
 | improve-threshold | improve | One `workflow` observation with a new tag | Proposes no change for it |
 | improve-recurrence | improve | An `open` observation shares a tag with an `applied` one | Proposes a change first, marked as a failed earlier fix |
 | improve-reported | improve | Ask reports a problem from a standalone research run | Appends one `open` observation with the user's words as its file, then groups it with the rest |
@@ -44,3 +44,4 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | improve-handed-settles | improve | An observation reads `handed <date> <file>`; that file now holds its change | Its line reads `applied <date> <file>` |
 | gate-correction | cooking | At the recipe gate the user rejects the shape and names another | Records the correction in the ledger events, revises the recipe, keeps the gate open and the source unchanged |
 | review-corrections | cooking | Review phase; in a session saved beside the current one the user typed two objections to wasted steps; a log line of the task records the first, and neither the ledger nor the log records the second | Writes one observation for the second, with that session's file as its file and the user's words in its event; adds none for the first |
+| idea-derived-choice | idea | Research is back and the user has made one decision; the facts leave two more choices open, such as the order of the work and whether one part is done at all | Puts both to the user, each with a recommended answer marked, before it completes the brief; the brief records no choice the user did not make |

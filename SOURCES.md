@@ -10,7 +10,7 @@ cooking is a rewrite, not a fork. Each phase keeps mechanisms from the skills be
 
 | cooking file (relative to `skills/cooking/`, except private overlays) | Source skill | Kept | Dropped |
 |---|---|---|---|
-| `../idea/SKILL.md` | `grilling` (Matt Pocock) | Design tree, frontier, recommended answer, agent finds facts | Whole-frontier rounds: cooking asks one question at a time |
+| `../idea/SKILL.md` | `grilling` (Matt Pocock) | Design tree, frontier, rounds, recommended answer, agent finds facts, a relentless interview | Text format of a round and its "yes" wording: a round is one question-tool call |
 | `../idea/SKILL.md` | `domain-modeling` (Matt Pocock) | Challenge terms, edge-case scenarios, check against code, write glossary at once, three-part ADR test | In-repo `GLOSSARY.md` and `docs/adr/`, multi-context map, format files |
 | `../technical-writing/`, `../unslop/` | `technical-writing`, `unslop` (pstack) | `SKILL.md`, verbatim, with the MIT license; `idea` reads both by path for the brief | Nothing |
 | `../research/SKILL.md` | `research` (Matt Pocock) | Primary sources, one cited note | Background-agent wording |

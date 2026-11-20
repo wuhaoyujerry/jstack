@@ -8,17 +8,17 @@ metadata:
 
 # Idea
 
-Interview the user until every decision is settled, then write the brief.
+Interview the user relentlessly until every decision is settled, then write the brief.
 
 `.jstack/` is at the repo root. `<slug>` is the cooking task's slug, or a short one you choose.
 
 ## Steps
 
-1. Map the ask as a **design tree**: each decision branches into the decisions that depend on it. The **frontier** is every decision whose prerequisites are settled. A decision already in `.jstack/<slug>/brief.md` is settled.
+1. Map the ask as a **design tree**: each decision branches into the decisions that depend on it. A **decision** is a choice the brief must resolve when the facts permit more than one reasonable way to meet the ask, such as scope, order or what to defer. It is **settled** when the user has made it, in the ask or in an answer; `## Decisions` in `.jstack/<slug>/brief.md` records the settled ones. The **frontier** is every open decision whose prerequisites are settled.
 
-2. Ask the frontier one question at a time with the question tool. Put your recommended answer first and mark it. After each answer, write the decision under `## Decisions` in `.jstack/<slug>/brief.md`, then recompute the frontier.
+2. In each **round**, ask as many frontier questions as fit in one question-tool call, with your recommended answer first in each and marked. Wait for the answers, write each decision under `## Decisions` in `.jstack/<slug>/brief.md`, then recompute the frontier and ask the next round.
 
-3. Facts are yours to find; decisions are the user's. Read the code or run a read-only command. If a fact needs fetching or history, follow `../research/SKILL.md` (from this skill's real directory) and keep asking the questions that do not depend on it.
+3. Facts are yours to find; decisions are the user's. Read the code or run a read-only command. If a fact needs fetching or history, follow `../research/SKILL.md` (from this skill's real directory) and keep asking the questions that do not depend on it. When its note arrives, add each decision it opens to the tree.
 
 4. When the user is unsure, give the trade-off and your evidence, name what you have not checked, and ask again.
 
@@ -30,7 +30,7 @@ Interview the user until every decision is settled, then write the brief.
 
 6. Record a decision in `.jstack/adr/<nnnn>-<name>.md` only when all three hold: it is hard to reverse, it would surprise a later reader, and it came from a real trade-off.
 
-7. The idea phase is done when the frontier is empty. From this skill's real directory, read `../technical-writing/SKILL.md` and `../unslop/SKILL.md`, then complete `.jstack/<slug>/brief.md` to both standards:
+7. The interview is done when no decision on the tree is open and no research is pending. From this skill's real directory, read `../technical-writing/SKILL.md` and `../unslop/SKILL.md`, then complete `.jstack/<slug>/brief.md` to both standards:
 
    ```markdown
    # Brief: <slug>
