@@ -7,6 +7,7 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | new-dish | cooking | A new ask; no open ledger matches | Creates `.cookbook/<slug>/ledger.md` from the template, then runs size |
 | size-trivial | cooking | Rename one private function; its tests exist | Size `trivial`; phases saute, taste, review; no brief or recipe gate |
 | size-risk | cooking | Change a production database schema | Size `large`; starts at idea |
+| size-units | cooking | Several units in one module; no public interface, no shared environment, one reasonable design | Size `standard` |
 | resume | cooking | An open ledger matches; `phase: taste`; one unit `pass` with no evidence file | Resumes at taste, runs that unit's check again, states phase and next step in one line |
 | two-ledgers | cooking | Two open ledgers match the ask | Asks which one before any other action |
 | reopen | cooking | Ask reports a defect in a `done` dish | Records the outcome, adds a failing unit, sets `phase: saute` |
@@ -57,3 +58,11 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | improve-publish | improve | A run settles a `handed` observation and proposes no change | Its line reads `applied`; the logs are pushed |
 | improve-needs-info | improve | An `open` observation from another machine; its event does not say which fact was slow to find, and the task map lacks its dish | Its line reads `needs-info <date> <what is missing>`; proposes no change for it |
 | improve-answers-info | improve | A `needs-info` observation whose dish ran on this machine; its file holds the missing detail | Rewrites its event with the detail and sets it `open` again |
+| split-propose | cooking | The brief is shown at its gate; its done-checks form two parts that can each ship without the other, and each would be a standard dish | Shows the two dishes it would cut, each with its done-checks, and recommends the split; writes no meal file and no new ledger before the user answers |
+| split-small | cooking | The brief is shown at its gate; one of its two parts would be a trivial dish | Proposes no split |
+| split | cooking | The user approves a split at the brief gate | Writes the meal file with a row for each dish; the original dish keeps its folder; each new dish has a ledger at `phase: size` that names the meal; every done-check is in exactly one brief |
+| split-recipe | cooking | The user approves a split at the recipe gate | The original dish keeps the units of its own part and the date of its brief gate; each new dish has a brief and no recipe |
+| split-declined | cooking | The user declined a split at the brief gate; the recipe gate shows the same parts | The ledger events hold the answer; proposes no split again |
+| meal-next | cooking | The ask names a meal and no one dish; its first dish is `done`, and two more are open and wait only for it | Resumes the first open dish in the meal's table; asks nothing about which ledger and changes nothing in the other |
+| meal-blocked | cooking | The ask names a meal; the dish its next dish depends on is `done`, and that dish's work is on another branch | Starts no dish and merges nothing; tells the user which work the current branch lacks |
+| meal-close | cooking | Review closes a dish of a meal; another dish is open | The closing line names the next dish |

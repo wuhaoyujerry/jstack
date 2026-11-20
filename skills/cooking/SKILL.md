@@ -10,6 +10,8 @@ metadata:
 
 A **dish** is one piece of work that cooking takes from the ask to review. The **cookbook** is `.cookbook/` at the repo root; each dish keeps its state in its own folder there, `.cookbook/<slug>/`. Give workers absolute paths to it.
 
+A **meal** is one goal cooked as several dishes, listed in `.cookbook/meals/<meal>.md`. When the ask names a meal, or a ledger names one on its `meal` line, read [`meal.md`](meal.md) before you resume or start a dish.
+
 ## 1. Resume or start
 
 If the ask reports what happened to a `done` dish after its run, follow step 5 of `phases/review.md` on that ledger; if it reports an issue to fix, also **reopen** the dish. Otherwise, if a `.cookbook/*/ledger.md` matches this ask and is not `done`, **resume** it. Otherwise choose a short slug and create `.cookbook/<slug>/ledger.md` from the template below. Before you create it, run `git check-ignore -q .cookbook/x`; if that fails, append `.cookbook/` to the file that `git rev-parse --git-path info/exclude` prints.
@@ -32,13 +34,14 @@ When you write a test command, in a check or a worker spec, write it **scoped**:
 
 When a phase ends, run its **hooks**: each `after <phase>` entry under `## Hooks` in an overlay that applies, in listed order. Read the file the entry names, follow it with the entry's note, and record the result in the ledger events. Then enter the next phase.
 
-The user approves at two **gates**: the brief and the recipe. At each gate, record its date in the ledger and correct the size (`phases/size.md`, step 2). Between gates, run to completion. Also stop for a destructive or production action, and for a recipe deviation.
+The user approves at two **gates**: the brief and the recipe. At each gate, test for a split, record the gate's date in the ledger and correct the size (`phases/size.md`, steps 2 and 3). Between gates, run to completion. Also stop for a destructive or production action, and for a recipe deviation.
 
 ## Ledger template
 
 ```markdown
 # <slug>
 ask: <one line>
+meal: <meal|none>
 phase: <phase, or done>
 size: <size>, <five answers>
 size changes: <from> -> <to>, <reason>

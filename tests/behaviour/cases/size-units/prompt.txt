@@ -1,0 +1,1 @@
+Read {{ROOT}}/skills/cooking/SKILL.md and follow it. Ask: add three private helpers to lineparse.py, each in its own commit with its own test in tests/test_lineparse.py: _lower(s) returns s.lower(); _dedupe(items) drops repeated items and keeps the first of each; _drop_empty(items) drops empty strings. parse() and its callers stay as they are.
