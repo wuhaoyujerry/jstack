@@ -40,7 +40,7 @@ ids)
   key="$(repo_key "$top")"; repo="$(hash8 "$key")"; task="$(hash8 "$key/$slug")"
   pull || true
   mkdir -p "$logs" "$(dirname "$map")"; touch "$map"
-  grep -qF "$repo | $task | " "$map" || printf '%s | %s | %s | %s\n' "$repo" "$task" "$key" "$top/.jstack/$slug" >> "$map"
+  grep -qF "$repo | $task | " "$map" || printf '%s | %s | %s | %s\n' "$repo" "$task" "$key" "$top/.cookbook/$slug" >> "$map"
   echo "repo=$repo task=$task"
   ;;
 pull)

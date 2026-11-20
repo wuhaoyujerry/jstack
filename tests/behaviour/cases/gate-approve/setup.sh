@@ -1,8 +1,8 @@
-# A standard task at the recipe gate: brief approved, recipe written, gate open.
+# A standard dish at the recipe gate: brief approved, recipe written, gate open.
 printf 'import urllib.request\n\ndef fetch(url):\n    return urllib.request.urlopen(url).read()\n' > client.py
 printf 'from client import fetch\n\ndef load(url):\n    return fetch(url)\n' > app.py
 git add -A && git_q commit -qm init
-s=.jstack/fetch-retry; mkdir -p "$s"
+s=.cookbook/fetch-retry; mkdir -p "$s"
 cat > "$s/brief.md" <<'B'
 # Brief: fetch-retry
 Problem: fetch() fails on a transient network error.
@@ -28,7 +28,7 @@ A loop inside `fetch`: three attempts, one-second wait, re-raise the last URLErr
 ## Out of scope
 Backoff, jitter.
 ## Choice
-One sketch; standard task.
+One sketch; standard dish.
 R
 cat > "$s/ledger.md" <<'L'
 # fetch-retry

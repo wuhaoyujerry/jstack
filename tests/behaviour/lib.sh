@@ -12,9 +12,11 @@ same_file() { cmp -s "$1" "$2" || fail "$1 changed"; }
 has() { grep -Eq -- "$2" "$1" 2>/dev/null || fail "$1 lacks /$2/"; }
 lacks() { if grep -Eq -- "$2" "$1" 2>/dev/null; then fail "$1 has /$2/"; fi; }
 
-# No tracked or new file changed in a Git repo (the fixture excludes .jstack/, the skills copy excludes overlays/ and logs/).
+# No tracked or new file changed in a Git repo (the fixture excludes .cookbook/, the skills copy excludes overlays/ and logs/).
 clean_tree() { [ -z "$(git -C "$1" status --porcelain)" ] || fail "$1 changed: $(git -C "$1" status --porcelain | head -5)"; }
 # The pushed copy of a log holds a line that matches.
 pushed() { git -C "$W/logs.git" show "HEAD:$1" 2>/dev/null | grep -Eq -- "$2" || fail "the pushed $1 lacks /$2/"; }
+# The worker starts in the log: one line for each `orca orchestration worker-start` call; a help call starts nothing.
+worker_starts() { grep -E -- '(^| )orchestration worker-start( |$)' "$ORCA_LOG" 2>/dev/null | grep -Ev -- '(^| )(--help|-h)( |$)'; }
 # Only a call that starts a terminal, a worktree or a worker counts; a query such as `worktree list` starts nothing.
 no_workers() { local s; s="$(grep -E -- '(^| )(terminal (create|split)|worktree create|orchestration (worker-start|dispatch|coordinator-start))( |$)' "$ORCA_LOG" 2>/dev/null | head -2)"; [ -z "$s" ] || fail "tried to start a worker: $s"; }

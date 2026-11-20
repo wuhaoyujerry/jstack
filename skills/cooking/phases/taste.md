@@ -14,7 +14,7 @@ The verifier receives the recipe, the diff and the brief's done-checks, without 
 
 ## 2. Find the drive script
 
-Use `.jstack/taste/<surface>.md` if it exists. If the surface will be checked again and has no drive script, the verifier writes one from the repo:
+Use `.cookbook/taste/<surface>.md` if it exists. If the surface will be checked again and has no drive script, the verifier writes one from the repo:
 
 - **Launch**: the exact command, and the sign that the app is usable.
 - **Doctor**: one read-only check that the instance is worth driving.
@@ -30,7 +30,7 @@ The verifier's loop, for each done-check and each unit check:
 
 1. Start from a clean state: a fresh checkout or a rebuilt artifact.
 2. Run the check through the real user path. Capture the action, the resulting state and the side effects.
-3. Save the raw output to `.jstack/<slug>/evidence/<check>-taste.txt`.
+3. Save the raw output to `.cookbook/<slug>/evidence/<check>-taste.txt`.
 4. Record the state. A check that was skipped, was unavailable, or could not fail is **not-run**, with the reason.
 
 Verification is **read-only**. A check that must change a shared environment is **not-run**, with its exact command, until the user approves it.
@@ -41,11 +41,11 @@ When a check fails, suspect the method of observation before the system.
 
 The verifier then reads the diff and the code it touches: the tests, and every caller of a changed function or signature. It looks for a defect that no check covers, in this order: correct, safe, holds under load, tested, fast, lean. It finds the expected load in the repo and states which load it assumed.
 
-A **finding** names its case: this input or situation gives this wrong result. No case, no finding. A finding is `must-fix` when it is a security hole, data loss, a break at the expected load, or a **live** bug; every other finding is a `suggestion`. A bug is live unless its case is rare in the real data the verifier can read and a guard already stops the harm; the finding then states the count and the guard. Save the findings to `.jstack/<slug>/evidence/review.txt`.
+A **finding** names its case: this input or situation gives this wrong result. No case, no finding. A finding is `must-fix` when it is a security hole, data loss, a break at the expected load, or a **live** bug; every other finding is a `suggestion`. A bug is live unless its case is rare in the real data the verifier can read and a guard already stops the harm; the finding then states the count and the guard. Save the findings to `.cookbook/<slug>/evidence/review.txt`.
 
 ## 5. Read the raw output
 
-Read each evidence file yourself; the verifier's summary only points to it. Write `.jstack/<slug>/taste.md`, with the findings below the table:
+Read each evidence file yourself; the verifier's summary only points to it. Write `.cookbook/<slug>/taste.md`, with the findings below the table:
 
 ```markdown
 | check | state | evidence | reason |

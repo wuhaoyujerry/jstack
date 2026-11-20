@@ -1,9 +1,9 @@
-# A trivial task stopped in review. An earlier session of the task holds two objections from the user:
+# A trivial dish stopped in review. An earlier session of the dish holds two objections from the user:
 # a log line records the first, and no file records the second.
 echo 'def parse_line(s): return s.strip()' > util.py
 printf 'grep -q "def parse_line" util.py\n' > check.sh
 git add -A && git_q commit -qm 'rename _parse to parse_line'
-s=.jstack/rename-parse; mkdir -p "$s/evidence" "$ROOT/logs" "$W/sessions"
+s=.cookbook/rename-parse; mkdir -p "$s/evidence" "$ROOT/logs" "$W/sessions"
 echo 'sh check.sh: exit 0' > "$s/evidence/rename-saute.txt"
 cat > "$s/taste.md" <<'T'
 | check | state | evidence | reason |
@@ -28,8 +28,8 @@ sess="$(cd "$W/sessions" && pwd)/2026-11-10T09-00-00-000Z_0199aaaa-0000-7000-800
 cat > "$sess" <<'J'
 {"type":"session","version":3,"id":"0199aaaa-0000-7000-8000-000000000001","timestamp":"2026-11-10T09:00:00.000Z","cwd":"/work/repo"}
 {"type":"message","id":"a1","parentId":null,"timestamp":"2026-11-10T09:00:01.000Z","message":{"role":"user","content":[{"type":"text","text":"Use the cooking skill. Ask: rename the private function _parse to parse_line in util.py."}]}}
-{"type":"message","id":"a2","parentId":"a1","timestamp":"2026-11-10T09:00:20.000Z","message":{"role":"assistant","content":[{"type":"toolCall","id":"c1","name":"write","arguments":{"path":".jstack/rename-parse/ledger.md","content":"# rename-parse"}}]}}
-{"type":"message","id":"a3","parentId":"a2","timestamp":"2026-11-10T09:00:21.000Z","message":{"role":"toolResult","toolCallId":"c1","toolName":"write","content":[{"type":"text","text":"Successfully wrote .jstack/rename-parse/ledger.md"}]}}
+{"type":"message","id":"a2","parentId":"a1","timestamp":"2026-11-10T09:00:20.000Z","message":{"role":"assistant","content":[{"type":"toolCall","id":"c1","name":"write","arguments":{"path":".cookbook/rename-parse/ledger.md","content":"# rename-parse"}}]}}
+{"type":"message","id":"a3","parentId":"a2","timestamp":"2026-11-10T09:00:21.000Z","message":{"role":"toolResult","toolCallId":"c1","toolName":"write","content":[{"type":"text","text":"Successfully wrote .cookbook/rename-parse/ledger.md"}]}}
 {"type":"message","id":"a4","parentId":"a3","timestamp":"2026-11-10T09:00:40.000Z","message":{"role":"assistant","content":[{"type":"text","text":"Size: trivial. May I start saute?"}]}}
 {"type":"message","id":"a5","parentId":"a4","timestamp":"2026-11-10T09:01:10.000Z","message":{"role":"user","content":[{"type":"text","text":"yes, go"}]}}
 {"type":"message","id":"a6","parentId":"a5","timestamp":"2026-11-10T09:01:30.000Z","message":{"role":"assistant","content":[{"type":"text","text":"Before I edit util.py: do you approve the start of saute?"}]}}

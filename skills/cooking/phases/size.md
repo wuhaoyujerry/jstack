@@ -1,6 +1,6 @@
 # Size
 
-Choose the task's size, and with it the phases that follow.
+Choose the dish's size, and with it the phases that follow.
 
 ## 1. Answer the signals
 

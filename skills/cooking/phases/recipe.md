@@ -1,6 +1,6 @@
 # Recipe
 
-Turn the approved brief into `.jstack/<slug>/recipe.md`: a shape, and ordered units that each carry a check.
+Turn the approved brief into `.cookbook/<slug>/recipe.md`: a shape, and ordered units that each carry a check.
 
 ## 1. Ground
 
@@ -10,8 +10,8 @@ Read every part of the system the change touches. If you cannot explain how a pa
 
 Write the caller's usage first, then derive the shape from it: types, signatures, module boundaries, resource layout. Leave bodies empty.
 
-- **Standard task**: you write one sketch.
-- **Large task, or the brief says the shape is contested**: start sketcher A and sketcher B. Each receives only `brief.md` and the research notes, and sketches without seeing the other. Compare the two in a table, choose or merge, and record why under **Choice**.
+- **Standard dish**: you write one sketch.
+- **Large dish, or the brief says the shape is contested**: start sketcher A and sketcher B. Each receives only `brief.md` and the research notes, and sketches without seeing the other. Compare the two in a table, choose or merge, and record why under **Choice**.
 
 Revise a sketch that shows a **red flag**:
 
@@ -51,7 +51,7 @@ Mark each check that needs judgement, and each that changes a shared environment
 ## Choice
 ```
 
-Every done-check in the brief maps to a unit check. Name decisions and interfaces; file paths go stale. Use the terms in `.jstack/glossary.md` and keep to the decisions in `.jstack/adr/`.
+Every done-check in the brief maps to a unit check. Name decisions and interfaces; file paths go stale. Use the terms in `.cookbook/glossary.md` and keep to the decisions in `.cookbook/adr/`.
 
 ## 5. Gate
 

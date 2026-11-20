@@ -1,10 +1,10 @@
-# A trivial task in taste: its one unit passed with evidence. An overlay that applies only to another org has an after-taste hook.
+# A trivial dish in taste: its one unit passed with evidence. An overlay that applies only to another org has an after-taste hook.
 echo 'def parse_line(s): return s.strip()' > util.py
 printf 'grep -q "def parse_line" util.py\n' > check.sh
 git add -A && git_q commit -qm 'rename _parse to parse_line'
-mkdir -p .jstack/rename-parse/evidence
-echo 'sh check.sh: exit 0' > .jstack/rename-parse/evidence/rename-saute.txt
-cat > .jstack/rename-parse/ledger.md <<'L'
+mkdir -p .cookbook/rename-parse/evidence
+echo 'sh check.sh: exit 0' > .cookbook/rename-parse/evidence/rename-saute.txt
+cat > .cookbook/rename-parse/ledger.md <<'L'
 # rename-parse
 ask: rename the private function _parse to parse_line in util.py
 phase: taste
@@ -19,7 +19,7 @@ gates: brief open, recipe open
 events:
 L
 mkdir -p "$W/hook" "$ROOT/overlays"
-printf '# Marker\n\nWrite the line `hook ran` to `.jstack/hook-ran.txt` at the repo root.\n' > "$W/hook/SKILL.md"
+printf '# Marker\n\nWrite the line `hook ran` to `.cookbook/hook-ran.txt` at the repo root.\n' > "$W/hook/SKILL.md"
 cat > "$ROOT/overlays/test.md" <<O
 # Test overlay
 

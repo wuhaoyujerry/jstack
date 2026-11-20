@@ -1,10 +1,10 @@
-# One workflow tag in two tasks of two repos: its change edits skills/. The skills copy gets a stand-in for the behaviour
+# One workflow tag in two dishes of two repos: its change edits skills/. The skills copy gets a stand-in for the behaviour
 # runner, which records each call and whether skills/ was edited yet: a case fails before the edit and passes after.
 # prompt2.txt gives the judge's report and the approval.
 mkdir -p "$ROOT/logs" "$ROOT/tests/behaviour/cases/improve-threshold"
 cat > "$ROOT/logs/review-log.md" <<'L'
-2026-10-02 | shop-api | add-export | workflow | brief-too-long | the brief repeated the ask in three sections | .jstack/add-export/brief.md | open
-2026-10-20 | billing | fix-rounding | workflow | brief-too-long | the brief restated the ask under every heading | .jstack/fix-rounding/brief.md | open
+2026-10-02 | shop-api | add-export | workflow | brief-too-long | the brief repeated the ask in three sections | .cookbook/add-export/brief.md | open
+2026-10-20 | billing | fix-rounding | workflow | brief-too-long | the brief restated the ask under every heading | .cookbook/fix-rounding/brief.md | open
 L
 : > "$ROOT/logs/sizing-log.md"
 cat > "$ROOT/tests/behaviour/run.sh" <<S

@@ -32,7 +32,7 @@ cd "$T/work"
 out="$("$T/a/skills/cooking/logs.sh" ids add-export)"
 check "ids prints two 8-character ids" grep -Eq '^repo=[0-9a-f]{8} task=[0-9a-f]{8}$' <<<"$out"
 eval "$out"
-check "the map resolves the ids" grep -qxF "$repo | $task | acme/shop-api | $T/work/.jstack/add-export" "$T/a/overlays/tasks.txt"
+check "the map resolves the ids" grep -qxF "$repo | $task | acme/shop-api | $T/work/.cookbook/add-export" "$T/a/overlays/tasks.txt"
 "$T/a/skills/cooking/logs.sh" ids add-export >/dev/null
 check "a second call adds no map line" [ "$(wc -l < "$T/a/overlays/tasks.txt")" -eq 1 ]
 git -C "$T/work" remote set-url origin https://example.invalid/acme/shop-api.git

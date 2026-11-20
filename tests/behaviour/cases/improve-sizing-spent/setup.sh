@@ -1,4 +1,4 @@
-# Two tasks missed the Shape signal with the same verdict. prompt2.txt rejects the sizing change; prompt3.txt runs /improve again.
+# Two dishes missed the Shape signal with the same verdict. prompt2.txt rejects the sizing change; prompt3.txt runs /improve again.
 mkdir -p "$ROOT/logs"
 : > "$ROOT/logs/review-log.md"
 cat > "$ROOT/logs/sizing-log.md" <<'L'

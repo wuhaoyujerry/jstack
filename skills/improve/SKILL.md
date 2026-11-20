@@ -14,9 +14,9 @@ Resolve symlinks to find this skill's real directory. The logs are `review-log.m
 
 The Git working tree that holds this skill's real directory is its **home**; every step runs in a session there. You are in the home when `git rev-parse --show-toplevel` prints the same path here as in that directory. Outside the home, hand off the ask to the home, with this file's path to follow and your working directory, then end your turn. To **hand off** is to start a session in the named repo with the prompt, through the tool this session has for that; with none, or when the launch fails, give the user the prompt to paste.
 
-If the ask reports the outcome of a task, first record it by step 5 of `../cooking/phases/review.md`. If the ask reports a problem from a run outside a cooking task, such as a standalone idea or research run, first append it to `review-log.md` as one observation in the format of `../cooking/phases/review.md`: `-` for an unknown repo id or task id, and the user's words as its file.
+If the ask reports the outcome of a dish, first record it by step 5 of `../cooking/phases/review.md`. If the ask reports a problem from a run outside a cooking dish, such as a standalone idea or research run, first append it to `review-log.md` as one observation in the format of `../cooking/phases/review.md`: `-` for an unknown repo id or dish id, and the user's words as its file.
 
-Every device pushes its lines to the logs, so a line names its repo and task by id, a file of the task by its path in the task folder, and any other file by its path in its repo. The **task map**, `../../overlays/tasks.txt`, has one line for each task that ran on this device: `<repo id> | <task id> | <owner/repo> | <task folder>`. Find a line's repo and files through it; find a session file by its name under the parent of the directory of `$PI_SESSION_FILE`. An id that the map lacks is from another device: you cannot read its files, and a change for that one repo waits for that device, so its observations stay `open`.
+Every device pushes its lines to the logs, so a line names its repo and dish by id, a file of the dish by its path in the dish folder, and any other file by its path in its repo. The **task map**, `../../overlays/tasks.txt`, has one line for each dish that ran on this device: `<repo id> | <dish id> | <owner/repo> | <dish folder>`. Find a line's repo and files through it; find a session file by its name under the parent of the directory of `$PI_SESSION_FILE`. An id that the map lacks is from another device: you cannot read its files, and a change for that one repo waits for that device, so its observations stay `open`.
 
 ## 1. Upstream
 
@@ -37,7 +37,7 @@ Run `../cooking/logs.sh pull`, then read both logs. Where an observation reads `
 
 Check each `open` observation for **detail**: its event alone must tell a reader on another device, with no file to open, what the agent did or what the skill text said, and what went wrong. Where the event falls short and the task map leads to its file, read the file and rewrite the event with what is missing, as step 3 of `../cooking/phases/review.md` words an event. Where no file is in reach, replace `open` with `needs-info <date> <what is missing>`. Answer a `needs-info` observation whose file is in reach the same way: rewrite its event and set it `open` again.
 
-Then give `open` observations whose events show one failure one tag, and rewrite it on those lines in `review-log.md`: a **merge**. Keep the tag that an `applied` observation of that failure has, else the tag of the earliest line. Then group the `open` observations by tag, across tasks and repos. Group the unspent `sizing-log.md` lines by missed signal and verdict; step 3 of `../cooking/phases/review.md` defines **spent**.
+Then give `open` observations whose events show one failure one tag, and rewrite it on those lines in `review-log.md`: a **merge**. Keep the tag that an `applied` observation of that failure has, else the tag of the earliest line. Then group the `open` observations by tag, across dishes and repos. Group the unspent `sizing-log.md` lines by missed signal and verdict; step 3 of `../cooking/phases/review.md` defines **spent**.
 
 An `open` observation whose tag also has an `applied` observation from an earlier date is a **recurrence**: the earlier change did not hold. Read the file its `applied` entry names before you propose another.
 
@@ -52,7 +52,7 @@ A group becomes a candidate **change** when it has the observations its category
 | steering | Move the rule into a check, or delete the text | one observation |
 | tool | Write the cheaper form where the agent reads it | one observation |
 | access | Give the agent that access | one observation |
-| workflow | Tasks in two repos: an edit to the cooking text. Tasks in one repo: a rule limited to that repo, in an **overlay** that applies to it (`../cooking/SKILL.md`, step 1); with none, in its `AGENTS.md` | the same tag in two tasks, or one observation whose event records a rule the user stated or approved |
+| workflow | Dishes in two repos: an edit to the cooking text. Dishes in one repo: a rule limited to that repo, in an **overlay** that applies to it (`../cooking/SKILL.md`, step 1); with none, in its `AGENTS.md` | the same tag in two dishes, or one observation whose event records a rule the user stated or approved |
 | sizing | A change to the signal in `../cooking/phases/size.md` | the same signal missed twice with the same verdict |
 | upstream | Copy the upstream folder, or edit the jstack file of the row | one upstream change |
 | recurrence | Revise or replace the earlier change | one observation |
@@ -60,7 +60,7 @@ A group becomes a candidate **change** when it has the observations its category
 
 Prefer an automated check to a drive script, and a drive script to cooking text. A mechanical rule becomes a check; only a judgement call becomes written guidance.
 
-Before a `workflow` or `steering` change, search the skill text for a rule that already covers the tag. A hit makes the group **drift**: the rule exists and did not hold. A drift change takes the place of the row's change, for tasks in one repo too: it strengthens that rule where it stands, or moves it into a check; the text keeps one rule for it. Name the group `drift`, with the rule's file, when you propose it and in your last message.
+Before a `workflow` or `steering` change, search the skill text for a rule that already covers the tag. A hit makes the group **drift**: the rule exists and did not hold. A drift change takes the place of the row's change, for dishes in one repo too: it strengthens that rule where it stands, or moves it into a check; the text keeps one rule for it. Name the group `drift`, with the rule's file, when you propose it and in your last message.
 
 Propose at most three changes, recurrences first, then most severe. Zero changes is a valid result: go to step 5.
 

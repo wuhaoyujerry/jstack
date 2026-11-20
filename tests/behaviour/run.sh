@@ -33,10 +33,10 @@ run_one() { # <case> <model>; prints "pass" or "FAIL <workdir>"
   # Its logs/ is a clone of an empty remote in the run dir, so a push of the logs stays there.
   mkdir -p "$ROOT" "$REPO" "$W/bin"
   cp -R "$repo_root/skills" "$repo_root/SCENARIOS.md" "$repo_root/SOURCES.md" "$ROOT/"
-  (cd "$ROOT" && git init -q && printf '/overlays/\n/logs/\n' > .gitignore && printf '.jstack/\n' > .git/info/exclude && git add -A && git_q commit -qm base)
+  (cd "$ROOT" && git init -q && printf '/overlays/\n/logs/\n' > .gitignore && printf '.cookbook/\n' > .git/info/exclude && git add -A && git_q commit -qm base)
   git init -q --bare "$W/logs.git" && git clone -q "$W/logs.git" "$ROOT/logs" 2>/dev/null
   (cd "$ROOT/logs" && git config user.name test && git config user.email test@example.invalid && git config commit.gpgsign false)
-  (cd "$REPO" && git init -q && printf '.jstack/\n' > .git/info/exclude)
+  (cd "$REPO" && git init -q && printf '.cookbook/\n' > .git/info/exclude)
 
   # Workers and other sessions are out of scope: a stub records each attempt to start one, through orca or pi.
   # Pi puts its own bin directory first on PATH, so the pi stub is a function that the agent's bash loads from BASH_ENV.
