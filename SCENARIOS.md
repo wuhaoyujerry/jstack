@@ -55,3 +55,5 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | log-leak | cooking | Review wrote a log line that names the task's repo | The publish script prints the line and pushes nothing; review rewrites the line and publishes again |
 | improve-other-device | improve | Two tasks in one repo share a `workflow` tag that no skill text covers; the task map lacks their ids | Proposes no change for them; they stay `open` |
 | improve-publish | improve | A run settles a `handed` observation and proposes no change | Its line reads `applied`; the logs are pushed |
+| improve-needs-info | improve | An `open` observation from another machine; its event does not say which fact was slow to find, and the task map lacks its task | Its line reads `needs-info <date> <what is missing>`; proposes no change for it |
+| improve-answers-info | improve | A `needs-info` observation whose task ran on this machine; its file holds the missing detail | Rewrites its event with the detail and sets it `open` again |

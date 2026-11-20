@@ -33,7 +33,11 @@ The upstream step is done when every named skill has a diff and every upstream c
 
 ## 2. Group
 
-Run `../cooking/logs.sh pull`, then read both logs. Where an observation reads `handed <date> <file>` and that file now holds its change, replace `handed` with `applied`. First give `open` observations whose events show one failure one tag, and rewrite it on those lines in `review-log.md`: a **merge**. Keep the tag that an `applied` observation of that failure has, else the tag of the earliest line. Then group the `open` observations by tag, across tasks and repos. Group the unspent `sizing-log.md` lines by missed signal and verdict; step 3 of `../cooking/phases/review.md` defines **spent**.
+Run `../cooking/logs.sh pull`, then read both logs. Where an observation reads `handed <date> <file>` and that file now holds its change, replace `handed` with `applied`.
+
+Check each `open` observation for **detail**: its event alone must tell a reader on another device, with no file to open, what the agent did or what the skill text said, and what went wrong. Where the event falls short and the task map leads to its file, read the file and rewrite the event with what is missing, as step 3 of `../cooking/phases/review.md` words an event. Where no file is in reach, replace `open` with `needs-info <date> <what is missing>`. Answer a `needs-info` observation whose file is in reach the same way: rewrite its event and set it `open` again.
+
+Then give `open` observations whose events show one failure one tag, and rewrite it on those lines in `review-log.md`: a **merge**. Keep the tag that an `applied` observation of that failure has, else the tag of the earliest line. Then group the `open` observations by tag, across tasks and repos. Group the unspent `sizing-log.md` lines by missed signal and verdict; step 3 of `../cooking/phases/review.md` defines **spent**.
 
 An `open` observation whose tag also has an `applied` observation from an earlier date is a **recurrence**: the earlier change did not hold. Read the file its `applied` entry names before you propose another.
 
@@ -84,4 +88,4 @@ For each collection checked, when the user has decided its every upstream change
 
 Every run ends here, also a run with no change. Run `../cooking/logs.sh publish`: it checks the lines this run wrote for a repo name, a repo owner and a home path, then pushes the logs. On exit 1, rewrite the lines it prints and run it again. On exit 2, tell the user that the logs are not pushed.
 
-Tell the user what changed, the result of each case you ran and each candidate scenario without a case, each merge with the tags it replaced, each `drift` group, and how many observations remain `open`; after step 1, also how many upstream changes remain undecided.
+Tell the user what changed, the result of each case you ran and each candidate scenario without a case, each merge with the tags it replaced, each `drift` group, and how many observations remain `open` and how many read `needs-info`; after step 1, also how many upstream changes remain undecided.
