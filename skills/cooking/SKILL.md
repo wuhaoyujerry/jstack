@@ -40,7 +40,7 @@ A **deploy unit** changes production: a push, a deploy, a migration there. A dis
 
 1. **Code saute**: every other unit, until each is `pass` with an evidence file and all work is on one branch. It ends no phase: run no hook.
 2. **Code taste**: set `phase: taste`; taste runs the diff review and every check that neither deploys nor needs the deployed system. When it is done, record `code taste passed <commit>` in the ledger events and set `phase: saute`. It ends no phase: run no hook and no review.
-3. **Deploy saute**: ask for approval of the exact deploy action, then build the deploy units. Saute is then done.
+3. **Deploy saute**: the deploy ships commits, not the working tree. Run `git status --porcelain`. If it prints a file of the dish, that edit was not tasted: reopen in the ledger the code units it touches, commit only the dish's edits and start again at 1. Otherwise ask for approval of the exact deploy action, then build the deploy units. Saute is then done.
 4. **Live taste**: the **live checks**, those that need the deployed system. Taste is then done, with the checks of both passes in its table. A live failure that needs changed code reopens the deploy units: start again at 1.
 
 On resume, `phase: taste` with a deploy unit not `pass` is the code taste; `phase: saute` is the deploy saute only when the events hold `code taste passed` for the current commit.
