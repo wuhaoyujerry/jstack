@@ -10,7 +10,7 @@ metadata:
 
 Interview the user relentlessly until every decision is settled, then write the brief.
 
-`.cookbook/` is at the repo root. `<dish>` is the cooking dish's folder. Outside cooking, it is `.cookbook/dishes/<slug>/`, with a short slug you choose.
+`.cookbook/` is at the root of the main checkout, the first worktree that `git worktree list` prints. `<dish>` is the cooking dish's folder. Outside cooking, it is `.cookbook/dishes/<slug>/`, with a short slug you choose.
 
 ## Steps
 

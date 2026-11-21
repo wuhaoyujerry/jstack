@@ -1,11 +1,14 @@
 . "$(dirname "$0")/../../lib.sh"
 agent_ended
-# The meal chooses the dish: the second is sized; the done dish, the third dish and the meal file stay as they were.
 m=.cookbook/meals/checkout
-has "$m/cart-export/ledger.md" '^size: (trivial|standard|large)'
-diff -r "$W/before/meals/checkout/cart-totals" "$m/cart-totals" > /dev/null || fail "the done dish changed"
-diff -r "$W/before/meals/checkout/cart-email" "$m/cart-email" > /dev/null || fail "the third dish changed"
-same_file "$W/before/meals/checkout/meal.md" "$m/meal.md"
-set -- "$m"/*/ledger.md
-[ "$#" -eq 3 ] || fail "want three ledgers, got: $*"
-clean_tree "$ROOT"
+# The main checkout hands the meal off whole: one worktree named for the meal, from the current branch, with the meal agent.
+n="$(grep -cE -- '(^| )worktree create( |$)' "$ORCA_LOG")"
+[ "$n" -eq 1 ] || fail "want one worktree create, got $n: $(cat "$ORCA_LOG")"
+for w in '--name checkout( |$)' '--agent pi( |$)' "--base-branch $(git branch --show-current)( |\$)" 'cooking/SKILL\.md' 'continue the meal checkout'; do has "$ORCA_LOG" "$w"; done
+has "$m/meal.md" '^worktree: .*wt/checkout'; has "$m/meal.md" '^branch: +checkout *$'
+# It sizes and starts no dish itself: the three dish folders stay as they were.
+for d in cart-totals cart-export cart-email; do
+  diff -r "$W/before/meals/checkout/$d" "$m/$d" > /dev/null || fail "the dish $d changed"
+done
+[ -z "$(worker_starts)" ] || fail "the main checkout started a dish worker: $(worker_starts)"
+clean_tree "$REPO"; clean_tree "$ROOT"

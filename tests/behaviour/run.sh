@@ -6,7 +6,9 @@
 # A case may add prompt2.txt, prompt3.txt ...: each continues the same session as the user's next message (reply in out2.txt ...).
 # between.sh, if present, runs after turn 1 to save state for assert.sh.
 # The agent starts in the fixture repo. A case whose prompt names the improve skill starts in the skills copy, the home of
-# /improve; a `from-repo` file in such a case starts it in the fixture repo.
+# /improve; a `from-repo` file in such a case starts it in the fixture repo. A `cwd` file starts it in that path under the run dir.
+# An `orca-worktrees` file makes the orca stub create each worktree that `worktree create` or `worker-start` names, under $W/wt,
+# and print the reply of that call.
 set -u
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -57,7 +59,26 @@ run_one() { # <case> <model>; prints "pass" or "FAIL <workdir>"
 
   # Workers and other sessions are out of scope: a stub records each attempt to start one, through orca or pi.
   # Pi puts its own bin directory first on PATH, so the pi stub is a function that the agent's bash loads from BASH_ENV.
-  printf '#!/bin/sh\necho "$*" >> "%s"\necho "orca: unavailable in this test" >&2\nexit 1\n' "$ORCA_LOG" > "$W/bin/orca"
+  cat > "$W/bin/orca" <<S
+#!/bin/sh
+echo "\$*" >> "$ORCA_LOG"
+call="\$1 \$2"
+if [ -e "$case_dir/orca-worktrees" ] && { [ "\$call" = "worktree create" ] || [ "\$call" = "orchestration worker-start" ]; }; then
+  name=; base=HEAD
+  while [ \$# -gt 0 ]; do case "\$1" in --name) name="\$2";; --base-branch) base="\$2";; esac; shift; done
+  # The agent or worker that the call names is never started: the log line is its only trace.
+  if [ -n "\$name" ] && git worktree add -q -b "\$name" "$W/wt/\$name" "\$base" >/dev/null 2>&1; then
+    if [ "\$call" = "worktree create" ]; then
+      printf '{"ok":true,"result":{"worktree":{"path":"%s","branch":"refs/heads/%s"}}}\n' "$W/wt/\$name" "\$name"
+    else
+      printf '{"ok":true,"result":{"dispatchId":"ctx_%s","state":"ready","workspace":"repo::%s","keptOpen":true,"next":"Orca wakes you when workers report; end your turn when you are done."}}\n' "\$name" "$W/wt/\$name"
+    fi
+    exit 0
+  fi
+fi
+echo "orca: unavailable in this test" >&2
+exit 1
+S
   # A model query answers with a row, so the check of a model id before a worker start passes; it starts nothing and is not logged.
   printf 'pi() { if [ "$1" = --list-models ]; then echo "provider model"; echo "$2" | tr / " "; return 0; fi; echo "$*" >> "%s"; echo "pi: unavailable in this test" >&2; return 1; }\n' "$W/pi-nested.log" > "$W/bashenv"
   chmod +x "$W/bin/orca"; : > "$ORCA_LOG"
@@ -68,6 +89,7 @@ run_one() { # <case> <model>; prints "pass" or "FAIL <workdir>"
 
   local cwd="$REPO"
   if grep -q 'skills/improve/SKILL.md' "$case_dir/prompt.txt" && [ ! -e "$case_dir/from-repo" ]; then cwd="$ROOT"; fi
+  if [ -f "$case_dir/cwd" ]; then cwd="$W/$(cat "$case_dir/cwd")"; fi
 
   local n=1 f="$case_dir/prompt.txt" out="$OUT" more=() prompt
   while [ -f "$f" ]; do

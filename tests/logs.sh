@@ -38,6 +38,10 @@ check "a second call adds no map line" [ "$(wc -l < "$T/a/overlays/tasks.txt")" 
 mkdir -p .cookbook/meals/checkout/cart-totals
 "$T/a/skills/cooking/logs.sh" ids cart-totals >/dev/null
 check "the map names the folder of a dish in a meal" grep -qF "| acme/shop-api | $T/work/.cookbook/meals/checkout/cart-totals" "$T/a/overlays/tasks.txt"
+git -C "$T/work" commit -q --allow-empty -m init; git -C "$T/work" worktree add -q -b dish "$T/linked"
+mkdir -p .cookbook/dishes/in-worktree
+(cd "$T/linked" && "$T/a/skills/cooking/logs.sh" ids in-worktree >/dev/null)
+check "a linked worktree maps to the dish folder in the main checkout" grep -qF "| acme/shop-api | $T/work/.cookbook/dishes/in-worktree" "$T/a/overlays/tasks.txt"
 git -C "$T/work" remote set-url origin https://example.invalid/acme/shop-api.git
 check "the HTTPS remote gives the same ids" [ "$("$T/a/skills/cooking/logs.sh" ids add-export)" = "$out" ]
 

@@ -1,0 +1,1 @@
+Read {{ROOT}}/skills/cooking/SKILL.md and follow it. Ask: continue adding retry to the fetch client. I approve the brief.

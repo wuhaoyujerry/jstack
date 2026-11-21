@@ -18,7 +18,7 @@ Answer five signals from the ask and a short repo look. Read files yourself; sta
 - **large**: wide Reach, Risk, or open Shape. Phases: idea, recipe, saute, taste, review.
 - **standard**: everything else. Phases: idea, recipe, saute, taste, review.
 
-Write the size and the five answers to the ledger and tell the user both in one line. The user may override. Then run the first phase of that size.
+Write the size and the five answers to the ledger and tell the user both in one line. The user may override. Then hand off a trivial dish (`../SKILL.md`, step 3), or run the first phase of that size.
 
 ## 2. Correct the size
 

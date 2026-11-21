@@ -36,7 +36,8 @@ pull() {
 case "${1:-}" in
 ids)
   slug="${2:?usage: logs.sh ids <slug>}"
-  top="$(git rev-parse --show-toplevel)"
+  # The cookbook is in the main checkout, which Git lists first, also when the task ran in a linked worktree.
+  top="$(git worktree list --porcelain | sed -n '1s/^worktree //p')"
   key="$(repo_key "$top")"; repo="$(hash8 "$key")"; task="$(hash8 "$key/$slug")"
   folder="$top/.cookbook/dishes/$slug"
   for d in "$top"/.cookbook/meals/*/"$slug"/; do [ -d "$d" ] && folder="${d%/}"; done
