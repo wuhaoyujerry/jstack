@@ -54,8 +54,9 @@ Read each evidence file yourself; the verifier's summary only points to it. Writ
 ## 6. Close
 
 - **fail** or **must-fix**: return the unit to saute. It counts as a failure of that unit. Record the event.
+- **Second return**: when the events already hold a return from taste, ask the user before you return anything. Show each `fail` and `must-fix` as its case; for each they choose to fix it, accept it by name, revert its unit or move it to a new dish. Record the choices in the events and in `taste.md`; one they accept, revert or move is closed. Return to saute only what they chose to fix.
 - **suggestion**: the user decides.
 - **not-run**: show the user the command. They approve the run, or accept the gap by name.
-- Taste is done when no check is `fail`, no `must-fix` is open, and each `not-run` is run or accepted.
+- Taste is done when no `fail` or `must-fix` is open, and each `not-run` is run or accepted.
 
 Report the table to the user, then run review; after a code taste, return to saute instead (`../SKILL.md`, step 2).

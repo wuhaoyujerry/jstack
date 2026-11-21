@@ -34,7 +34,7 @@ When you write a test command, in a check or a worker spec, write it **scoped**:
 
 When a phase ends, run its **hooks**: each `after <phase>` entry under `## Hooks` in an overlay that applies, in listed order. Read the file the entry names, follow it with the entry's note, and record the result in the ledger events. Then enter the next phase.
 
-A dish has two **gates**: the brief and the recipe. The user approves the brief; the recipe gate waits for the user only on a gap (`phases/recipe.md`, step 5). At each gate, test for a split, record the gate's date in the ledger and correct the size (`phases/size.md`, steps 2 and 3). Between gates, run to completion. Also stop for a destructive or production action, and for a recipe deviation.
+A dish has two **gates**: the brief and the recipe. The user approves the brief; the recipe gate waits for the user only on a gap (`phases/recipe.md`, step 5). At each gate, test for a split, record the gate's date in the ledger and correct the size (`phases/size.md`, steps 2 and 3). Between gates, run to completion. Also stop for a destructive or production action, for a recipe deviation, and for a second return from taste (`phases/taste.md`, step 6).
 
 A **deploy unit** changes production: a push, a deploy, a migration there. A dish that has one runs saute and taste twice:
 
