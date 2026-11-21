@@ -23,12 +23,12 @@ Interview the user relentlessly until every decision is settled, then write the 
 4. When the user is unsure, give the trade-off and your evidence, name what you have not checked, and ask again.
 
 5. Sharpen the language as you go:
-   - When a term conflicts with `.cookbook/glossary.md` or with the code, ask which meaning is right.
+   - When a term conflicts with `GLOSSARY.md` at the repo root or with the code, ask which meaning is right.
    - Replace a vague term with one exact term.
    - Test a relationship between concepts with a concrete edge case.
-   - When a term settles, write it to `.cookbook/glossary.md` at once: the term and one sentence.
+   - When a term settles, write it under `## Terms` in `<dish>/brief.md` at once: the term and one sentence. The recipe moves it to `GLOSSARY.md`.
 
-6. Record a decision in `.cookbook/adr/<nnnn>-<name>.md` only when all three hold: it is hard to reverse, it would surprise a later reader, and it came from a real trade-off.
+6. A decision that replaces an ADR in `docs/adr/` names that ADR under `## Decisions`. Mark a decision `ADR` under `## Decisions` only when all three hold: it is hard to reverse, it would surprise a later reader, and it came from a real trade-off. Write its alternatives and the reason under `## Open facts`. The recipe moves it to `docs/adr/`.
 
 7. The interview is done when no decision on the tree is open and no research is pending. From this skill's real directory, read `../technical-writing/SKILL.md` and `../unslop/SKILL.md`, then complete `<dish>/brief.md` to both standards:
 
@@ -44,6 +44,8 @@ Interview the user relentlessly until every decision is settled, then write the 
    ## Non-goals
    ## Open facts
    - <a fact the recipe must find or confirm, or a mechanism>
+   ## Terms
+   - <a settled term>: <one sentence>
    ## Contested shape: yes | no
    ## Decisions
    ```
