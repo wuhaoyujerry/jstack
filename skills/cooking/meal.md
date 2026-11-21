@@ -41,7 +41,7 @@ Find the meal agent first:
 - **The meal file names the worktree you are in**: you are the meal agent.
 - **It names another worktree**: tell the user that worktree and change nothing.
 - **It names none, and no dish is ready**: tell the user what is missing and change nothing.
-- **It names none, in the main checkout**: hand off the meal by step 3 of `SKILL.md`, with the meal's name for the slug and `Ask: continue the meal <meal>.` Write the reply's path and its branch, without `refs/heads/`, to the meal file.
+- **It names none, in the main checkout**: hand off the meal by step 3 of `SKILL.md`, with the meal's name for the slug and `Ask: continue the meal <meal>.` Write the reply's path and its branch, without `refs/heads/`, to the meal file, and record the handoff and `$PI_SESSION_FILE` in the events of each dish that is not `done`.
 - **It names none, in another worktree**: that worktree is the meal worktree and you are the meal agent. Write its path and branch to the meal file, and set to `none` the `worktree` line of a dish that names it.
 
 As the meal agent:

@@ -16,10 +16,10 @@ lacks() { if grep -Eq -- "$2" "$1" 2>/dev/null; then fail "$1 has /$2/"; fi; }
 clean_tree() { [ -z "$(git -C "$1" status --porcelain)" ] || fail "$1 changed: $(git -C "$1" status --porcelain | head -5)"; }
 # The pushed copy of a log holds a line that matches.
 pushed() { git -C "$W/logs.git" show "HEAD:$1" 2>/dev/null | grep -Eq -- "$2" || fail "the pushed $1 lacks /$2/"; }
-# A dish folder is as it was in the copy <before>, but for events added to its ledger.
+# A dish folder is as it was in the copy <before>, but for events added to its ledger. A blank line may come or go with them.
 only_new_events() { # <before> <dish folder>
   diff -r -x ledger.md "$1" "$2" > /dev/null || fail "$2 changed"
-  local extra; extra="$(diff "$1/ledger.md" "$2/ledger.md" | grep -E '^[<>]' | grep -Ev '^> - ')"
+  local extra; extra="$(diff "$1/ledger.md" "$2/ledger.md" | grep -E '^[<>]' | grep -Ev '^> - |^[<>] *$')"
   [ -z "$extra" ] || fail "the ledger of $2 changed beyond new events: $extra"
 }
 # The worker starts in the log: one line for each `orca orchestration worker-start` call; a help call starts nothing.

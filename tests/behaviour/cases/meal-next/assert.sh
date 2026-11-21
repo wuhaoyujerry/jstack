@@ -8,5 +8,7 @@ for w in '--name checkout( |$)' '--agent pi( |$)' "--base-branch $(git branch --
 has "$m/meal.md" '^worktree: .*wt/checkout'; has "$m/meal.md" '^branch: +checkout *$'
 # It sizes and starts no dish itself: the three dish folders stay as they were, but for events added to a ledger, such as the handoff.
 for d in cart-totals cart-export cart-email; do only_new_events "$W/before/meals/checkout/$d" "$m/$d"; done
+# The handoff is on record where the review of each open dish finds it: events that name the meal worktree and this session's file.
+for d in cart-export cart-email; do has "$m/$d/ledger.md" '^- .*wt/checkout'; has "$m/$d/ledger.md" '^- .*\.jsonl'; done
 [ -z "$(worker_starts)" ] || fail "the main checkout started a dish worker: $(worker_starts)"
 clean_tree "$REPO"; clean_tree "$ROOT"
