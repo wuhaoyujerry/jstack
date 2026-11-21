@@ -16,6 +16,14 @@ RUNS="${RUNS:-3}"
 MODELS="${MODELS:-openai-codex/gpt-6.2-sol:medium anthropic/claude-fable-5-2:medium}"
 TIMEOUT="${TIMEOUT:-900}"
 
+# A model id that Pi lacks on this machine fails every run, with the cause only in pi.err: stop before any run.
+for m in $MODELS; do
+  id="${m%:*}"
+  pi --list-models "$id" 2>/dev/null | awk -v p="${id%%/*}" -v n="${id#*/}" '$1 == p && $2 == n { f = 1 } END { exit !f }' && continue
+  echo "run.sh: Pi lists no model $id on this machine. Set MODELS to ids that 'pi --list-models' prints; an overlay in overlays/ may map them." >&2
+  exit 2
+done
+
 if [ "$#" -gt 0 ]; then cases=("$@"); else
   cases=(); for d in "$here"/cases/*/; do cases+=("$(basename "$d")"); done
 fi
