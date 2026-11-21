@@ -25,7 +25,7 @@ The user approved the dishes to cut (`phases/size.md`, step 3). The **original d
 3. Cut the original dish to its own part the same way: its brief, the `ask` and `meal` lines of its ledger, and the units of a written recipe. Answer the five signals again for its own part and record the size. A gate it has passed keeps its date.
 4. Record the split in the events of each ledger.
 
-The split is done when the meal file lists every dish, every dish has a ledger that names the meal, and every done-check of the uncut brief is in exactly one brief. Then continue the original dish from where it stopped; at the brief gate, show its cut brief; at the recipe gate, follow `phases/recipe.md`, step 5.
+The split is done when the meal file lists every dish, every dish has a ledger that names the meal, and every done-check of the uncut brief is in exactly one brief. Then continue the original dish from where it stopped; at the brief gate, show the gate summary of its cut brief (`../idea/SKILL.md`, step 8); at the recipe gate, follow `phases/recipe.md`, step 5.
 
 ## 2. Cook a dish of a meal
 
