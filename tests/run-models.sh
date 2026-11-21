@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Tests the model check of tests/behaviour/run.sh with a stub pi that lists one model. Starts no agent.
+# Tests the model check of tests/behaviour/run.sh with a stub pi that lists only the models of the provider `here`. Starts no agent.
 # Usage: tests/run-models.sh
 set -u
 
@@ -8,7 +8,7 @@ T="$(cd "$(mktemp -d)" && pwd -P)"; trap 'rm -rf "$T"' EXIT
 cat > "$T/pi" <<'S'
 #!/bin/sh
 [ "$1" = --list-models ] || { echo started >> "$(dirname "$0")/started"; exit 1; }
-if [ "$2" = here/gpt-x ]; then printf 'provider  model  context\nhere      gpt-x  272K\n'; else echo "No models matching \"$2\""; fi
+case "$2" in here/*) printf 'provider  model  context\nhere      %s  272K\n' "${2#here/}" ;; *) echo "No models matching \"$2\"" ;; esac
 S
 chmod +x "$T/pi"
 
@@ -23,6 +23,13 @@ check "missing id: reaches no case" '[ ! -s "$T/out" ]'
 
 run "here/gpt-x:medium"
 check "listed id: reaches the cases" 'grep -q "no-such-case: no such case" "$T/out"'
+
+# With no MODELS, the default ids take their providers from the map; without a map line they stay as written.
+printf 'openai-codex here\nanthropic here\n' > "$T/map"
+MODEL_MAP="$T/map" run ""
+check "mapped defaults: reaches the cases" 'grep -q "no-such-case: no such case" "$T/out"'
+MODEL_MAP="$T/no-map" run ""
+check "no map: stops on the default id" '[ "$(cat "$T/exit")" = 2 ] && grep -q "no model openai-codex/" "$T/err"'
 check "starts no agent" '[ ! -e "$T/started" ]'
 
 [ "$fails" -eq 0 ] && echo "all passed" || echo "$fails failed"
