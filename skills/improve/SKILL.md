@@ -62,6 +62,8 @@ Prefer an automated check to a drive script, and a drive script to cooking text.
 
 Before a `workflow` or `steering` change, search the skill text for a rule that already covers the tag. A hit makes the group **drift**: the rule exists and did not hold. A drift change takes the place of the row's change, for dishes in one repo too: it strengthens that rule where it stands, or moves it into a check; the text keeps one rule for it. Name the group `drift`, with the rule's file, when you propose it and in your last message.
 
+For a recurrence or drift group whose rule text already states, check whether the agent's runtime sees the event the rule governs: a command, a tool call, a file write. If it does, propose a **runtime hook** in place of stronger text: code that the runtime runs on that event, such as a Pi extension or a permission rule, to block the action or show the agent the rule. The text keeps the rule for runtimes that lack the hook.
+
 Propose at most three changes, recurrences first, then most severe. Zero changes is a valid result: go to step 5.
 
 ## 4. Approve and apply
