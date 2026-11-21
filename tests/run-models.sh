@@ -8,6 +8,7 @@ T="$(cd "$(mktemp -d)" && pwd -P)"; trap 'rm -rf "$T"' EXIT
 cat > "$T/pi" <<'S'
 #!/bin/sh
 [ "$1" = --list-models ] || { echo started >> "$(dirname "$0")/started"; exit 1; }
+echo "$2" >> "$(dirname "$0")/listed"
 case "$2" in here/*) printf 'provider  model  context\nhere      %s  272K\n' "${2#here/}" ;; *) echo "No models matching \"$2\"" ;; esac
 S
 chmod +x "$T/pi"
@@ -30,6 +31,11 @@ MODEL_MAP="$T/map" run ""
 check "mapped defaults: reaches the cases" 'grep -q "no-such-case: no such case" "$T/out"'
 MODEL_MAP="$T/no-map" run ""
 check "no map: stops on the default id" '[ "$(cat "$T/exit")" = 2 ] && grep -q "no model openai-codex/" "$T/err"'
+# A map line with a slash replaces a whole id. The provider `anthropic` has no line here, so only that line passes the check.
+printf 'openai-codex here\nanthropic/claude-fable-5-2 here/opus-x\n' > "$T/map"; : > "$T/listed"
+MODEL_MAP="$T/map" run ""
+check "mapped id: reaches the cases" 'grep -q "no-such-case: no such case" "$T/out"'
+check "mapped id: replaces that model and keeps the other" 'grep -qx "here/opus-x" "$T/listed" && grep -qx "here/gpt-6.2-sol" "$T/listed"'
 check "starts no agent" '[ ! -e "$T/started" ]'
 
 [ "$fails" -eq 0 ] && echo "all passed" || echo "$fails failed"

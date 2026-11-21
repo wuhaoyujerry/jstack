@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Behavioural tests: run a headless Pi agent on a seeded fixture, then assert on the files it leaves.
 # Usage: tests/behaviour/run.sh [case ...]
-# Env: RUNS per case and model (default 3), MODELS (space-separated), MODEL_MAP (another provider map), TIMEOUT (seconds per turn), KEEP=1 keeps passing run dirs,
+# Env: RUNS per case and model (default 3), MODELS (space-separated), MODEL_MAP (another model map), TIMEOUT (seconds per turn), KEEP=1 keeps passing run dirs,
 # SRC tests the skills of another checkout (for example a worktree of an older commit).
 # A case may add prompt2.txt, prompt3.txt ...: each continues the same session as the user's next message (reply in out2.txt ...).
 # between.sh, if present, runs after turn 1 to save state for assert.sh.
@@ -14,14 +14,18 @@ set -u
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "${SRC:-$here/../..}" && pwd)"
 RUNS="${RUNS:-3}"
-# The main agent is one of these two, so every case runs on both. A machine whose Pi names a provider otherwise maps it in
-# overlays/model-providers.txt, one "<provider> <provider here>" per line. The map changes these defaults only, never a given MODELS.
+# The main agent is one of these two, so every case runs on both. A machine with another provider name or another main-agent model
+# maps it in overlays/model-map.txt, one "<provider or id> <replacement>" per line: `openai-codex openai` renames a provider, and
+# `anthropic/claude-fable-5-2 anthropic/claude-opus-5-5` replaces a model. The map changes these defaults only, never a given MODELS.
 if [ -z "${MODELS:-}" ]; then
   MODELS="openai-codex/gpt-6.2-sol:medium anthropic/claude-fable-5-2:medium"
-  map="${MODEL_MAP:-$here/../../overlays/model-providers.txt}"
+  map="${MODEL_MAP:-$here/../../overlays/model-map.txt}"
   if [ -f "$map" ]; then
     while read -r from to; do
-      [ -z "$to" ] || MODELS="$(printf '%s\n' $MODELS | sed "s#^$from/#$to/#" | tr '\n' ' ')"
+      [ -n "$to" ] || continue
+      # A line with a slash names a whole id, which ends at the effort; any other line names a provider.
+      case "$from" in */*) end=: ;; *) end=/ ;; esac
+      MODELS="$(printf '%s\n' $MODELS | sed "s#^$from$end#$to$end#" | tr '\n' ' ')"
     done < "$map"
   fi
 fi
@@ -31,7 +35,7 @@ TIMEOUT="${TIMEOUT:-900}"
 for m in $MODELS; do
   id="${m%:*}"
   pi --list-models "$id" 2>/dev/null | awk -v p="${id%%/*}" -v n="${id#*/}" '$1 == p && $2 == n { f = 1 } END { exit !f }' && continue
-  echo "run.sh: Pi lists no model $id on this machine. Map its provider in overlays/model-providers.txt, or set MODELS to ids that 'pi --list-models' prints." >&2
+  echo "run.sh: Pi lists no model $id on this machine. Map its provider or its id in overlays/model-map.txt, or set MODELS to ids that 'pi --list-models' prints." >&2
   exit 2
 done
 
