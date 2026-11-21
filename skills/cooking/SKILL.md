@@ -34,7 +34,16 @@ When you write a test command, in a check or a worker spec, write it **scoped**:
 
 When a phase ends, run its **hooks**: each `after <phase>` entry under `## Hooks` in an overlay that applies, in listed order. Read the file the entry names, follow it with the entry's note, and record the result in the ledger events. Then enter the next phase.
 
-The user approves at two **gates**: the brief and the recipe. At each gate, test for a split, record the gate's date in the ledger and correct the size (`phases/size.md`, steps 2 and 3). Between gates, run to completion. Also stop for a destructive or production action, and for a recipe deviation.
+A dish has two **gates**: the brief and the recipe. The user approves the brief; the recipe gate waits for the user only on a gap (`phases/recipe.md`, step 5). At each gate, test for a split, record the gate's date in the ledger and correct the size (`phases/size.md`, steps 2 and 3). Between gates, run to completion. Also stop for a destructive or production action, and for a recipe deviation.
+
+A **deploy unit** changes production: a push, a deploy, a migration there. A dish that has one runs saute and taste twice:
+
+1. **Code saute**: every other unit, until each is `pass` with an evidence file and all work is on one branch. It ends no phase: run no hook.
+2. **Code taste**: set `phase: taste`; taste runs the diff review and every check that neither deploys nor needs the deployed system. When it is done, record `code taste passed <commit>` in the ledger events and set `phase: saute`. It ends no phase: run no hook and no review.
+3. **Deploy saute**: ask for approval of the exact deploy action, then build the deploy units. Saute is then done.
+4. **Live taste**: the **live checks**, those that need the deployed system. Taste is then done, with the checks of both passes in its table. A live failure that needs changed code reopens the deploy units: start again at 1.
+
+On resume, `phase: taste` with a deploy unit not `pass` is the code taste; `phase: saute` is the deploy saute only when the events hold `code taste passed` for the current commit.
 
 ## Ledger template
 

@@ -4,7 +4,7 @@ Every unit is built until its check passes: by you in order, or by parallel buil
 
 ## 1. Plan the workers
 
-The units form a graph. The **frontier** is every unit whose dependencies have passed. For a trivial task, write the one unit and its check into the ledger yourself.
+The units form a graph. The **frontier** is every unit whose dependencies have passed; a deploy unit joins it only after the code taste (`../SKILL.md`, step 2). For a trivial task, write the one unit and its check into the ledger yourself.
 
 1. Put frontier units that share files into one **group**; a unit that shares none is a group of its own.
 2. Estimate each group in minutes. Serial time is the sum. Parallel time is the longest group plus 10 to 15 minutes for worker starts, specs, merges and rechecks.

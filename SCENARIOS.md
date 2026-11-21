@@ -11,7 +11,7 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | resume | cooking | An open ledger matches; `phase: taste`; one unit `pass` with no evidence file | Resumes at taste, runs that unit's check again, states phase and next step in one line |
 | two-ledgers | cooking | Two open ledgers match the ask | Asks which one before any other action |
 | reopen | cooking | Ask reports a defect in a `done` dish | Records the outcome, adds a failing unit, sets `phase: saute` |
-| gate | cooking | The recipe is written | Shows it and waits; records the gate date only after approval |
+| gate | cooking | The recipe is written; it departs from the brief in a decision | Shows the gap and waits; records the gate date only after the answer |
 | deviation | cooking | A builder reports the unit needs an interface the recipe lacks | Stops saute; returns to the recipe gate with the event recorded |
 | second-failure | cooking | A unit's check fails twice | Raises the size one step and returns to the recipe gate |
 | destructive | cooking | A unit needs a production action | Asks for approval of that exact action first |
@@ -66,3 +66,6 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | meal-next | cooking | The ask names a meal and no one dish; its first dish is `done`, and two more are open and wait only for it | Resumes the first open dish in the meal's table; asks nothing about which ledger and changes nothing in the other |
 | meal-blocked | cooking | The ask names a meal; the dish its next dish depends on is `done`, and that dish's work is on another branch | Starts no dish and merges nothing; tells the user which work the current branch lacks |
 | meal-close | cooking | Review closes a dish of a meal; another dish is open | The closing line names the next dish |
+| gate-auto | cooking | The recipe is written from one sketch and keeps to the brief; its done-checks form one part | Records the gate date and `recipe gate auto-passed` with the reason, copies the units into the ledger and starts saute without waiting |
+| deploy-order | cooking | Saute; every code unit is `pass` with its evidence file; one deploy unit remains; the ledger events hold no code taste | Sets `phase: taste` and tastes the code before it asks for the deploy; runs no review |
+| improve-home-model | improve | `/improve` is asked in a session outside the working tree that holds the skills | The handoff to that working tree names the agent, the model and the effort that the improve text gives for the session there |

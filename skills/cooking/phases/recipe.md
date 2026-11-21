@@ -32,7 +32,7 @@ A **unit** is the smallest change that can be built, checked and committed alone
 
 Keep checks **lean**. Attach each at the highest existing **seam** that shows the behaviour; add a seam only when none does. Reuse an existing test when one shows it. A new test lists its cases in the unit: one per behaviour in the brief's done-checks, plus one per risky failure path in a parser or security code. A unit that writes state, enqueues work, calls an external provider or handles a webhook also lists at least one failure or edge case in its check: a partial failure, a retry or re-entry, or another caller path.
 
-Mark each check that needs judgement, and each that changes a shared environment.
+Mark each check that needs judgement, and each that changes a shared environment. A check that needs the deployed system is a **live check**: write it under `## Taste` with the unit it verifies, not as a unit.
 
 ## 4. Write the recipe
 
@@ -47,6 +47,7 @@ Mark each check that needs judgement, and each that changes a shared environment
 - surface: <where a user meets this change>
 - judgement checks: <ids>
 - mutating checks: <ids, each with its exact command>
+- live checks: <each with the unit it verifies>
 ## Out of scope
 ## Choice
 ```
@@ -55,4 +56,13 @@ Every done-check in the brief maps to a unit check. Name decisions and interface
 
 ## 5. Gate
 
-Show the recipe. Wait for the user to approve it. Then copy the units into the ledger.
+The recipe is for agents: the user does not read it. The gate waits for the user only on a **gap** that needs their input:
+
+- the two sketches differ in a design choice that is the user's to make;
+- the recipe departs from the brief in scope, a decision or a done-check;
+- a unit failed twice and saute returned here;
+- the split test recommends a split.
+
+On a gap, show the gap and your recommendation, not the recipe, and wait for the answer. With no gap the gate **auto-passes**: write `recipe gate auto-passed` and the reason in the ledger events, and tell the user in one line. On either passage, record the gate's date and copy the units into the ledger.
+
+A return from saute sets the gate to `open`. So does an objection from the user to the recipe, also after the gate's date: record the correction in the ledger events, revise the recipe and wait for approval.

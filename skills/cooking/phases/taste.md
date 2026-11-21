@@ -58,4 +58,4 @@ Read each evidence file yourself; the verifier's summary only points to it. Writ
 - **not-run**: show the user the command. They approve the run, or accept the gap by name.
 - Taste is done when no check is `fail`, no `must-fix` is open, and each `not-run` is run or accepted.
 
-Report the table to the user, then run review.
+Report the table to the user, then run review; after a code taste, return to saute instead (`../SKILL.md`, step 2).
