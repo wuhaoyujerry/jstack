@@ -2,7 +2,7 @@
 printf 'import urllib.request\n\ndef fetch(url):\n    return urllib.request.urlopen(url).read()\n' > client.py
 printf 'from client import fetch\n\ndef load(url):\n    return fetch(url)\n' > app.py
 git add -A && git_q commit -qm init
-s=.cookbook/fetch-retry; mkdir -p "$s"
+s=.cookbook/dishes/fetch-retry; mkdir -p "$s"
 cat > "$s/brief.md" <<'B'
 # Brief: fetch-retry
 Problem: fetch() fails on a transient network error.

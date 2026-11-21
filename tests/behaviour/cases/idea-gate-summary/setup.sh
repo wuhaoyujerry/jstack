@@ -4,8 +4,8 @@ printf 'import urllib.request\n\ndef fetch(url):\n    return urllib.request.urlo
 printf 'from client import fetch\n\ndef load(url):\n    return fetch(url)\n' > app.py
 printf 'from client import fetch\n\ndef probe(url):\n    """Health probe."""\n    return fetch(url)\n' > probe.py
 git add -A && git_q commit -qm init
-mkdir -p .cookbook/fetch-retry
-cat > .cookbook/fetch-retry/ledger.md <<'L'
+mkdir -p .cookbook/dishes/fetch-retry
+cat > .cookbook/dishes/fetch-retry/ledger.md <<'L'
 # fetch-retry
 ask: add retry to the fetch client
 phase: idea
@@ -20,7 +20,7 @@ events:
 - 2026-11-10: The user answered the last round. The brief holds the five decisions the user made.
 - 2026-11-10: The user said that no other decision is open and that no research is needed, and asked for the brief.
 L
-cat > .cookbook/fetch-retry/brief.md <<'B'
+cat > .cookbook/dishes/fetch-retry/brief.md <<'B'
 # Brief: fetch-retry
 ## Decisions
 - D1 Attempts. `fetch` tries a URL three times at most. (2026-11-10)

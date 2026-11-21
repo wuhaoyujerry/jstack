@@ -43,6 +43,6 @@ Open the original source yourself for every claim the answer depends on.
 - Every claim cites its source and date: a file path with its line, a commit, a ticket, or a URL.
 - End with **Unknowns**: what the evidence does not settle, how to check it, and each source's state: hits, empty (searched, nothing found) or unsearched.
 
-Inside a cooking dish, also save the answer to `.cookbook/<slug>/research/<question>.md`.
+Inside a cooking dish, also save the answer to `research/<question>.md` in the dish folder.
 
 Research is done when the question has an answer or a named unknown, with every claim cited.

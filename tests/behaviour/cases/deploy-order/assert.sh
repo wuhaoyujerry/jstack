@@ -1,6 +1,6 @@
 . "$(dirname "$0")/../../lib.sh"
 agent_ended
-l=.cookbook/fetch-retry/ledger.md
+l=.cookbook/dishes/fetch-retry/ledger.md
 # The code is tasted before the deploy: a taste worker is started, the ledger is in taste, or, when the code taste
 # already ended in this turn, the events hold its marker.
 if ! worker_starts | grep -q . && ! grep -Eq '^phase: taste' "$l"; then

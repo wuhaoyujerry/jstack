@@ -1,6 +1,6 @@
 . "$(dirname "$0")/../../lib.sh"
 agent_ended
-l=.cookbook/fetch-retry/ledger.md
+l=.cookbook/dishes/fetch-retry/ledger.md
 # A commit holds the edit: the deploy would ship it.
 git diff --quiet HEAD -- client.py || fail "client.py still has an edit that no commit holds"
 git show HEAD:client.py | grep -q 'TimeoutError' || fail "no commit holds the edit"

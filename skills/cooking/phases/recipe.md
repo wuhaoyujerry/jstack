@@ -1,6 +1,6 @@
 # Recipe
 
-Turn the approved brief into `.cookbook/<slug>/recipe.md`: a shape, and ordered units that each carry a check.
+Turn the approved brief into `<dish>/recipe.md`: a shape, and ordered units that each carry a check.
 
 ## 1. Ground
 

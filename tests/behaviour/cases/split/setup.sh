@@ -7,7 +7,7 @@ printf 'import sys\n\ndef main(argv):\n    return 0\n\nif __name__ == "__main__"
 mkdir -p tests && printf 'from report import rows\n\ndef test_rows():\n    assert rows([{"id": 1, "total": 2}]) == [[1, "2.00"]]\n' > tests/test_report.py
 printf '__pycache__/\n.pytest_cache/\n' >> .git/info/exclude
 git add -A && git_q commit -qm init
-slug="${SLUG:-sync-export}"; s=".cookbook/$slug"; mkdir -p "$s"
+slug="${SLUG:-sync-export}"; s=".cookbook/dishes/$slug"; mkdir -p "$s"
 goal2="${GOAL2:-An operator can export the orders as CSV.}"
 decisions2="${DECISIONS2:-- Export: \`report.rows\` gains an optional \`min_total\` argument; orders below it are left out.
 - Export: a new \`export\` command in \`cli.py\` takes \`--min-total\` and a path, and writes the rows as CSV under the header \`id,total\`.

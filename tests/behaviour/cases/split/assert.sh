@@ -1,15 +1,16 @@
 . "$(dirname "$0")/../../lib.sh"
 agent_ended
 # Turn 1 shows the brief gate and proposes the split: nothing is cut before the user answers.
-[ "$(cat "$W/cookbook-turn1")" = .cookbook/sync-export/ledger.md ] || fail "the cookbook changed before the answer: $(tr '\n' ' ' < "$W/cookbook-turn1")"
+[ "$(cat "$W/cookbook-turn1")" = .cookbook/dishes/sync-export/ledger.md ] || fail "the cookbook changed before the answer: $(tr '\n' ' ' < "$W/cookbook-turn1")"
 [ ! -s "$W/status-turn1" ] || fail "source changed before the answer: $(cat "$W/status-turn1")"
 has "$OUT" '[Ss]plit'
-# Turn 2 approves: one meal file, and one new dish beside the original, which keeps its folder.
-set -- .cookbook/meals/*.md
+# Turn 2 approves: one meal folder that holds the meal file, the original dish's folder and one new dish.
+set -- .cookbook/meals/*/meal.md
 [ "$#" -eq 1 ] && [ -f "$1" ] || fail "want one meal file, got: $*"
-meal="$1"
-[ -f .cookbook/sync-export/ledger.md ] || fail "the original dish lost its folder"
-set -- .cookbook/*/ledger.md
+meal="$1"; md="$(dirname "$meal")"
+[ -f "$md/sync-export/ledger.md" ] || fail "the original dish is not in the meal folder"
+[ ! -e .cookbook/dishes/sync-export ] || fail "the original dish's old folder remains"
+set -- "$md"/*/ledger.md
 [ "$#" -eq 2 ] || fail "want two ledgers, got: $*"
 for l in "$@"; do
   d="$(dirname "$l")"; slug="$(basename "$d")"
@@ -23,7 +24,7 @@ for l in "$@"; do
 done
 # The shared decision moves to the meal file. Each done-check is in exactly one brief, and the two part.
 has "$meal" '[Ss]tandard library'
-in_brief() { grep -l -- "$1" .cookbook/*/brief.md; }
+in_brief() { grep -l -- "$1" "$md"/*/brief.md; }
 for t in test_sync test_export; do
   [ "$(in_brief "$t" | wc -l)" -eq 1 ] || fail "$t is in $(in_brief "$t" | wc -l) briefs, want 1"
 done

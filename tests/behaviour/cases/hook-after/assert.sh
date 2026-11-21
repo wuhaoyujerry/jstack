@@ -1,8 +1,8 @@
 . "$(dirname "$0")/../../lib.sh"
 agent_ended
 has .cookbook/hook-ran.txt 'hook ran'
-sed -n '/^events:/,$p' .cookbook/rename-parse/ledger.md | grep -qi 'hook' || fail "ledger events lack the hook result"
-has .cookbook/rename-parse/ledger.md '^phase: done'
+sed -n '/^events:/,$p' .cookbook/dishes/rename-parse/ledger.md | grep -qi 'hook' || fail "ledger events lack the hook result"
+has .cookbook/dishes/rename-parse/ledger.md '^phase: done'
 # The hook runs when taste ends, before review writes its logs.
 [ -f "$ROOT/logs/sizing-log.md" ] || fail "review did not run"
 [ .cookbook/hook-ran.txt -ot "$ROOT/logs/sizing-log.md" ] || fail "the hook ran after review"

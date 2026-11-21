@@ -2,10 +2,10 @@
 echo 'def parse_line(s): return s.strip()' > util.py
 printf 'grep -q "def parse_line" util.py\n' > check.sh
 git add -A && git_q commit -qm 'rename _parse to parse_line'
-mkdir -p .cookbook/rename-parse/evidence "$ROOT/logs"
-echo 'sh check.sh: exit 0' > .cookbook/rename-parse/evidence/rename-saute.txt
-printf 'pytest: command not found\nmake test: no rule to make target\nsh check.sh: exit 0\n' > .cookbook/rename-parse/evidence/find-check.txt
-cat > .cookbook/rename-parse/ledger.md <<'L'
+mkdir -p .cookbook/dishes/rename-parse/evidence "$ROOT/logs"
+echo 'sh check.sh: exit 0' > .cookbook/dishes/rename-parse/evidence/rename-saute.txt
+printf 'pytest: command not found\nmake test: no rule to make target\nsh check.sh: exit 0\n' > .cookbook/dishes/rename-parse/evidence/find-check.txt
+cat > .cookbook/dishes/rename-parse/ledger.md <<'L'
 # rename-parse
 ask: rename the private function _parse to parse_line in util.py
 phase: taste

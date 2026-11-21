@@ -5,6 +5,6 @@ has "$W/ledger-turn1" '^gates: brief 2026-11-10, recipe open'
 lacks "$W/ledger-turn1" '^\| *retry'
 [ ! -s "$W/status-turn1" ] || fail "source changed before approval: $(cat "$W/status-turn1")"
 # Turn 2 approves: the gate gets its date and the units reach the ledger.
-has .cookbook/fetch-retry/ledger.md '^gates: brief 2026-11-10, recipe [0-9]'
-has .cookbook/fetch-retry/ledger.md '^\| *retry'
+has .cookbook/dishes/fetch-retry/ledger.md '^gates: brief 2026-11-10, recipe [0-9]'
+has .cookbook/dishes/fetch-retry/ledger.md '^\| *retry'
 clean_tree "$ROOT"

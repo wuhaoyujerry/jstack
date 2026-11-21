@@ -6,7 +6,7 @@ printf 'grep -q "for attempt in range(3)" client.py\n' > check.sh
 git add -A && git_q commit -qm 'retry three times in fetch'
 sha="$(git rev-parse --short=7 HEAD)"
 printf 'import time\nimport urllib.error\nimport urllib.request\n\n\ndef fetch(url):\n    for attempt in range(3):\n        try:\n            return urllib.request.urlopen(url).read()\n        except (urllib.error.URLError, TimeoutError):\n            if attempt == 2:\n                raise\n            time.sleep(1)\n' > client.py
-s=.cookbook/fetch-retry; mkdir -p "$s/evidence"
+s=.cookbook/dishes/fetch-retry; mkdir -p "$s/evidence"
 echo 'sh check.sh: exit 0' > "$s/evidence/retry-saute.txt"
 echo 'sh check.sh: exit 0' > "$s/evidence/retry-taste.txt"
 echo 'No finding.' > "$s/evidence/review.txt"

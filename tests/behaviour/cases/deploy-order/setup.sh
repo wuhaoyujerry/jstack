@@ -3,7 +3,7 @@ printf 'import time\nimport urllib.error\nimport urllib.request\n\n\ndef fetch(u
 printf 'from client import fetch\n\ndef load(url):\n    return fetch(url)\n' > app.py
 printf 'grep -q "for attempt in range(3)" client.py\n' > check.sh
 git add -A && git_q commit -qm 'retry three times in fetch'
-s=.cookbook/fetch-retry; mkdir -p "$s/evidence"
+s=.cookbook/dishes/fetch-retry; mkdir -p "$s/evidence"
 echo 'sh check.sh: exit 0' > "$s/evidence/retry-saute.txt"
 cat > "$s/brief.md" <<'B'
 # Brief: fetch-retry

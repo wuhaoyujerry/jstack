@@ -10,13 +10,13 @@ metadata:
 
 Interview the user relentlessly until every decision is settled, then write the brief.
 
-`.cookbook/` is at the repo root. `<slug>` is the cooking dish's slug, or a short one you choose.
+`.cookbook/` is at the repo root. `<dish>` is the cooking dish's folder. Outside cooking, it is `.cookbook/dishes/<slug>/`, with a short slug you choose.
 
 ## Steps
 
-1. Map the ask as a **design tree**: each decision branches into the decisions that depend on it. A **decision** is a choice the brief must resolve when the facts permit more than one reasonable way to meet the ask, such as scope, order or what to defer. It is **settled** when the user has made it, in the ask or in an answer; `## Decisions` in `.cookbook/<slug>/brief.md` records the settled ones. The **frontier** is every open decision whose prerequisites are settled.
+1. Map the ask as a **design tree**: each decision branches into the decisions that depend on it. A **decision** is a choice the brief must resolve when the facts permit more than one reasonable way to meet the ask, such as scope, order or what to defer. It is **settled** when the user has made it, in the ask or in an answer; `## Decisions` in `<dish>/brief.md` records the settled ones. The **frontier** is every open decision whose prerequisites are settled.
 
-2. In each **round**, ask as many frontier questions as fit in one question-tool call, with your recommended answer first in each and marked. Wait for the answers, write each decision under `## Decisions` in `.cookbook/<slug>/brief.md`, then recompute the frontier and ask the next round.
+2. In each **round**, ask as many frontier questions as fit in one question-tool call, with your recommended answer first in each and marked. Wait for the answers, write each decision under `## Decisions` in `<dish>/brief.md`, then recompute the frontier and ask the next round.
 
 3. Facts are yours to find; decisions are the user's. Read the code or run a read-only command. If a fact needs fetching or history, follow `../research/SKILL.md` (from this skill's real directory) and keep asking the questions that do not depend on it. When its note arrives, add each decision it opens to the tree.
 
@@ -30,7 +30,7 @@ Interview the user relentlessly until every decision is settled, then write the 
 
 6. Record a decision in `.cookbook/adr/<nnnn>-<name>.md` only when all three hold: it is hard to reverse, it would surprise a later reader, and it came from a real trade-off.
 
-7. The interview is done when no decision on the tree is open and no research is pending. From this skill's real directory, read `../technical-writing/SKILL.md` and `../unslop/SKILL.md`, then complete `.cookbook/<slug>/brief.md` to both standards:
+7. The interview is done when no decision on the tree is open and no research is pending. From this skill's real directory, read `../technical-writing/SKILL.md` and `../unslop/SKILL.md`, then complete `<dish>/brief.md` to both standards:
 
    ```markdown
    # Brief: <slug>

@@ -8,7 +8,7 @@ Read the ledger, `taste.md` and the evidence folder. Then print the user's side 
 
 ```bash
 for f in "$(dirname "$PI_SESSION_FILE")"/*.jsonl; do
-  grep -qsF '.cookbook/<slug>/' "$f" || continue
+  grep -qsE '\.cookbook/(dishes/|meals/[^/]+/)?<slug>/' "$f" || continue
   echo "== $f"
   jq -rR 'fromjson? | select(.message?.role? == "user") | .message.content | if type == "array" then map(.text? | strings) | join(" ") else strings end | gsub("\\s+"; " ") | .[0:500]' "$f"
 done

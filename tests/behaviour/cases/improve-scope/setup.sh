@@ -7,8 +7,8 @@ cat > "$ROOT/logs/review-log.md" <<'L'
 2026-10-20 | 5c1e0a77 | c07d6e18 | workflow | brief-too-long | the brief restated the ask under every heading | brief.md | open
 L
 cat > "$ROOT/overlays/tasks.txt" <<L
-5c1e0a77 | 91f3b2d4 | acme/shop-api | $W/shop-api/.cookbook/add-export
-5c1e0a77 | c07d6e18 | acme/shop-api | $W/shop-api/.cookbook/fix-rounding
+5c1e0a77 | 91f3b2d4 | acme/shop-api | $W/shop-api/.cookbook/dishes/add-export
+5c1e0a77 | c07d6e18 | acme/shop-api | $W/shop-api/.cookbook/dishes/fix-rounding
 L
 : > "$ROOT/logs/sizing-log.md"
 printf '# Shop overlay\n\nApplies to the repo `shop-api`.\n' > "$ROOT/overlays/shop.md"

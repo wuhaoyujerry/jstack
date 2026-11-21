@@ -17,14 +17,14 @@ The units form a graph. The **frontier** is every unit whose dependencies have p
 
 The worker spec points to files instead of repeating them: `recipe.md` (or the ledger for a trivial dish), the unit ids, and the evidence folder. It gives the builder this loop for each unit:
 
-1. If the unit fixes a defect, run its check first and save the failing output to `.cookbook/<slug>/evidence/<unit>-repro.txt`. A check that passes here does not reproduce the defect: stop and report.
+1. If the unit fixes a defect, run its check first and save the failing output to `<dish>/evidence/<unit>-repro.txt`. A check that passes here does not reproduce the defect: stop and report.
 2. Build the unit as the **smallest complete change**:
    - Take the first source that fully works: code already in the repo, the standard library or platform, an installed dependency, then new code.
    - Build only what the unit names. Finish every caller, test and fixture the change breaks.
    - Keep validation at trust boundaries, error handling that prevents data loss, security and accessibility.
    - For a defect, read every caller of the function you change, then fix the cause once in the shared code.
    - Add only the test cases its check lists.
-3. Run its check. Save the raw output to `.cookbook/<slug>/evidence/<unit>-saute.txt`.
+3. Run its check. Save the raw output to `<dish>/evidence/<unit>-saute.txt`.
 4. If the check passes, commit and take the next unit.
 5. If it fails, fix and run it once more. On a second failure, stop and report both outputs.
 6. If the unit needs something the recipe does not give (a parameter, a file, a different interface), stop and report the **deviation**.

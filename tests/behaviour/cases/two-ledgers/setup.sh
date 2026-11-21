@@ -2,8 +2,8 @@
 echo 'def fetch(url): return url' > client.py
 git add -A && git_q commit -qm init
 for slug in fetch-retry retry-fetch-client; do
-  mkdir -p ".cookbook/$slug"
-  cat > ".cookbook/$slug/ledger.md" <<L
+  mkdir -p ".cookbook/dishes/$slug"
+  cat > ".cookbook/dishes/$slug/ledger.md" <<L
 # $slug
 ask: add retry to the fetch client
 phase: idea

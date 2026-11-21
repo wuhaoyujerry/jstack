@@ -4,8 +4,8 @@ printf 'import urllib.request\n\ndef fetch(url):\n    return urllib.request.urlo
 printf 'from client import fetch\n\ndef load(url):\n    return fetch(url)\n' > app.py
 printf 'from client import fetch\n\ndef probe(url):\n    """Health probe."""\n    return fetch(url)\n' > probe.py
 git add -A && git_q commit -qm init
-mkdir -p .cookbook/fetch-retry
-cat > .cookbook/fetch-retry/ledger.md <<'L'
+mkdir -p .cookbook/dishes/fetch-retry
+cat > .cookbook/dishes/fetch-retry/ledger.md <<'L'
 # fetch-retry
 ask: add retry to the fetch client
 phase: idea

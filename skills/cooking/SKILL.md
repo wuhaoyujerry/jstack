@@ -8,13 +8,13 @@ metadata:
 
 # cooking
 
-A **dish** is one piece of work that cooking takes from the ask to review. The **cookbook** is `.cookbook/` at the repo root; each dish keeps its state in its own folder there, `.cookbook/<slug>/`. Give workers absolute paths to it.
+A **dish** is one piece of work that cooking takes from the ask to review. The **cookbook** is `.cookbook/` at the repo root. Each dish keeps its state in its **dish folder**: `.cookbook/dishes/<slug>/`, or `.cookbook/meals/<meal>/<slug>/` for a dish of a meal. In this skill's files, `<dish>` is that folder. Give workers absolute paths to it.
 
-A **meal** is one goal cooked as several dishes, listed in `.cookbook/meals/<meal>.md`. When the ask names a meal, or a ledger names one on its `meal` line, read [`meal.md`](meal.md) before you resume or start a dish.
+A **meal** is one goal cooked as several dishes. Its **meal folder**, `.cookbook/meals/<meal>/`, holds the folders of its dishes and the meal file, `meal.md`, that lists them. When the ask names a meal, or a ledger names one on its `meal` line, read [`meal.md`](meal.md) before you resume or start a dish.
 
 ## 1. Resume or start
 
-If the ask reports what happened to a `done` dish after its run, follow step 5 of `phases/review.md` on that ledger; if it reports an issue to fix, also **reopen** the dish. Otherwise, if a `.cookbook/*/ledger.md` matches this ask and is not `done`, **resume** it. Otherwise choose a short slug and create `.cookbook/<slug>/ledger.md` from the template below. Before you create it, run `git check-ignore -q .cookbook/x`; if that fails, append `.cookbook/` to the file that `git rev-parse --git-path info/exclude` prints.
+If the ask reports what happened to a `done` dish after its run, follow step 5 of `phases/review.md` on that ledger; if it reports an issue to fix, also **reopen** the dish. Otherwise, if a `.cookbook/{dishes,meals/*}/*/ledger.md` matches this ask and is not `done`, **resume** it. Otherwise choose a short slug that no dish folder has and create `.cookbook/dishes/<slug>/ledger.md` from the template below. Before you create it, run `git check-ignore -q .cookbook/x`; if that fails, append `.cookbook/` to the file that `git rev-parse --git-path info/exclude` prints.
 
 To **resume**, rebuild the position from disk, not from the session. Read the ledger and the dish's files, then check `git status`, the dish's worktrees and its workers. A gate is passed only when the ledger has its date. A unit is `pass` only when its evidence file exists; run the check of every other started unit again. If several open ledgers match, ask which. Tell the user the phase and the next step in one line, then continue.
 

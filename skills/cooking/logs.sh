@@ -38,9 +38,11 @@ ids)
   slug="${2:?usage: logs.sh ids <slug>}"
   top="$(git rev-parse --show-toplevel)"
   key="$(repo_key "$top")"; repo="$(hash8 "$key")"; task="$(hash8 "$key/$slug")"
+  folder="$top/.cookbook/dishes/$slug"
+  for d in "$top"/.cookbook/meals/*/"$slug"/; do [ -d "$d" ] && folder="${d%/}"; done
   pull || true
   mkdir -p "$logs" "$(dirname "$map")"; touch "$map"
-  grep -qF "$repo | $task | " "$map" || printf '%s | %s | %s | %s\n' "$repo" "$task" "$key" "$top/.cookbook/$slug" >> "$map"
+  grep -qF "$repo | $task | " "$map" || printf '%s | %s | %s | %s\n' "$repo" "$task" "$key" "$folder" >> "$map"
   echo "repo=$repo task=$task"
   ;;
 pull)

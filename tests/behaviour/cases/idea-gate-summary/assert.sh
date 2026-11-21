@@ -1,6 +1,6 @@
 . "$(dirname "$0")/../../lib.sh"
 agent_ended
-b=.cookbook/fetch-retry/brief.md
+b=.cookbook/dishes/fetch-retry/brief.md
 # The brief opens with the three sections for the user and closes with the section the user reads least.
 heads="$(grep -E '^## ' "$b")"
 [ "$(printf '%s\n' "$heads" | head -3 | tr '\n' '|')" = "## Goal|## What it does|## How we check|" ] || fail "brief opens with: $(printf '%s\n' "$heads" | head -3 | tr '\n' ' ')"
@@ -25,6 +25,6 @@ has "$OUT" 'brief\.md'
 lacks "$OUT" 'Open facts|Done-checks|Non-goals|mock'
 n="$(wc -w < "$OUT")"; [ "$n" -le 160 ] || fail "reply has $n words, want a gate summary and at most 160 words"
 # The gate waits for the user.
-has .cookbook/fetch-retry/ledger.md '^gates: brief open, recipe open'
+has .cookbook/dishes/fetch-retry/ledger.md '^gates: brief open, recipe open'
 [ -z "$(git status --porcelain)" ] || fail "source changed in the idea phase"
 clean_tree "$ROOT"
