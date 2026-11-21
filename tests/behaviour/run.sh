@@ -8,7 +8,8 @@
 # The agent starts in the fixture repo. A case whose prompt names the improve skill starts in the skills copy, the home of
 # /improve; a `from-repo` file in such a case starts it in the fixture repo. A `cwd` file starts it in that path under the run dir.
 # An `orca-worktrees` file makes the orca stub create each worktree that `worktree create` or `worker-start` names, under $W/wt,
-# and print the reply of that call.
+# and print the reply of that call. An `orca-inbox` file makes the stub print that file at the first `orchestration check`, and
+# accept `ask`, `reply` and `send`, which it only logs.
 set -u
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -79,6 +80,18 @@ if [ -e "$case_dir/orca-worktrees" ] && { [ "\$call" = "worktree create" ] || [ 
     fi
     exit 0
   fi
+fi
+# Mail between agents: the first check prints the inbox of the case. A message that the agent sends is only logged, with its body file.
+if [ -e "$case_dir/orca-inbox" ]; then
+  case "\$call" in
+  "orchestration check")
+    if [ -s "$case_dir/orca-inbox" ] && [ ! -e "$W/inbox-read" ]; then : > "$W/inbox-read"; cat "$case_dir/orca-inbox"; else echo "No unread messages."; fi
+    exit 0 ;;
+  "orchestration ask" | "orchestration reply" | "orchestration send")
+    while [ \$# -gt 0 ]; do if [ "\$1" = --body-file ] && [ -f "\$2" ]; then cat "\$2" >> "$ORCA_LOG"; fi; shift; done
+    echo "messageId=msg_test\$\$"
+    exit 0 ;;
+  esac
 fi
 echo "orca: unavailable in this test" >&2
 exit 1

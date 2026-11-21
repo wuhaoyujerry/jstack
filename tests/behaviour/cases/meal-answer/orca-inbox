@@ -1,0 +1,12 @@
+msg_q1 question from term_cart_export
+  dish cart-export: brief gate
+  Goal: An operator can export a cart as CSV.
+  What it does:
+  - Writes one row for each item in the cart.
+  - Ends the file with a row that holds the total.
+  How we check:
+  - A test exports a cart of two items and reads the rows back.
+  Brief: .cookbook/meals/checkout/cart-export/brief.md
+  Do you approve this brief?
+
+Reply: orca orchestration reply --id msg_q1 --from term_meal --body "..."
