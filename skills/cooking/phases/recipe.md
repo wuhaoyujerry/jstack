@@ -34,7 +34,7 @@ Keep checks **lean**. Attach each at the highest existing **seam** that shows th
 
 Mark each check that needs judgement, and each that changes a shared environment. A check that needs the deployed system is a **live check**: write it under `## Taste` with the unit it verifies, not as a unit.
 
-When the brief lists terms under `## Terms` or marks a decision `ADR`, cut one **domain unit**. It writes each term to `GLOSSARY.md` at the repo root, and each marked decision to `docs/adr/<nnnn>-<name>.md` with its alternatives and reason. An ADR that replaces an older one states what it replaces and why, and the unit deletes the older file once a search finds no reference to its name. It follows the format of the files there and creates a file the repo lacks. Its check finds every term and every marked decision there. Both are committed with the dish. Where an overlay of the ledger keeps either out of the diff, it stays in the brief.
+When the brief lists terms under `## Terms` or marks a decision `ADR`, cut one **domain unit**. It writes each term to `GLOSSARY.md` at the repo root, and each marked decision to `docs/adr/<nnnn>-<name>.md` with its alternatives and reason. An ADR that replaces an older one states what it replaces and why, and the unit deletes the older file once a search finds no reference to its name. It follows the format of the files there and creates a file the repo lacks. Where `.gitattributes` lacks it, the unit adds `GLOSSARY.md merge=union`, so that dishes built in parallel both merge. Its check finds every term and every marked decision there. Both are committed with the dish. Where an overlay of the ledger keeps either out of the diff, it stays in the brief.
 
 ## 4. Write the recipe
 
