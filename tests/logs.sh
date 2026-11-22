@@ -77,6 +77,30 @@ idx="$("$T/a/skills/cooking/logs.sh" tags)"
 check "tags prints a tag once, with its category, its count and its first event" grep -qxF 'brief-too-long | workflow | 2 | the brief repeated the ask in three sections' <<<"$idx"
 check "tags prints one line for each tag" [ "$(grep -c . <<<"$idx")" -eq 3 ]
 
+# The closing line: a tag open in two dishes, a tag open again after an applied change, and a signal that two unspent lines missed.
+mkdir -p "$T/d/skills/cooking" "$T/d/logs"; cp "$src/skills/cooking/logs.sh" "$T/d/skills/cooking/"
+check "summary of no logs counts nothing" [ "$("$T/d/skills/cooking/logs.sh" summary)" = '0 open observations' ]
+cat > "$T/d/logs/review-log.md" <<'L'
+2026-10-01 | r1 | d1 | workflow | gate-missed | e | ledger.md | open
+2026-10-02 | r1 | d2 | workflow | gate-missed | e | ledger.md | open
+2026-10-01 | r1 | d1 | check | slow-tests | e | ledger.md | applied 2026-10-02 skills/x.md
+2026-10-03 | r1 | d2 | check | slow-tests | e | ledger.md | open
+2026-10-03 | r1 | d2 | lesson | same-dish | e | ledger.md | open
+2026-10-03 | r1 | d2 | lesson | same-dish | e | ledger.md | open
+2026-10-03 | - | - | workflow | no-dish | e | "words" | open
+2026-10-04 | - | - | workflow | no-dish | e | "words" | open
+L
+cat > "$T/d/logs/sizing-log.md" <<'L'
+# Sizing log
+
+2026-10-01 | r1 | d1 | predicted=standard | verdict=under | missed=reach
+2026-10-02 | signal=reach | rejected
+2026-10-02 | r1 | d2 | predicted=standard | verdict=under | missed=reach,risk
+2026-10-03 | r1 | d3 | predicted=standard | verdict=under | missed=risk
+L
+check "summary names the tags and the signal that call for /improve" [ "$("$T/d/skills/cooking/logs.sh" summary)" = \
+  '7 open observations; open in two dishes: gate-missed; open again after an applied change: slow-tests; missed in two unspent lines: risk; run /improve' ]
+
 # A device without the clone writes locally and reports that nothing is pushed.
 mkdir -p "$T/c/skills/cooking" "$T/c/logs"; cp "$src/skills/cooking/logs.sh" "$T/c/skills/cooking/"
 (cd "$T/c" && git init -q && printf '/logs/\n' > .gitignore)

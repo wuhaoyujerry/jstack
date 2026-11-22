@@ -4,6 +4,7 @@
 # Usage: logs.sh ids <slug>   in the task's repo: pulls the logs, records the task in the map, prints "repo=<id> task=<id>"
 #        logs.sh pull         pulls the logs
 #        logs.sh tags         prints each tag of the review log once: "<tag> | <category> | <lines> | <first event>"
+#        logs.sh summary      prints the closing line of review: the open observations, and what calls for /improve
 #        logs.sh publish      checks the unpushed lines for private names, then commits and pushes the logs
 # Exit: 1 a line holds a private name (publish); 2 the logs are not pushed.
 set -euo pipefail
@@ -56,6 +57,37 @@ tags)
   awk -F' [|] ' 'NF >= 8 { if (!($5 in n)) { order[++k] = $5; cat[$5] = $4; ev[$5] = substr($6, 1, 200) } n[$5]++ }
     END { for (i = 1; i <= k; i++) { t = order[i]; print t " | " cat[t] " | " n[t] " | " ev[t] } }' "$logs/review-log.md"
   ;;
+summary)
+  # One line. It names a tag that is open in two dishes or open again after an applied change, and a signal that two unspent
+  # lines of the sizing log missed; a line above a signal's last marker is spent. A line without a dish counts for no dish.
+  set --
+  [ -f "$logs/review-log.md" ] && set -- "$@" kind=review "$logs/review-log.md"
+  [ -f "$logs/sizing-log.md" ] && set -- "$@" kind=sizing "$logs/sizing-log.md"
+  awk -F' [|] ' '
+    function add(list, x) { return list (list ? ", " : "") x }
+    kind == "review" && NF >= 8 {
+      if (!($5 in seen)) { seen[$5] = 1; tag[++k] = $5 }
+      if ($8 == "open") { n++; if ($2 " " $3 != "- -" && !in_dish[$5, $2, $3]++) dishes[$5]++; if ($1 > last_open[$5]) last_open[$5] = $1 }
+      else if ($8 ~ /^applied / && (first_applied[$5] == "" || $1 < first_applied[$5])) first_applied[$5] = $1
+    }
+    kind == "sizing" && $2 ~ /^signal=/ { unspent[substr($2, 8)] = 0 }
+    kind == "sizing" && $NF ~ /^missed=/ {
+      m = split(substr($NF, 8), a, ",")
+      for (i = 1; i <= m; i++) if (a[i] != "none") { if (!(a[i] in unspent)) signal[++j] = a[i]; unspent[a[i]]++ }
+    }
+    END {
+      for (i = 1; i <= k; i++) {
+        if (dishes[tag[i]] >= 2) two = add(two, tag[i])
+        if (first_applied[tag[i]] != "" && last_open[tag[i]] > first_applied[tag[i]]) again = add(again, tag[i])
+      }
+      for (i = 1; i <= j; i++) if (unspent[signal[i]] >= 2) missed = add(missed, signal[i])
+      line = (n + 0) " open observation" (n == 1 ? "" : "s")
+      if (two) line = line "; open in two dishes: " two
+      if (again) line = line "; open again after an applied change: " again
+      if (missed) line = line "; missed in two unspent lines: " missed
+      print line ((two || again || missed) ? "; run /improve" : "")
+    }' "$@" < /dev/null
+  ;;
 publish)
   is_clone || { echo "logs: $logs is not a clone of the logs repo; nothing is pushed" >&2; exit 2; }
   cd "$logs"
@@ -88,6 +120,6 @@ publish)
   echo "logs: pushed"
   ;;
 *)
-  sed -n '2,8p' "${BASH_SOURCE[0]}" >&2; exit 64
+  sed -n '2,9p' "${BASH_SOURCE[0]}" >&2; exit 64
   ;;
 esac

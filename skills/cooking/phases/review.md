@@ -76,7 +76,7 @@ Then run `logs.sh publish`. It checks the new lines for a repo name, a repo owne
 
 ## 4. Close
 
-Set the ledger phase to `done`. Tell the user in one line: the number of `open` observations in `review-log.md`, each tag that now appears in two dishes, each missed signal that now appears in two unspent lines, and each tag that recurs after an `applied` change. When the line names a tag or signal, end it with `run /improve`.
+Set the ledger phase to `done`. Run `logs.sh summary` and tell the user the line it prints: the number of `open` observations, then each tag and each missed signal that calls for `/improve`.
 
 ## 5. Outcome
 
