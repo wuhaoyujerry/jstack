@@ -1,6 +1,6 @@
 # The handoff-linked fixture, with a brief of three done-checks. A command shows the first. A reader must look at the second, and
 # every reader decides it alike. The third is an opinion on wording, which a decision of the user leaves to the builder.
-. "$(dirname "$0")/../handoff-linked/setup.sh"
+. "$(dirname "$0")/../../fixtures/handoff-linked.sh"
 cat > .cookbook/dishes/fetch-retry/brief.md <<'B'
 # Brief: fetch-retry
 ## Goal

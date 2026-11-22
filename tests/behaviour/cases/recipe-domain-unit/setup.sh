@@ -1,5 +1,5 @@
 # The handoff-linked fixture, with a brief that settled one term and marks one decision ADR. The repo has no glossary and no ADR.
-. "$(dirname "$0")/../handoff-linked/setup.sh"
+. "$(dirname "$0")/../../fixtures/handoff-linked.sh"
 cat > .cookbook/dishes/fetch-retry/brief.md <<'B'
 # Brief: fetch-retry
 ## Goal

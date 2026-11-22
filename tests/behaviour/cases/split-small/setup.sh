@@ -3,4 +3,4 @@ export SLUG=sync-rename ASK='make the nightly sync survive network errors and re
 export GOAL2='The report code names its total formatter clearly.'
 export DECISIONS2='- Report: the private function `_fmt` in `report.py` becomes `_format_total`; no behaviour changes.'
 export CHECK2='- `python -m pytest tests/test_report.py` passes, and `grep -c _fmt report.py` prints 0.'
-. "$(dirname "$0")/../split/setup.sh"
+. "$(dirname "$0")/../../fixtures/split.sh"

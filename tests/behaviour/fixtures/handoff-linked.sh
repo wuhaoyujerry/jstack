@@ -1,3 +1,4 @@
+# For setup.sh: the handoff-linked fixture, which several cases share.
 # The handoff fixture after the handoff: the brief gate has its date, the ledger names the dish worktree, and the session starts in
 # that worktree (the `cwd` file) with the prompt of the handoff.
 wt="$(cd "$W" && pwd -P)/wt/fetch-retry"

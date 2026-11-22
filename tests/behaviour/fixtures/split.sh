@@ -1,3 +1,4 @@
+# For setup.sh: the split fixture, which several cases share.
 # A standard dish in idea: the interview is done and the brief gate is open. The brief has two done-checks in separate modules,
 # and each needs two units and a public change, so each part would be a standard dish. PART2 swaps in another second part.
 printf 'import urllib.request\n\ndef fetch(url):\n    return urllib.request.urlopen(url).read()\n' > client.py
