@@ -1,5 +1,10 @@
 . "$(dirname "$0")/../../lib.sh"
 agent_ended
+# Scenario improve-in-home. The session is in the home, so it runs the steps itself, whatever its model. It starts no other session,
+# where a help or a version call starts nothing, and it gives the user no prompt for one: such a prompt says to follow this skill's file.
+n="$(grep -Evc -- '^(--help|-h|--version|-v)( |$)' "$W/pi-nested.log" 2>/dev/null)"
+[ "${n:-0}" -eq 0 ] || fail "tried to start another session: $(grep -Ev -- '^(--help|-h|--version|-v)( |$)' "$W/pi-nested.log" | head -1 | cut -c1-120)"
+lacks "$OUT" 'skills/improve/SKILL\.md and follow'
 # Order: the spec the judge started with holds a scenario row that SCENARIOS.md lacks.
 [ -s "$W/spec-at-start" ] || fail "no judge started with a spec file: $(head -3 "$ORCA_LOG")"
 git -C "$ROOT" show HEAD:SCENARIOS.md | grep '^|' > "$W/base-rows"
