@@ -10,6 +10,8 @@
 # An `orca-worktrees` file makes the orca stub create each worktree that `worktree create` or `worker-start` names, under $W/wt,
 # and print the reply of that call. An `orca-inbox` file makes the stub print that file at the first `orchestration check`, and
 # accept `ask`, `reply` and `send`, which it only logs.
+# A symbolic link to a case folder is an alias: the id of a second scenario that the case asserts too. It runs by name; a run of
+# every case skips it.
 set -u
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -41,7 +43,7 @@ for m in $MODELS; do
 done
 
 if [ "$#" -gt 0 ]; then cases=("$@"); else
-  cases=(); for d in "$here"/cases/*/; do cases+=("$(basename "$d")"); done
+  cases=(); for d in "$here"/cases/*/; do [ -L "${d%/}" ] || cases+=("$(basename "$d")"); done
 fi
 
 git_q() { git -c user.name=test -c user.email=test@example.invalid -c commit.gpgsign=false "$@" >/dev/null; }
