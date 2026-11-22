@@ -1,0 +1,3 @@
+msg_d1 worker_done from term_cart_export
+  dish cart-export: done
+  cart-export is done: export_csv writes a cart as CSV with a total row, and its check passed. The work is on the branch cart-export. Nothing is left.

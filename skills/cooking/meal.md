@@ -55,7 +55,9 @@ As the meal agent, handle each message that waits for you (2 and 3) before you s
 
    The spec is `Read <this skill's real directory>/SKILL.md and follow it. Ask: continue the dish <slug>.` Write the path in the reply's `workspace`, after `::`, to the `worktree` line of the dish's ledger. When dishes remain that are not `done`, and none of them is ready or names a worktree, tell the user what is missing and change nothing. Then end your turn; Orca wakes you with each message.
 2. A **question** from a dish is a gate or a stop of that dish. Show it to the user as the dish wrote it, with the dish's name, and send the user's answer back.
-3. A **report** that a dish is `done`: merge its branch with `git merge <dish branch>`. On a conflict, run `git merge --abort`, show the user the files and stop. Otherwise tell the user the dish's closing line and go to 1.
+3. A **report** that a dish is `done`: merge its branch with `git merge <dish branch>`. On a conflict, run `git merge --abort`, record the conflict as an outcome, show the user the files and stop. Otherwise tell the user the dish's closing line and go to 1.
+
+An **outcome** is what happens to a `done` dish after its report: a conflict in its merge, a deploy, a live check. Record it yourself by step 5 of `phases/review.md`, with the name of `$PI_SESSION_FILE` as its file.
 
 The meal is done when every dish is `done` and merged: tell the user.
 
