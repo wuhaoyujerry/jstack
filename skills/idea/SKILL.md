@@ -52,6 +52,6 @@ Interview the user relentlessly until every decision is settled, then write the 
 
    The first three sections are for the user, in plain words a reader who has not seen the code understands: the goal in one sentence; what the dish changes, in at most 5 lines; how the user will see that it works, in at most 3 lines. Each line has 15 words or fewer and no code, identifier or issue criterion. The sections after them are for the recipe.
 
-   Write each done-check and each decision as one sentence of 20 words or fewer: the outcome, or the choice. A **mechanism** behind it (a command, an identifier, a code reference, the steps of a procedure) goes under `## Open facts`; the recipe writes the exact check of each done-check from there.
+   Write each done-check and each decision, also a decision the brief already holds, as one sentence of 20 words or fewer: the outcome, or the choice. A **mechanism** behind it (a command, an identifier, a code reference, the steps of a procedure) goes under `## Open facts`; the recipe writes the exact check of each done-check from there.
 
 8. **Gate.** Show the **gate summary**: the goal, what it does and how we check, as written in the brief, then the path of the brief and the ask for approval. The user reads nothing else: leave the recipe sections, rewordings and code out of the reply. A choice you made while writing the brief is a decision; ask it before the gate. The idea phase ends when the user approves the brief.
