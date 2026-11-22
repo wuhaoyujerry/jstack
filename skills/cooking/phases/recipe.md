@@ -32,7 +32,7 @@ A **unit** is the smallest change that can be built, checked and committed alone
 
 Keep checks **lean**. Attach each at the highest existing **seam** that shows the behaviour; add a seam only when none does. Reuse an existing test when one shows it. A new test lists its cases in the unit: one per behaviour in the brief's done-checks, plus one per risky failure path in a parser or security code. A unit that writes state, enqueues work, calls an external provider or handles a webhook also lists at least one failure or edge case in its check: a partial failure, a retry or re-entry, or another caller path.
 
-Mark each check that needs judgement, and each that changes a shared environment. A check that needs the deployed system is a **live check**: write it under `## Taste` with the unit it verifies, not as a unit.
+A **judgement check** is a check whose verdict is an opinion: two readers of the same output can reach different verdicts, such as whether wording is clear or a design looks good. A check that every reader decides alike stays unmarked, also when only a person who looks can decide it, such as whether a page shows a photo. Mark each judgement check, and each check that changes a shared environment. A check that needs the deployed system is a **live check**: write it under `## Taste` with the unit it verifies, not as a unit.
 
 When the brief lists terms under `## Terms` or marks a decision `ADR`, cut one **domain unit**. It writes each term to `GLOSSARY.md` at the repo root, and each marked decision to `docs/adr/<nnnn>-<name>.md` with its alternatives and reason. An ADR that replaces an older one states what it replaces and why, and the unit deletes the older file once a search finds no reference to its name. It follows the format of the files there and creates a file the repo lacks. Where `.gitattributes` lacks it, the unit adds `GLOSSARY.md merge=union`, so that dishes built in parallel both merge. Its check finds every term and every marked decision there. Both are committed with the dish. Where an overlay of the ledger keeps either out of the diff, it stays in the brief.
 
@@ -62,6 +62,7 @@ The recipe is for agents: the user does not read it. The gate waits for the user
 
 - the two sketches differ in a design choice that is the user's to make;
 - the recipe departs from the brief in scope, a decision or a done-check;
+- the recipe marks a judgement check, and neither the brief nor the ledger events hold the user's answer on its opinion. A decision that leaves the work behind the check to the builder, such as its wording or its design, is that answer: the check stays a judgement check;
 - a unit failed twice and saute returned here;
 - the split test recommends a split.
 

@@ -14,7 +14,7 @@ Interview the user relentlessly until every decision is settled, then write the 
 
 ## Steps
 
-1. Map the ask as a **design tree**: each decision branches into the decisions that depend on it. A **decision** is a choice the brief must resolve when the facts permit more than one reasonable way to meet the ask, such as scope, order or what to defer. It is **settled** when the user has made it, in the ask or in an answer; `## Decisions` in `<dish>/brief.md` records the settled ones. The **frontier** is every open decision whose prerequisites are settled.
+1. Map the ask as a **design tree**: each decision branches into the decisions that depend on it. A **decision** is a choice the brief must resolve when the facts permit more than one reasonable way to meet the ask, such as scope, order or what to defer. It is **settled** when the user has made it, in the ask or in an answer; `## Decisions` in `<dish>/brief.md` records the settled ones. An outcome that rests on an opinion, such as wording that reads well or a design that looks good, holds one more decision: what settles the opinion, as the exact text, the design to match or a rule with a number. The **frontier** is every open decision whose prerequisites are settled.
 
 2. In each **round**, ask as many frontier questions as fit in one question-tool call, with your recommended answer first in each and marked. Wait for the answers, write each decision under `## Decisions` in `<dish>/brief.md`, then recompute the frontier and ask the next round.
 
