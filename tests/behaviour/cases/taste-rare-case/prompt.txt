@@ -1,0 +1,1 @@
+You are the verifier of the dish `receipt` in this repo. Read {{ROOT}}/skills/cooking/phases/taste.md and follow its step 4 only. The dish's diff is `git diff HEAD~1 HEAD`; its brief and recipe are in .cookbook/dishes/receipt/. Save the findings to .cookbook/dishes/receipt/evidence/review.txt and change no other file.
