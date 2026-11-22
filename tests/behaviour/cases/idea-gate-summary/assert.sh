@@ -23,7 +23,8 @@ long="$(awk '/^## /{s=$0; next} s ~ /^## (Done-checks|Decisions)/ && /^ *([-*]|[
 # The reply is the gate summary: the user sections and the brief's path, without the sections for the recipe.
 has "$OUT" 'brief\.md'
 lacks "$OUT" 'Open facts|Done-checks|Non-goals|mock'
-n="$(wc -w < "$OUT")"; [ "$n" -le 160 ] || fail "reply has $n words, want a gate summary and at most 160 words"
+# The user sections hold 135 words at most: 9 lines of 15. The rest is their headings, the path and the ask.
+n="$(wc -w < "$OUT")"; [ "$n" -le 180 ] || fail "reply has $n words, want a gate summary and at most 180 words"
 # The gate waits for the user.
 has .cookbook/dishes/fetch-retry/ledger.md '^gates: brief open, recipe open'
 [ -z "$(git status --porcelain)" ] || fail "source changed in the idea phase"

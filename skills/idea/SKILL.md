@@ -54,4 +54,6 @@ Interview the user relentlessly until every decision is settled, then write the 
 
    Write each done-check and each decision, also a decision the brief already holds, as one sentence of 20 words or fewer: the outcome, or the choice. A **mechanism** behind it (a command, an identifier, a code reference, the steps of a procedure) goes under `## Open facts`; the recipe writes the exact check of each done-check from there.
 
+   Then run `check-brief.sh <dish>/brief.md` from this skill's real directory. It counts the lines and the words that the two paragraphs above limit, and prints each line over a limit. Rewrite each printed line and run it again: the brief is complete when it prints nothing.
+
 8. **Gate.** Show the **gate summary**: the goal, what it does and how we check, as written in the brief, then the path of the brief and the ask for approval. The user reads nothing else: leave the recipe sections, rewordings and code out of the reply. A choice you made while writing the brief is a decision; ask it before the gate. The idea phase ends when the user approves the brief.
