@@ -3,6 +3,7 @@
 # A log line names a repo and a task by id. The task map, overlays/tasks.txt, resolves the ids on the device that ran the task.
 # Usage: logs.sh ids <slug>   in the task's repo: pulls the logs, records the task in the map, prints "repo=<id> task=<id>"
 #        logs.sh pull         pulls the logs
+#        logs.sh tags         prints each tag of the review log once: "<tag> | <category> | <lines> | <first event>"
 #        logs.sh publish      checks the unpushed lines for private names, then commits and pushes the logs
 # Exit: 1 a line holds a private name (publish); 2 the logs are not pushed.
 set -euo pipefail
@@ -49,6 +50,12 @@ ids)
 pull)
   pull || true
   ;;
+tags)
+  # The line that first used a tag gives its category and its event, cut so that the index stays one short read as the log grows.
+  [ -f "$logs/review-log.md" ] || exit 0
+  awk -F' [|] ' 'NF >= 8 { if (!($5 in n)) { order[++k] = $5; cat[$5] = $4; ev[$5] = substr($6, 1, 200) } n[$5]++ }
+    END { for (i = 1; i <= k; i++) { t = order[i]; print t " | " cat[t] " | " n[t] " | " ev[t] } }' "$logs/review-log.md"
+  ;;
 publish)
   is_clone || { echo "logs: $logs is not a clone of the logs repo; nothing is pushed" >&2; exit 2; }
   cd "$logs"
@@ -81,6 +88,6 @@ publish)
   echo "logs: pushed"
   ;;
 *)
-  sed -n '2,7p' "${BASH_SOURCE[0]}" >&2; exit 64
+  sed -n '2,8p' "${BASH_SOURCE[0]}" >&2; exit 64
   ;;
 esac

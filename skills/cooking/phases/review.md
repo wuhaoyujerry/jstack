@@ -20,7 +20,7 @@ An **observation** is one event from this run and the file that shows it: an evi
 
 A **correction** is a message the user typed in which they object to something the agent did or asked in this dish. Write an observation for each correction that fits a category below: its session file shows it, and the observation quotes the user's words.
 
-Give each observation a category and a **tag**: one to three words for what went wrong. Reuse a tag from `review-log.md` when it names the same failure, whatever its length.
+Give each observation a category and a **tag**: one to three words for its **cause**, the thing that one change would fix. First run `logs.sh tags` and read every line: a tag of `review-log.md`, its category, the count of its lines and its first event. When one change would fix that event and yours, your observation takes that tag and that category, whatever the tag's length.
 
 | Category | Event |
 |---|---|

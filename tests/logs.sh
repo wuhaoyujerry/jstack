@@ -71,6 +71,12 @@ check "device a pushes after it" [ "$(publish a)" = 0 ]
 check "the remote holds the line of b" remote_has from-b
 check "the remote holds the line of a" remote_has from-a
 
+# The tag index: one line for each tag, with the category and the event of the line that first used it.
+line brief-too-long 'the brief repeated the ask in a fourth section'
+idx="$("$T/a/skills/cooking/logs.sh" tags)"
+check "tags prints a tag once, with its category, its count and its first event" grep -qxF 'brief-too-long | workflow | 2 | the brief repeated the ask in three sections' <<<"$idx"
+check "tags prints one line for each tag" [ "$(grep -c . <<<"$idx")" -eq 3 ]
+
 # A device without the clone writes locally and reports that nothing is pushed.
 mkdir -p "$T/c/skills/cooking" "$T/c/logs"; cp "$src/skills/cooking/logs.sh" "$T/c/skills/cooking/"
 (cd "$T/c" && git init -q && printf '/logs/\n' > .gitignore)
