@@ -16,9 +16,9 @@ user="$(sec Goal; sec 'What it does'; sec 'How we check')"
 if printf '%s\n' "$user" | grep -Eq '`|mock|urllib|time\.sleep'; then fail "user sections hold code: $(printf '%s\n' "$user" | grep -E '`|mock|urllib|time\.sleep' | head -1)"; fi
 long="$(printf '%s\n' "$user" | sed -E "s/$item//" | awk 'split($0,a," ")>15')"
 [ -z "$long" ] || fail "a user line over 15 words: $(printf '%s\n' "$long" | head -1)"
-# Each done-check and each decision is one sentence of 20 words or fewer; a label such as "D3." or "D3 Errors." at its start and
-# a date in brackets at its end are not counted.
-long="$(awk '/^## /{s=$0; next} s ~ /^## (Done-checks|Decisions)/ && /^ *([-*]|[0-9]+[.)]) /{l=$0; sub(/^ *([-*]|[0-9]+[.)]) +/,"",l); sub(/^D[0-9]+[^.]*\. +/,"",l); sub(/ *\([^()]*\)\.?$/,"",l); if (split(l,a," ")>20) print l}' "$b")"
+# Each done-check and each decision is one sentence of 20 words or fewer; a label such as "D3.", "D3 Errors." or
+# "D3 (2026-11-10):" at its start and a date in brackets at its end are not counted.
+long="$(awk '/^## /{s=$0; next} s ~ /^## (Done-checks|Decisions)/ && /^ *([-*]|[0-9]+[.)]) /{l=$0; sub(/^ *([-*]|[0-9]+[.)]) +/,"",l); sub(/^D[0-9]+[^.:]*[.:] +/,"",l); sub(/ *\([^()]*\)\.?$/,"",l); if (split(l,a," ")>20) print l}' "$b")"
 [ -z "$long" ] || fail "a line over 20 words: $(printf '%s\n' "$long" | head -1)"
 # The reply is the gate summary: the user sections and the brief's path, without the sections for the recipe.
 has "$OUT" 'brief\.md'
