@@ -30,6 +30,7 @@ ledger() { # <slug> <ask> <phase> <size> <gates> <unit row> <event>
 # $1
 ask: $2
 meal: checkout
+worktree: none
 phase: $3
 size: $4
 size changes:

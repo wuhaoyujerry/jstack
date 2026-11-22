@@ -36,6 +36,6 @@ ledger cart-export 'export a cart as CSV' 'done' 'standard, done-check clear, on
   "- 2026-11-11 started by the meal agent as its worker, in $wt
 - 2026-11-11 unit export: commit $(git -C "$wt" rev-parse --short HEAD) on branch cart-export
 - 2026-11-11 review closed the dish"
-awk -v w="$wt" '{ print } /^meal:/ { print "worktree: " w }' "$m/cart-export/ledger.md" > "$m/cart-export/ledger.md.new" && mv "$m/cart-export/ledger.md.new" "$m/cart-export/ledger.md"
+awk -v w="$wt" '/^worktree:/ { $0 = "worktree: " w } { print }' "$m/cart-export/ledger.md" > "$m/cart-export/ledger.md.new" && mv "$m/cart-export/ledger.md.new" "$m/cart-export/ledger.md"
 mkdir -p "$m/cart-export/evidence" && echo '1 passed' > "$m/cart-export/evidence/export-saute.txt"
 rm -rf "$W/before" && cp -R .cookbook "$W/before"

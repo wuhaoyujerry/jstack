@@ -16,7 +16,7 @@ branch: <meal branch|none>
 |---|---|
 ```
 
-Each dish keeps its own folder and ledger in the meal folder, and names the meal on the `meal` line of its ledger. Read a dish's status from the `phase` of its ledger; the meal is done when every dish is `done`.
+Each dish keeps its own folder and ledger in the meal folder, and names the meal on the `meal` line of its ledger. Read a dish's status from the `phase` of its ledger.
 
 ## 1. Split a dish
 
@@ -32,7 +32,7 @@ The split is done when the meal file lists every dish, every dish has a folder i
 
 ## 2. Coordinate the meal
 
-The **meal worktree** holds the **meal branch**, which collects the work of the dishes. The session in it is the **meal agent**: it cooks no dish. It starts each dish as a worker in a child worktree, receives every report, and merges each dish that is done. Follow this step after a split, when the ask names the meal, and when it names a dish of the meal whose ledger names no worktree. This step replaces the question that `SKILL.md` asks when several ledgers match.
+The **meal worktree** holds the **meal branch**, which collects the work of the dishes. The session in it is the **meal agent**: it cooks no dish. It starts each dish as a worker in a child worktree, receives every report, and merges each dish that is done. Follow this step after a split, when the ask names the meal, and when it names a dish of the meal whose ledger names no worktree. A dish's worker (step 3) that is asked to continue its dish cooks it in place of this step, whatever its ledger names. This step replaces the question that `SKILL.md` asks when several ledgers match.
 
 A dish is **ready** when it is not `done`, every dish it depends on is `done`, and the meal branch holds their work. While the meal file names no worktree, the current branch stands for the meal branch.
 
@@ -41,10 +41,10 @@ Find the meal agent first:
 - **The meal file names the worktree you are in**: you are the meal agent.
 - **It names another worktree**: tell the user that worktree and change nothing.
 - **It names none, and no dish is ready**: tell the user what is missing and change nothing.
-- **It names none, in the main checkout**: hand off the meal by step 3 of `SKILL.md`, with the meal's name for the slug and `Ask: continue the meal <meal>.` Write the reply's path and its branch, without `refs/heads/`, to the meal file, and record the handoff and `$PI_SESSION_FILE` in the events of each dish that is not `done`.
+- **It names none, in the main checkout**: hand off the meal by step 3 of `SKILL.md`, with the meal's name for the slug, `Ask: continue the meal <meal>.`, and the meal file in place of the ledger: write the reply's path and its branch, without `refs/heads/`, to the meal file, and record the handoff and `$PI_SESSION_FILE` in the events of each dish that is not `done`. The `worktree` line of a dish names that dish's own worktree, never the meal worktree.
 - **It names none, in another worktree**: that worktree is the meal worktree and you are the meal agent. Write its path and branch to the meal file, and set to `none` the `worktree` line of a dish that names it.
 
-As the meal agent:
+As the meal agent, handle each message that waits for you (2 and 3) before you start a dish:
 
 1. Start every ready dish whose ledger names no worktree, as `models.md` starts a worker, on your own model and in a child worktree from the meal branch:
 
@@ -53,7 +53,7 @@ As the meal agent:
      --worktree new-child --name <slug> --base-branch <meal branch> --task-title "dish <slug>" --spec-file <file> --json
    ```
 
-   The spec is `Read <this skill's real directory>/SKILL.md and follow it. Ask: continue the dish <slug>.` Write the path in the reply's `workspace`, after `::`, to the `worktree` line of the dish's ledger. Then end your turn; Orca wakes you with each message.
+   The spec is `Read <this skill's real directory>/SKILL.md and follow it. Ask: continue the dish <slug>.` Write the path in the reply's `workspace`, after `::`, to the `worktree` line of the dish's ledger. When dishes remain that are not `done`, and none of them is ready or names a worktree, tell the user what is missing and change nothing. Then end your turn; Orca wakes you with each message.
 2. A **question** from a dish is a gate or a stop of that dish. Show it to the user as the dish wrote it, with the dish's name, and send the user's answer back.
 3. A **report** that a dish is `done`: merge its branch with `git merge <dish branch>`. On a conflict, run `git merge --abort`, show the user the files and stop. Otherwise tell the user the dish's closing line and go to 1.
 

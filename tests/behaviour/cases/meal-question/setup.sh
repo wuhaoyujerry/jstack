@@ -28,7 +28,7 @@ None.
 B
 for d in cart-export cart-email; do
   git worktree add -q -b "$d" "$base/$d" checkout
-  awk -v w="$base/$d" '{ print } /^meal:/ { print "worktree: " w } /^- 2026-11-10 split/ { print "- 2026-11-11 started by the meal agent as its worker, in " w }' \
+  awk -v w="$base/$d" '/^worktree:/ { $0 = "worktree: " w } { print } /^- 2026-11-10 split/ { print "- 2026-11-11 started by the meal agent as its worker, in " w }' \
     "$m/$d/ledger.md" > "$m/$d/ledger.md.new" && mv "$m/$d/ledger.md.new" "$m/$d/ledger.md"
 done
 rm -rf "$W/before" && cp -R .cookbook "$W/before"

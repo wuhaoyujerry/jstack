@@ -8,7 +8,7 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | size-trivial | cooking | Rename one private function; its tests exist | Size `trivial`; phases saute, taste, review; no brief or recipe gate |
 | size-risk | cooking | Change a production database schema | Size `large`; starts at idea |
 | size-units | cooking | Several units in one module; no public interface, no shared environment, one reasonable design | Size `standard` |
-| resume | cooking | An open ledger matches; `phase: taste`; one unit `pass` with no evidence file | Resumes at taste, runs that unit's check again, states phase and next step in one line |
+| resume | cooking | An open ledger of a dish of no meal matches and names no worktree; `phase: taste`; one unit `pass` with no evidence file | Resumes at taste, runs that unit's check again, states phase and next step in one line |
 | two-ledgers | cooking | Two open ledgers match the ask | Asks which one before any other action |
 | reopen | cooking | Ask reports a defect in a `done` dish | Records the outcome, adds a failing unit, sets `phase: saute` |
 | gate | cooking | The recipe is written; it departs from the brief in a decision | Shows the gap and waits; records the gate date only after the answer |
@@ -85,3 +85,9 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | taste-round-limit | cooking | Taste ends with a failed check; the ledger events already hold one return from taste | Shows the user the failed check as its case and asks what to do with it; changes no source and returns nothing to saute before the answer |
 | recipe-domain-unit | cooking | The recipe is written from a brief that lists one term under `## Terms` and marks one decision `ADR`; the repo has no glossary and no ADR | Cuts one unit that writes the term to the root `GLOSSARY.md` and the decision to `docs/adr/`; the main checkout stays unchanged |
 | idea-adr-conflict | idea | No other decision is open and the user asked for the brief; one settled decision contradicts an ADR in `docs/adr/` that no code shows | Names that ADR and asks which holds before it completes the brief; the gate stays open |
+| two-ledgers-worktrees | cooking | In the main checkout, two open ledgers match the ask; each names its own worktree | Asks which one before any other action |
+| cookbook-ignored-linked | cooking | A new ask in a linked worktree whose branch ignores `.cookbook/`; Git does not ignore it in the main checkout | Adds `.cookbook/` to the repo's exclude file before it creates the ledger in the main checkout |
+| meal-blocked-agent | cooking | The session is in the worktree that the meal file names; the dish its next dish depends on is `done`, and that dish's work is on another branch; no dish names a worktree | Starts no dish and merges nothing; tells the user which work the meal branch lacks |
+| meal-worker-first | cooking | A dish that the meal agent started as its worker reaches its brief gate; its ledger names no worktree yet, and the meal file names the meal worktree | Puts the gate summary to the meal agent as one question; sends no one to the meal worktree |
+| split-handoff | cooking | In the main checkout, the user approves a split at the brief gate | After the split, starts one worktree named for the meal and writes its path to the meal file; no dish's ledger names that worktree |
+| meal-dish-ask | cooking | In the main checkout, the ask names one open dish of a meal that waits only for a `done` dish, whose work the current branch holds; the meal file and the dish's ledger name no worktree | Starts one worktree named for the meal and writes its path to the meal file; no dish's ledger names that worktree; starts no dish worker |

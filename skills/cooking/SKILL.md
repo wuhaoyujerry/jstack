@@ -14,9 +14,9 @@ A **meal** is one goal cooked as several dishes. Its **meal folder**, `.cookbook
 
 ## 1. Resume or start
 
-If the ask reports what happened to a `done` dish after its run, follow step 5 of `phases/review.md` on that ledger; if it reports an issue to fix, also **reopen** the dish. Otherwise, if a `.cookbook/{dishes,meals/*}/*/ledger.md` matches this ask and is not `done`, **resume** it. Otherwise choose a short slug that no dish folder has and create `.cookbook/dishes/<slug>/ledger.md` from the template below. Before you create it, run `git check-ignore -q .cookbook/x`; if that fails, append `.cookbook/` to the file that `git rev-parse --git-path info/exclude` prints.
+If the ask reports what happened to a `done` dish after its run, follow step 5 of `phases/review.md` on that ledger; if it reports an issue to fix, also **reopen** the dish. Otherwise, if a `.cookbook/{dishes,meals/*}/*/ledger.md` matches this ask and is not `done`, **resume** it; when several match, first ask which. Otherwise choose a short slug that no dish folder has and create `.cookbook/dishes/<slug>/ledger.md` from the template below. Before you create it, run `git -C <main checkout> check-ignore -q .cookbook/x`; if that fails, append `.cookbook/` to the file that `git rev-parse --git-path info/exclude` prints.
 
-To **resume**, rebuild the position from disk, not from the session. A dish whose ledger names a worktree continues only in a session there: anywhere else, tell the user the worktree and change nothing. Read the ledger and the dish's files, then check `git status`, the dish's worktrees and its workers. A gate is passed only when the ledger has its date. A unit is `pass` only when its evidence file exists; run the check of every other started unit again. If several open ledgers match, ask which. Tell the user the phase and the next step in one line, then continue.
+To **resume**, rebuild the position from disk, not from the session. A dish whose ledger names a worktree continues only in a session there: anywhere else, tell the user the worktree and change nothing. Read the ledger and the dish's files, then check `git status`, the dish's worktrees and its workers. A gate is passed only when the ledger has its date. A unit is `pass` only when its evidence file exists; run the check of every other started unit again. Tell the user the phase and the next step in one line, then continue.
 
 To **reopen**, add one unit to the ledger for each issue, with a check that fails now. Set `phase` to `saute` and record the event, then run saute, taste and review again. An issue that is a missed requirement takes the deviation route in `phases/saute.md`.
 
@@ -47,7 +47,7 @@ On resume, `phase: taste` with a deploy unit not `pass` is the code taste; `phas
 
 ## 3. Hand off to a dish worktree
 
-Each dish is built in its own **dish worktree**, by a session there, so the main checkout keeps its branch and files. A session in the main checkout **hands off** the dish at its **handoff point**: the end of the size phase for a trivial dish, the end of the idea phase for any other. A session in another worktree writes that worktree to the ledger at the handoff point and cooks the dish there. A meal is handed off whole, to its meal agent: `meal.md`, step 2.
+Each dish is built in its own **dish worktree**, by a session there, so the main checkout keeps its branch and its tracked files. A session in the main checkout **hands off** the dish at its **handoff point**: the end of the size phase for a trivial dish, the end of the idea phase for any other. A session in another worktree writes that worktree to the ledger at the handoff point and cooks the dish there. A meal is handed off whole, to its meal agent: `meal.md`, step 2.
 
 1. Start the worktree and its agent from the current branch:
 
