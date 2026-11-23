@@ -2,6 +2,7 @@
 # Available to assert.sh: $W (run dir), $ROOT (skills copy), $REPO (fixture repo, also cwd of assert.sh), $OUT (agent reply), $ORCA_LOG,
 # $MODEL (the main agent's <model>:<effort>). $W/pi-nested.log holds each attempt of the agent to start pi itself.
 # $ROOT/logs is a clone of the bare repo $W/logs.git, which receives the logs the agent pushes.
+# $W/memory holds each page the agent saved to ai-memory, by its path; $W/memory.log holds each `ai-memory` call with its directory.
 
 fail() { echo "ASSERT: $*"; exit 1; }
 

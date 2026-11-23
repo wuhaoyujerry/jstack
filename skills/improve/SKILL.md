@@ -16,7 +16,7 @@ The Git working tree that holds this skill's real directory is its **home**; eve
 
 If the ask reports the outcome of a dish, first record it by step 5 of `../cooking/phases/review.md`. If the ask reports a problem from a run outside a cooking dish, such as a standalone idea or research run, first append it to `review-log.md` as one observation in the format of `../cooking/phases/review.md`: `-` for an unknown repo id or dish id, and the user's words as its file.
 
-Every device pushes its lines to the logs, so a line names its repo and dish by id, a file of the dish by its path in the dish folder, and any other file by its path in its repo. The **task map**, `../../overlays/tasks.txt`, has one line for each dish that ran on this device: `<repo id> | <dish id> | <owner/repo> | <dish folder>`. Find a line's repo and files through it; find a session file by its name under the parent of the directory of `$PI_SESSION_FILE`. An id that the map lacks is from another device: you cannot read its files, and a change for that one repo waits for that device, so its observations stay `open`.
+Every device pushes its lines to the logs, so a line names its repo and dish by id, a file of the dish by its path in the dish folder, any other file by its path in its repo, and a page of the project's ai-memory as `memory:<page>`. The **task map**, `../../overlays/tasks.txt`, has one line for each dish that ran on this device: `<repo id> | <dish id> | <owner/repo> | <dish folder>`. Find a line's repo and files through it; find a session file by its name under the parent of the directory of `$PI_SESSION_FILE`; read a memory page with `ai-memory read-page --path <page>`, run in the repo of its line. An id that the map lacks is from another device: you cannot read its files, and a change for that one repo waits for that device, so its observations stay `open`. Memory stays on its device too: a page that this device lacks was saved on another, so propose without it.
 
 ## 1. Upstream
 
@@ -39,7 +39,7 @@ Check each `open` observation for **detail**: its event alone must tell a reader
 
 Then give `open` observations whose events show one failure one tag, and rewrite it on those lines in `review-log.md`: a **merge**. Keep the tag that an `applied` observation of that failure has, else the tag of the earliest line. Then group the `open` observations by tag, across dishes and repos. Group the unspent `sizing-log.md` lines by missed signal and verdict; step 3 of `../cooking/phases/review.md` defines **spent**.
 
-An `open` observation whose tag also has an `applied` observation from an earlier date is a **recurrence**: the earlier change did not hold. Read the file its `applied` entry names before you propose another.
+An `open` observation whose tag also has an `applied` observation from an earlier date, or above it in the log, is a **recurrence**: the earlier change did not hold. Read the file or the memory page that its `applied` entry names before you propose another.
 
 ## 3. Choose
 
@@ -82,7 +82,7 @@ Apply each approved change by the file it edits:
 
 For each applied change that came from observations, add its candidate scenario to `SCENARIOS.md`; write one now for a change that had none.
 
-In `review-log.md`, replace `open` on every observation of a proposed group with `applied <date> <file>`, naming the file the change edited by its path in its repo; with `handed <date> <file>` for a change you handed off, by a session you started or by a prompt you gave the user, naming the file it is to edit; or with `rejected <date>`. The other observations stay `open`. In `sizing-log.md`, append a marker (step 3 of `../cooking/phases/review.md`) for the signal of each sizing change the user decided.
+In `review-log.md`, replace `open` on every observation of a proposed group with `applied <date> <file>`, naming the file the change edited by its path in its repo, or the memory page it wrote as `memory:<page>`; with `handed <date> <file>` for a change you handed off, by a session you started or by a prompt you gave the user, naming the file it is to edit; or with `rejected <date>`. The other observations stay `open`. In `sizing-log.md`, append a marker (step 3 of `../cooking/phases/review.md`) for the signal of each sizing change the user decided.
 
 For each collection checked, when the user has decided its every upstream change, set its commit in `SOURCES.md` to the `HEAD` you diffed. If any of its upstream changes is still undecided, keep the old commit so the next run sees it again.
 
