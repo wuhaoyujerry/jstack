@@ -10,6 +10,7 @@
 # An `orca-worktrees` file makes the orca stub create each worktree that `worktree create` or `worker-start` names, under $W/wt,
 # and print the reply of that call. An `orca-inbox` file makes the stub print that file at the first `orchestration check`, and
 # accept `ask`, `reply` and `send`, which it only logs.
+# An `ai-memory` stub keeps each page that `write-page` gets under $W/memory and prints it for `read-page`: no run reaches the real memory.
 # A symbolic link to a case folder is an alias: the id of a second scenario that the case asserts too. It runs by name; a run of
 # every case skips it.
 set -u
@@ -98,9 +99,25 @@ fi
 echo "orca: unavailable in this test" >&2
 exit 1
 S
+  # Memory: a page is a file under $W/memory, which a setup may seed. $W/memory.log holds each call with its directory.
+  cat > "$W/bin/ai-memory" <<S
+#!/bin/sh
+echo "\$(pwd -P) | \$*" >> "$W/memory.log"
+cmd="\${1:-}"; path=; body=
+while [ \$# -gt 0 ]; do case "\$1" in --path) path="\${2:-}";; --body) body="\${2:-}";; esac; shift; done
+case "\$cmd" in write-page|read-page) ;; *) echo "ai-memory: unavailable in this test" >&2; exit 1;; esac
+case "\$path" in ""|/*|*..*) echo "ai-memory: --path must name a page" >&2; exit 2;; esac
+if [ "\$cmd" = read-page ]; then
+  [ -f "$W/memory/\$path" ] || { echo "Error: no page \$path" >&2; exit 1; }
+  printf 'path: %s\n\n' "\$path"; cat "$W/memory/\$path"; exit 0
+fi
+mkdir -p "$W/memory/\$(dirname "\$path")"
+if [ "\$body" = - ]; then cat > "$W/memory/\$path"; else printf '%s\n' "\$body" > "$W/memory/\$path"; fi
+echo "wrote \$path under default/test"
+S
   # A model query answers with a row, so the check of a model id before a worker start passes; it starts nothing and is not logged.
   printf 'pi() { if [ "$1" = --list-models ]; then echo "provider model"; echo "$2" | tr / " "; return 0; fi; echo "$*" >> "%s"; echo "pi: unavailable in this test" >&2; return 1; }\n' "$W/pi-nested.log" > "$W/bashenv"
-  chmod +x "$W/bin/orca"; : > "$ORCA_LOG"
+  chmod +x "$W/bin/orca" "$W/bin/ai-memory"; : > "$ORCA_LOG"
 
   (cd "$REPO" && bash "$case_dir/setup.sh") > "$W/setup.log" 2>&1 || { echo "FAIL $W (setup)"; return; }
   # The logs that setup wrote are the pushed state: the agent's lines are the only new ones.
@@ -113,7 +130,8 @@ S
   local n=1 f="$case_dir/prompt.txt" out="$OUT" more=() prompt
   while [ -f "$f" ]; do
     prompt="$(sed "s|{{ROOT}}|$ROOT|g" "$f")"
-    (cd "$cwd" && PATH="$W/bin:$PATH" BASH_ENV="$W/bashenv" timeout "$TIMEOUT" pi -p --session-dir "$W/sessions" ${more[@]+"${more[@]}"} --no-extensions \
+    # The server address is one that nothing answers, for a call that reaches the real `ai-memory` past the stub.
+    (cd "$cwd" && PATH="$W/bin:$PATH" BASH_ENV="$W/bashenv" AI_MEMORY_SERVER_URL=http://127.0.0.1:9 timeout "$TIMEOUT" pi -p --session-dir "$W/sessions" ${more[@]+"${more[@]}"} --no-extensions \
       --no-skills --no-context-files --no-mcp --no-prompt-templates --model "$MODEL" "$prompt") > "$out" 2>> "$W/pi.err"
     echo "$?" > "$W/pi.exit"; [ "$(cat "$W/pi.exit")" = 0 ] || break
     if [ "$n" -eq 1 ] && [ -f "$case_dir/between.sh" ]; then (cd "$REPO" && bash "$case_dir/between.sh") > "$W/between.log" 2>&1; fi

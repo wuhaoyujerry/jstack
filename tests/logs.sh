@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Tests skills/cooking/logs.sh on temporary repos: ids and the task map, the leak check, the push, and two devices.
+# Tests skills/cooking/logs.sh on temporary repos: ids and the task map, the leak check, the push, two devices, and a project
+# fact with a stub of `ai-memory`.
 # Usage: tests/logs.sh
 set -u
 
@@ -77,7 +78,35 @@ idx="$("$T/a/skills/cooking/logs.sh" tags)"
 check "tags prints a tag once, with its category, its count and its first event" grep -qxF 'brief-too-long | workflow | 2 | the brief repeated the ask in three sections' <<<"$idx"
 check "tags prints one line for each tag" [ "$(grep -c . <<<"$idx")" -eq 3 ]
 
+# A project fact: its page goes to ai-memory from the main checkout, and the script prints the last field of the fact's log line.
+# The stub is first on PATH, and the server address is one that nothing answers: no call reaches the real memory.
+mkdir -p "$T/bin"
+cat > "$T/bin/ai-memory" <<'S'
+#!/bin/sh
+[ -z "${MEMORY_DOWN:-}" ] || { echo "could not reach the server" >&2; exit 1; }
+{ echo "cwd=$(pwd -P)"; echo "args=$*"; cat; } > "$MEMORY_CALL"
+S
+chmod +x "$T/bin/ai-memory"
+export MEMORY_CALL="$T/memory-call" AI_MEMORY_SERVER_URL=http://127.0.0.1:9
+fact() { (cd "$T/linked" && PATH="$T/bin:$PATH" "$T/a/skills/cooking/logs.sh" fact "$@" 2>"$T/err"); }
+printf '# Production shell\n\nRun `deployctl console`.\n' > "$T/fact.md"
+check "fact prints applied with the page" [ "$(fact prod-shell "$T/fact.md")" = "applied $(date +%F) memory:facts/prod-shell.md" ]
+check "fact saves the page from the main checkout, also when called in a linked worktree" grep -qxF "cwd=$T/work" "$T/memory-call"
+check "fact names the page for the tag" grep -q -- '--path facts/prod-shell.md ' "$T/memory-call"
+check "fact saves the file as the page" grep -qxF 'Run `deployctl console`.' "$T/memory-call"
+rm -f "$T/memory-call"
+echo "2026-10-04 | $repo | $task | navigation | canonical-domain | e | ledger.md | applied 2026-10-04 memory:facts/canonical-domain.md" >> "$log"
+echo "2026-10-04 | 0a0a0a0a | 1b1b1b1b | navigation | seed-step | e | ledger.md | applied 2026-10-04 memory:facts/seed-step.md" >> "$log"
+check "fact leaves a tag with an applied line of this repo open" [ "$(fact canonical-domain "$T/fact.md")" = open ]
+check "fact saves no page for that tag" [ ! -e "$T/memory-call" ]
+check "fact saves a tag whose applied line is of another repo" [ "$(fact seed-step "$T/fact.md")" = "applied $(date +%F) memory:facts/seed-step.md" ]
+check "fact leaves the line open when memory is out of reach" [ "$(MEMORY_DOWN=1 fact scratch-db "$T/fact.md")" = open ]
+check "fact says that the fact is not saved" grep -q 'not saved' "$T/err"
+check "fact keeps the page of any tag inside facts/" [ "$(fact '../x y' "$T/fact.md")" = "applied $(date +%F) memory:facts/---x-y.md" ]
+check "fact stops without a file" [ "$(fact prod-shell "$T/none.md"; echo $?)" = 64 ]
+
 # The closing line: a tag open in two dishes, a tag open again after an applied change, and a signal that two unspent lines missed.
+# A tag is open again with a later date than its applied line, or below it on the same day; an open line above it on an earlier day is none.
 mkdir -p "$T/d/skills/cooking" "$T/d/logs"; cp "$src/skills/cooking/logs.sh" "$T/d/skills/cooking/"
 check "summary of no logs counts nothing" [ "$("$T/d/skills/cooking/logs.sh" summary)" = '0 open observations' ]
 cat > "$T/d/logs/review-log.md" <<'L'
@@ -89,7 +118,14 @@ cat > "$T/d/logs/review-log.md" <<'L'
 2026-10-03 | r1 | d2 | lesson | same-dish | e | ledger.md | open
 2026-10-03 | - | - | workflow | no-dish | e | "words" | open
 2026-10-04 | - | - | workflow | no-dish | e | "words" | open
+2026-10-05 | r1 | d1 | navigation | same-day | e | ledger.md | applied 2026-10-05 memory:facts/same-day.md
+2026-10-05 | r1 | d3 | navigation | same-day | e | ledger.md | open
+2026-10-05 | r1 | d4 | check | not-yet | e | ledger.md | open
+2026-10-06 | r1 | d5 | check | not-yet | e | ledger.md | applied 2026-10-06 skills/x.md
+2026-10-07 | r1 | d6 | check | later-above | e | ledger.md | open
+2026-10-06 | r1 | d5 | check | later-above | e | ledger.md | applied 2026-10-06 skills/x.md
 L
+echo "2026-10-08 | $repo | $task | navigation | prod-shell | e | ledger.md | applied 2026-10-08 memory:facts/prod-shell.md" >> "$T/d/logs/review-log.md"
 cat > "$T/d/logs/sizing-log.md" <<'L'
 # Sizing log
 
@@ -99,7 +135,9 @@ cat > "$T/d/logs/sizing-log.md" <<'L'
 2026-10-03 | r1 | d3 | predicted=standard | verdict=under | missed=risk
 L
 check "summary names the tags and the signal that call for /improve" [ "$("$T/d/skills/cooking/logs.sh" summary)" = \
-  '7 open observations; open in two dishes: gate-missed; open again after an applied change: slow-tests; missed in two unspent lines: risk; run /improve' ]
+  '10 open observations; open in two dishes: gate-missed; open again after an applied change: slow-tests, same-day, later-above; missed in two unspent lines: risk; run /improve' ]
+check "summary of a task names the memory pages of its lines" [ "$("$T/d/skills/cooking/logs.sh" summary add-export)" = \
+  '10 open observations; saved to memory: facts/prod-shell.md; open in two dishes: gate-missed; open again after an applied change: slow-tests, same-day, later-above; missed in two unspent lines: risk; run /improve' ]
 
 # A device without the clone writes locally and reports that nothing is pushed.
 mkdir -p "$T/c/skills/cooking" "$T/c/logs"; cp "$src/skills/cooking/logs.sh" "$T/c/skills/cooking/"

@@ -4,7 +4,10 @@
 # Usage: logs.sh ids <slug>   in the task's repo: pulls the logs, records the task in the map, prints "repo=<id> task=<id>"
 #        logs.sh pull         pulls the logs
 #        logs.sh tags         prints each tag of the review log once: "<tag> | <category> | <lines> | <first event>"
-#        logs.sh summary      prints the closing line of review: the open observations, and what calls for /improve
+#        logs.sh fact <tag> <file>  in the task's repo: saves the file as a page of the project's memory in ai-memory, and prints
+#                             the last field of the fact's log line: "applied <date> memory:<page>", or "open" with no page saved
+#        logs.sh summary [<slug>]  prints the closing line of review: the open observations, and what calls for /improve; with
+#                             a slug, in the task's repo, also the memory pages that the lines of that task name
 #        logs.sh publish      checks the unpushed lines for private names, then commits and pushes the logs
 # Exit: 1 a line holds a private name (publish); 2 the logs are not pushed.
 set -euo pipefail
@@ -19,6 +22,12 @@ hash8() { printf %s "$1" | shasum -a 256 | cut -c1-8; }
 repo_key() {
   local url; url="$(git -C "$1" remote get-url origin 2>/dev/null || true)"
   if [ -n "$url" ]; then printf %s "$url" | sed -E 's#\.git$##; s#^.*[:/]([^/]+/[^/]+)$#\1#'; else basename "$1"; fi
+}
+
+# The main checkout of the task's repo, which Git lists first, also in a linked worktree; then the repo's key and its id.
+repo_ids() {
+  top="$(git worktree list --porcelain | sed -n '1s/^worktree //p')"
+  key="$(repo_key "$top")"; repo="$(hash8 "$key")"
 }
 
 # logs/ sits inside the skills checkout, which ignores it: only its own .git makes it the clone.
@@ -38,9 +47,8 @@ pull() {
 case "${1:-}" in
 ids)
   slug="${2:?usage: logs.sh ids <slug>}"
-  # The cookbook is in the main checkout, which Git lists first, also when the task ran in a linked worktree.
-  top="$(git worktree list --porcelain | sed -n '1s/^worktree //p')"
-  key="$(repo_key "$top")"; repo="$(hash8 "$key")"; task="$(hash8 "$key/$slug")"
+  # The cookbook is in the main checkout, also when the task ran in a linked worktree.
+  repo_ids; task="$(hash8 "$key/$slug")"
   folder="$top/.cookbook/dishes/$slug"
   for d in "$top"/.cookbook/meals/*/"$slug"/; do [ -d "$d" ] && folder="${d%/}"; done
   pull || true
@@ -60,15 +68,25 @@ tags)
 summary)
   # One line. It names a tag that is open in two dishes or open again after an applied change, and a signal that two unspent
   # lines of the sizing log missed; a line above a signal's last marker is spent. A line without a dish counts for no dish.
+  # A tag is open again when an open line of it has a later date than an applied one, or stands below one: the place of a line
+  # holds on one day, where dates tie. A Git error costs only the pages, never the line.
+  repo=; task=
+  if [ -n "${2:-}" ]; then repo_ids 2>/dev/null || true; task="$(hash8 "${key:-}/$2")"; fi
   set --
   [ -f "$logs/review-log.md" ] && set -- "$@" kind=review "$logs/review-log.md"
   [ -f "$logs/sizing-log.md" ] && set -- "$@" kind=sizing "$logs/sizing-log.md"
-  awk -F' [|] ' '
+  awk -F' [|] ' -v repo="$repo" -v task="$task" '
     function add(list, x) { return list (list ? ", " : "") x }
     kind == "review" && NF >= 8 {
       if (!($5 in seen)) { seen[$5] = 1; tag[++k] = $5 }
-      if ($8 == "open") { n++; if ($2 " " $3 != "- -" && !in_dish[$5, $2, $3]++) dishes[$5]++; if ($1 > last_open[$5]) last_open[$5] = $1 }
-      else if ($8 ~ /^applied / && (first_applied[$5] == "" || $1 < first_applied[$5])) first_applied[$5] = $1
+      if ($8 == "open") {
+        n++; if ($2 " " $3 != "- -" && !in_dish[$5, $2, $3]++) dishes[$5]++
+        if ($1 > last_open[$5]) last_open[$5] = $1
+        if ($5 in first_applied) below[$5] = 1
+      } else if ($8 ~ /^applied /) {
+        if (!($5 in first_applied) || $1 < first_applied[$5]) first_applied[$5] = $1
+        if (task != "" && $2 == repo && $3 == task && split($8, w, " ") == 3 && w[3] ~ /^memory:/ && !page[w[3]]++) saved = add(saved, substr(w[3], 8))
+      }
     }
     kind == "sizing" && $2 ~ /^signal=/ { unspent[substr($2, 8)] = 0 }
     kind == "sizing" && $NF ~ /^missed=/ {
@@ -78,15 +96,37 @@ summary)
     END {
       for (i = 1; i <= k; i++) {
         if (dishes[tag[i]] >= 2) two = add(two, tag[i])
-        if (first_applied[tag[i]] != "" && last_open[tag[i]] > first_applied[tag[i]]) again = add(again, tag[i])
+        t = tag[i]; if ((t in first_applied) && ((t in below) || last_open[t] > first_applied[t])) again = add(again, t)
       }
       for (i = 1; i <= j; i++) if (unspent[signal[i]] >= 2) missed = add(missed, signal[i])
       line = (n + 0) " open observation" (n == 1 ? "" : "s")
+      if (saved) line = line "; saved to memory: " saved
       if (two) line = line "; open in two dishes: " two
       if (again) line = line "; open again after an applied change: " again
       if (missed) line = line "; missed in two unspent lines: " missed
       print line ((two || again || missed) ? "; run /improve" : "")
     }' "$@" < /dev/null
+  ;;
+fact)
+  # The page is named for the tag, so one cause keeps one page in a project. Any other character than a letter, a digit, `_` or
+  # `-` becomes `-`, so every tag gives a page inside facts/.
+  tag="${2:-}"; file="${3:-}"
+  [ -n "$tag" ] && [ -s "$file" ] || { echo "usage: logs.sh fact <tag> <file>, with a file that holds the fact" >&2; exit 64; }
+  page="facts/$(printf %s "$tag" | tr -c 'A-Za-z0-9_-' '-').md"
+  repo_ids
+  # An applied line of the tag in this repo means that an earlier change did not hold: the line stays open, and /improve decides.
+  # The tag reaches awk through the environment, which keeps a backslash as it is.
+  if [ -f "$logs/review-log.md" ] && TAG="$tag" awk -F' [|] ' -v r="$repo" '$2 == r && $5 == ENVIRON["TAG"] && $8 ~ /^applied / { f = 1 } END { exit !f }' "$logs/review-log.md"; then
+    echo open; exit 0
+  fi
+  # ai-memory names the project from the directory of the call, and a linked worktree of a repo with no remote would get a
+  # project of its own: call it in the main checkout.
+  if out="$({ cd "$top" && ai-memory write-page --path "$page" --body - --kind fact; } < "$file" 2>&1)"; then
+    echo "applied $(date +%F) memory:$page"
+  else
+    echo "logs: the fact is not saved, because ai-memory is out of reach: $out" >&2
+    echo open
+  fi
   ;;
 publish)
   is_clone || { echo "logs: $logs is not a clone of the logs repo; nothing is pushed" >&2; exit 2; }
@@ -120,6 +160,6 @@ publish)
   echo "logs: pushed"
   ;;
 *)
-  sed -n '2,9p' "${BASH_SOURCE[0]}" >&2; exit 64
+  sed -n '2,12p' "${BASH_SOURCE[0]}" >&2; exit 64
   ;;
 esac
