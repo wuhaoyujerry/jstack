@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Tests skills/cooking/logs.sh on temporary repos: ids and the task map, the leak check, the push, two devices, and a project
-# fact with a stub of `ai-memory`.
+# Tests skills/cooking/logs.sh on temporary repos: ids and the task map, the leak check, the push, two devices, and the project
+# facts that it saves and prints, with a stub of `ai-memory`.
 # Usage: tests/logs.sh
 set -u
 
@@ -84,10 +84,15 @@ mkdir -p "$T/bin"
 cat > "$T/bin/ai-memory" <<'S'
 #!/bin/sh
 [ -z "${MEMORY_DOWN:-}" ] || { echo "could not reach the server" >&2; exit 1; }
+if [ "$1" = read-page ]; then
+  echo "cwd=$(pwd -P)" >> "$MEMORY_CALL.reads"
+  [ -f "$MEMORY_STORE/$3" ] || { echo "Error: no such page" >&2; exit 1; }
+  printf 'path: %s\n\n' "$3"; cat "$MEMORY_STORE/$3"; exit 0
+fi
 { echo "cwd=$(pwd -P)"; echo "args=$*"; cat; } > "$MEMORY_CALL"
 S
 chmod +x "$T/bin/ai-memory"
-export MEMORY_CALL="$T/memory-call" AI_MEMORY_SERVER_URL=http://127.0.0.1:9
+export MEMORY_CALL="$T/memory-call" MEMORY_STORE="$T/memory-store" AI_MEMORY_SERVER_URL=http://127.0.0.1:9
 fact() { (cd "$T/linked" && PATH="$T/bin:$PATH" "$T/a/skills/cooking/logs.sh" fact "$@" 2>"$T/err"); }
 printf '# Production shell\n\nRun `deployctl console`.\n' > "$T/fact.md"
 check "fact prints applied with the page" [ "$(fact prod-shell "$T/fact.md")" = "applied $(date +%F) memory:facts/prod-shell.md" ]
@@ -104,6 +109,24 @@ check "fact leaves the line open when memory is out of reach" [ "$(MEMORY_DOWN=1
 check "fact says that the fact is not saved" grep -q 'not saved' "$T/err"
 check "fact keeps the page of any tag inside facts/" [ "$(fact '../x y' "$T/fact.md")" = "applied $(date +%F) memory:facts/---x-y.md" ]
 check "fact stops without a file" [ "$(fact prod-shell "$T/none.md"; echo $?)" = 64 ]
+
+# The saved facts of a repo: each page that a line of the repo names, printed from the memory through the main checkout.
+# The log of device a names canonical-domain for this repo and seed-step for another; the page of prod-shell is on another device.
+echo "2026-10-05 | $repo | $task | navigation | prod-shell | e | ledger.md | applied 2026-10-05 memory:facts/prod-shell.md" >> "$log"
+mkdir -p "$T/memory-store/facts"; echo 'The canonical domain is shop.example.com.' > "$T/memory-store/facts/canonical-domain.md"
+echo 'Run the seed step.' > "$T/memory-store/facts/seed-step.md"
+echo "2026-10-06 | - | - | workflow | from-b-late | device b saw a late step | ledger.md | open" >> "$T/b/logs/review-log.md"
+check "device b pushes a later line" [ "$(publish b)" = 0 ]
+saved="$(cd "$T/linked" && PATH="$T/bin:$PATH" "$T/a/skills/cooking/logs.sh" facts 2>"$T/err")"
+check "facts prints a page that a line of this repo names" grep -qxF 'The canonical domain is shop.example.com.' <<<"$saved"
+check "facts names a page that this device cannot read" grep -qxF 'facts/prod-shell.md: this device cannot read the page' <<<"$saved"
+if grep -q from-b-late "$log"; then bad "facts pulled the logs"; else ok "facts pulls no logs"; fi
+if grep -q 'seed step' <<<"$saved"; then bad "facts prints the page of another repo"; else ok "facts leaves out the page of another repo"; fi
+check "facts reads the memory from the main checkout" [ "$(sort -u "$T/memory-call.reads")" = "cwd=$T/work" ]
+mkdir -p "$T/e/skills/cooking"; cp "$src/skills/cooking/logs.sh" "$T/e/skills/cooking/"
+check "facts of a repo with no saved fact says so" [ "$(PATH="$T/bin:$PATH" "$T/e/skills/cooking/logs.sh" facts)" = 'no project facts are saved for this repo' ]
+check "facts creates no logs folder" [ ! -e "$T/e/logs" ]
+check "facts creates no overlays folder" [ ! -e "$T/e/overlays" ]
 
 # The closing line: a tag open in two dishes, a tag open again after an applied change, and a signal that two unspent lines missed.
 # A tag is open again with a later date than its applied line, or below it on the same day; an open line above it on an earlier day is none.

@@ -20,6 +20,8 @@ To **resume**, rebuild the position from disk, not from the session. A dish whos
 
 To **reopen**, add one unit to the ledger for each issue, with a check that fails now. Set `phase` to `saute` and record the event, then run saute, taste and review again. An issue that is a missed requirement takes the deviation route in `phases/saute.md`.
 
+When the ledger is chosen and this session goes on with the dish, run `logs.sh facts` in the dish's repo before the first check of a unit and before the first phase; the script is in this skill's real directory. It only reads. It prints the facts about this project that earlier reviews saved (`phases/review.md`, step 3), and names a saved page that this device cannot read. Take a fact from there before you look for it elsewhere, and give a worker that builds or checks the facts its task needs.
+
 Write each state change to the ledger before the next action.
 
 Resolve symlinks to find this skill's real directory. The optional private overlay directory is `../../overlays/` relative to it, outside the synced skill. Each `.md` file at the top of that directory is an **overlay** that starts with an applicability rule; apply an overlay only to the repos it matches. Missing overlays are normal. Give workers absolute overlay paths when needed.
