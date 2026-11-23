@@ -6,6 +6,7 @@
 #        logs.sh tags         prints each tag of the review log once: "<tag> | <category> | <lines> | <first event>"
 #        logs.sh fact <tag> <file>  in the task's repo: saves the file as a page of the project's memory in ai-memory, and prints
 #                             the last field of the fact's log line: "applied <date> memory:<page>", or "open" with no page saved
+#        logs.sh facts        in the task's repo: prints each page of the project's memory that a line of the repo names as saved
 #        logs.sh summary [<slug>]  prints the closing line of review: the open observations, and what calls for /improve; with
 #                             a slug, in the task's repo, also the memory pages that the lines of that task name
 #        logs.sh publish      checks the unpushed lines for private names, then commits and pushes the logs
@@ -128,6 +129,21 @@ fact)
     echo open
   fi
   ;;
+facts)
+  # The facts that earlier reviews saved about this project, for a session that starts a task. It reads only: it pulls no logs
+  # and creates no folder, so a session can call it before it may change anything.
+  repo_ids
+  pages=""
+  if [ -f "$logs/review-log.md" ]; then
+    pages="$(awk -F' [|] ' -v r="$repo" '$2 == r && split($8, w, " ") == 3 && w[1] == "applied" && w[3] ~ /^memory:/ && !seen[w[3]]++ { print substr(w[3], 8) }' "$logs/review-log.md")"
+  fi
+  [ -n "$pages" ] || { echo "no project facts are saved for this repo"; exit 0; }
+  # The memory is on one device: a page that this device cannot read is named, so that the session knows the fact exists.
+  while IFS= read -r page; do
+    (cd "$top" && ai-memory read-page --path "$page" 2>/dev/null) || echo "$page: this device cannot read the page"
+    echo
+  done <<< "$pages"
+  ;;
 publish)
   is_clone || { echo "logs: $logs is not a clone of the logs repo; nothing is pushed" >&2; exit 2; }
   cd "$logs"
@@ -160,6 +176,6 @@ publish)
   echo "logs: pushed"
   ;;
 *)
-  sed -n '2,12p' "${BASH_SOURCE[0]}" >&2; exit 64
+  sed -n '2,13p' "${BASH_SOURCE[0]}" >&2; exit 64
   ;;
 esac
