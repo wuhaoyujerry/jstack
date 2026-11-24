@@ -1,0 +1,1 @@
+Read {{ROOT}}/skills/cooking/SKILL.md and follow it. Ask: continue the dish slug-dashes.

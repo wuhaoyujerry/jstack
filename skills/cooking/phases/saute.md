@@ -28,7 +28,12 @@ The worker spec points to files instead of repeating them: `recipe.md` (or the l
 4. If taste returned the unit with a `must-fix`, prove the fix before the next taste round:
    - Run the verifier's own probe for the finding again: the command or steps in its evidence file, through the same path. If the finding names only a case, first write a probe that drives that case through the real user path. Save the output beside it. A new unit test alone is not this proof.
    - Read every caller of the code the fix changes. In the unit's check, list one case the finding did not name (another step order, a retry or re-entry, another caller path), then add or reuse its test.
-5. If the check passes, commit and take the next unit.
+5. If the check passes, run the **scope check** before you commit: `scope.sh <cases>` in the unit's working tree, by the absolute path of the script in the cooking skill's real directory. `<cases>` is the number of test cases the unit's check lists. Save its output to `<dish>/evidence/<unit>-scope.txt`.
+   - Revert each change in a file it prints that the unit does not name and that no caller, test or fixture needs.
+   - On exit 1 the unit adds more tests than its check lists. Remove each added test that covers no listed case. If each covers one, keep them and write the reason as the last line of the scope file.
+   - After a revert or a removal, run the check and the scope check again.
+
+   Then commit and take the next unit.
 6. If it fails, fix and run it once more. On a second failure, stop and report both outputs.
 7. If the unit needs something the recipe does not give (a parameter, a file, a different interface), stop and report the **deviation**.
 
