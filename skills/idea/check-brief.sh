@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Checks a brief against the limits of the idea skill (SKILL.md, step 7) and prints each line that breaks one.
+# Checks a brief against the limits of the idea skill (SKILL.md, step 8) and prints each line that breaks one.
 # Usage: check-brief.sh <brief.md>
 # Not counted as words: a list marker; in a decision, a label at its start such as "D3 Errors." or "D3 (2026-11-10):", and a
 # date in brackets at its end.

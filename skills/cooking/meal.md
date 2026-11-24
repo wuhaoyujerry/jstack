@@ -28,7 +28,7 @@ The user approved the dishes to cut (`phases/size.md`, step 3). The **original d
 4. Cut the original dish to its own part the same way: its brief, the `ask` and `meal` lines of its ledger, and the units of a written recipe. Its brief keeps each shared decision that is marked `ADR`, with the mark and with the alternatives and reason under `## Open facts`: its domain unit commits that ADR for the meal. Answer the five signals again for its own part and record the size. A gate it has passed keeps its date.
 5. Record the split in the events of each ledger.
 
-The split is done when the meal file lists every dish, every dish has a folder in the meal folder and a ledger that names the meal, and every done-check of the uncut brief is in exactly one brief. Then coordinate the meal (step 2). The answer to the split approves no brief: the original dish stops at the gate where it was, and that gate stays open until its worker has put the cut brief to it, with the gate summary at the brief gate (`../idea/SKILL.md`, step 8) and by `phases/recipe.md`, step 5, at the recipe gate.
+The split is done when the meal file lists every dish, every dish has a folder in the meal folder and a ledger that names the meal, and every done-check of the uncut brief is in exactly one brief. Then coordinate the meal (step 2). The answer to the split approves no brief: the original dish stops at the gate where it was, and that gate stays open until its worker has put the cut brief to it, with the gate reply at the brief gate (`../idea/SKILL.md`, step 9) and by `phases/recipe.md`, step 5, at the recipe gate.
 
 ## 2. Coordinate the meal
 
