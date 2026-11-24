@@ -4,6 +4,8 @@ agent_ended
 [ "$(cat "$W/cookbook-turn1")" = .cookbook/dishes/sync-export/ledger.md ] || fail "the cookbook changed before the answer: $(tr '\n' ' ' < "$W/cookbook-turn1")"
 [ ! -s "$W/status-turn1" ] || fail "source changed before the answer: $(cat "$W/status-turn1")"
 has "$OUT" '[Ss]plit'
+# A behaviour run has no page tool: the reply opens with the line that says why there is no page.
+grep '[^[:space:]]' "$OUT" | sed -n 1p | grep -q 'answer-me-with-html' || fail "the reply does not open with the reason for no page: $(grep '[^[:space:]]' "$OUT" | head -1 | cut -c1-120)"
 # Turn 2 approves: one meal folder that holds the meal file, the original dish's folder and one new dish.
 set -- .cookbook/meals/*/meal.md
 [ "$#" -eq 1 ] && [ -f "$1" ] || fail "want one meal file, got: $*"

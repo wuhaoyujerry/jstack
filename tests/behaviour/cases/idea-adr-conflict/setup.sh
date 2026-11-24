@@ -1,4 +1,4 @@
-# A standard dish in the idea phase. The user settled every decision and asked for the brief. One of them contradicts an ADR of
+# A standard dish in the idea phase. The user settled every decision, answered the closing question and asked for the brief. One of them contradicts an ADR of
 # the repo, which the user has not seen in this dish; no code or packaging file shows the constraint.
 printf 'import urllib.request\n\ndef fetch(url):\n    return urllib.request.urlopen(url).read()\n' > client.py
 printf 'from client import fetch\n\ndef load(url):\n    return fetch(url)\n' > app.py
@@ -35,4 +35,5 @@ cat > .cookbook/dishes/fetch-retry/brief.md <<'B'
 - D1 Library. The retry uses the `tenacity` package. (2026-11-10)
 - D2 Attempts. `fetch` tries a URL three times at most. (2026-11-10)
 - D3 Wait. `fetch` waits one second between attempts. (2026-11-10)
+- Closing question. Nothing is missing. (2026-11-10)
 B

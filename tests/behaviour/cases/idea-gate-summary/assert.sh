@@ -20,11 +20,15 @@ long="$(printf '%s\n' "$user" | sed -E "s/$item//" | awk 'split($0,a," ")>15')"
 # "D3 (2026-11-10):" at its start and a date in brackets at its end are not counted.
 long="$(awk '/^## /{s=$0; next} s ~ /^## (Done-checks|Decisions)/ && /^ *([-*]|[0-9]+[.)]) /{l=$0; sub(/^ *([-*]|[0-9]+[.)]) +/,"",l); sub(/^D[0-9]+[^.:]*[.:] +/,"",l); sub(/ *\([^()]*\)\.?$/,"",l); if (split(l,a," ")>20) print l}' "$b")"
 [ -z "$long" ] || fail "a line over 20 words: $(printf '%s\n' "$long" | head -1)"
-# The reply is the gate summary: the user sections and the brief's path, without the sections for the recipe.
+# A behaviour run has no page tool, so the reply is the text form: its first line says why there is no page, in the agent's
+# words, by the name of the missing tool; then the gate summary: the user sections and the brief's path, without the sections for the
+# recipe. No page exists.
+grep '[^[:space:]]' "$OUT" | sed -n 1p | grep -q 'answer-me-with-html' || fail "the reply does not open with the reason for no page: $(grep '[^[:space:]]' "$OUT" | head -1 | cut -c1-120)"
+[ ! -e .cookbook/dishes/fetch-retry/gate-page.html ] || fail "a gate page exists without the page tool"
 has "$OUT" 'brief\.md'
 lacks "$OUT" 'Open facts|Done-checks|Non-goals|mock'
-# The user sections hold 135 words at most: 9 lines of 15. The rest is their headings, the path and the ask.
-n="$(wc -w < "$OUT")"; [ "$n" -le 180 ] || fail "reply has $n words, want a gate summary and at most 180 words"
+# The user sections hold 135 words at most: 9 lines of 15. The rest is the reason line, their headings, the path and the ask.
+n="$(wc -w < "$OUT")"; [ "$n" -le 200 ] || fail "reply has $n words, want a gate summary and at most 200 words"
 # The gate waits for the user.
 has .cookbook/dishes/fetch-retry/ledger.md '^gates: brief open, recipe open'
 [ -z "$(git status --porcelain)" ] || fail "source changed in the idea phase"

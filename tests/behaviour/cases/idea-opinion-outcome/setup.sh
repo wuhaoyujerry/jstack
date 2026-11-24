@@ -1,4 +1,4 @@
-# A standard dish in the idea phase. The user settled every decision and asked for the brief. One decision is an outcome that rests
+# A standard dish in the idea phase. The user settled every decision, answered the closing question and asked for the brief. One decision is an outcome that rests
 # on an opinion: no text, no reference and no number says what counts as calm and plain.
 printf 'import urllib.request\n\ndef fetch(url):\n    return urllib.request.urlopen(url).read()\n' > client.py
 printf 'from client import fetch\n\ndef load(url):\n    return fetch(url)\n' > app.py
@@ -29,4 +29,5 @@ cat > .cookbook/dishes/fetch-retry/brief.md <<'B'
 - D1 Attempts. `fetch` tries a URL three times at most. (2026-11-10)
 - D2 Wait. `fetch` waits one second between attempts. (2026-11-10)
 - D3 Message. After the last failure the caller gets a message that reads as calm and plain. (2026-11-10)
+- Closing question. Nothing is missing. (2026-11-10)
 B

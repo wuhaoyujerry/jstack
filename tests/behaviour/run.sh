@@ -117,6 +117,9 @@ echo "wrote \$path under default/test"
 S
   # A model query answers with a row, so the check of a model id before a worker start passes; it starts nothing and is not logged.
   printf 'pi() { if [ "$1" = --list-models ]; then echo "provider model"; echo "$2" | tr / " "; return 0; fi; echo "$*" >> "%s"; echo "pi: unavailable in this test" >&2; return 1; }\n' "$W/pi-nested.log" > "$W/bashenv"
+  # The page tool of idea (skills/idea/gate-page.sh): a case has none, so its brief gate is the text form, unless its setup appends
+  # another IDEA_PAGE_TOOL to this file. The tool keeps its state in its home, which stays in the run directory.
+  printf 'export IDEA_PAGE_TOOL="%s" AM_HOME="%s"\n' "$W/no-page-tool/am.mjs" "$W/am-home" >> "$W/bashenv"
   chmod +x "$W/bin/orca" "$W/bin/ai-memory"; : > "$ORCA_LOG"
 
   (cd "$REPO" && bash "$case_dir/setup.sh") > "$W/setup.log" 2>&1 || { echo "FAIL $W (setup)"; return; }

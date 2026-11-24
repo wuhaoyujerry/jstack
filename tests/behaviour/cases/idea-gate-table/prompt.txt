@@ -1,0 +1,1 @@
+Read {{ROOT}}/skills/idea/SKILL.md and follow it. Topic: the wording of the error of the fetch client. The dish folder is .cookbook/dishes/error-wording: I settled every decision there and answered the closing question. No research is pending. Write the brief.
