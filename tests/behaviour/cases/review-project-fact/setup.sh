@@ -7,7 +7,7 @@
 printf 'def export_csv(orders):\n    return "\\n".join(",".join(map(str, o)) for o in orders)\n' > orders.py
 printf 'grep -q "def export_csv" orders.py\n' > check.sh
 git add -A && git_q commit -qm 'add the orders export'
-s=.cookbook/dishes/orders-export; mkdir -p "$s/evidence" "$ROOT/logs" "$W/memory/facts"
+s=.cookbook/dishes/orders-export; mkdir -p "$s/evidence" "$JSTACK_DATA/logs" "$W/memory/facts"
 echo 'sh check.sh: exit 0' > "$s/evidence/export-saute.txt"
 cat > "$s/evidence/prod-shell.txt" <<'E'
 grep -rn shell AGENTS.md README.md docs/ : no match
@@ -58,12 +58,12 @@ events:
 L
 eval "$("$ROOT/skills/cooking/logs.sh" ids orders-export)"
 today="$(date +%F)"
-cat > "$ROOT/logs/review-log.md" <<R
+cat > "$JSTACK_DATA/logs/review-log.md" <<R
 2026-11-03 | 3c9d1e7a | d5e09b13 | workflow | question-jargon | The agent asked the user to choose a fix in internal terms; the user answered "not following" and needed a plain re-ask. | "not following" | open
 2026-11-04 | 3c9d1e7a | 6f7c2d90 | access | worker-permission-prompt | A worker stopped at a human permission prompt for a shell read; the coordinator could not answer it and the user had to act in the worker terminal. | ledger.md | open
 $today | $repo | 7a1c33e0 | navigation | canonical-domain | The live check first used the hosting platform's default host, which the sign-in provider rejects; the canonical domain was recorded only in the ledger of a sibling dish. | ledger.md | applied $today memory:facts/canonical-domain.md
 R
-cp "$ROOT/logs/review-log.md" "$W/log.before"
-: > "$ROOT/logs/sizing-log.md"
+cp "$JSTACK_DATA/logs/review-log.md" "$W/log.before"
+: > "$JSTACK_DATA/logs/sizing-log.md"
 printf '# Canonical domain\n\nThe sign-in provider accepts only the canonical domain, shop.example.com. The default host of the hosting platform fails sign-in.\n' > "$W/memory/facts/canonical-domain.md"
 cp "$W/memory/facts/canonical-domain.md" "$W/domain-page.before"

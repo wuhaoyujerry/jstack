@@ -1,6 +1,6 @@
 . "$(dirname "$0")/../../lib.sh"
 agent_ended
-log="$ROOT/logs/review-log.md"
+log="$JSTACK_DATA/logs/review-log.md"
 # An observation is open, or a project fact that review saved: its line then reads applied with the memory page.
 obs=' [|] (open|applied [0-9-]+ memory:[^ ]+)$'
 grep -Eq "$obs" "$log" || fail "review wrote no observation"
@@ -9,5 +9,5 @@ awk -F' [|] ' '$8 == "open" || $8 ~ /^applied / { n = split($5, w, /[-_ ]+/); if
   if (length($2 $3) != 16 || $2 $3 !~ /^[0-9a-f]+$/) { print "repo or task is not an id: " $2 " | " $3; bad = 1 }
   if ($7 ~ /^\// || $7 ~ /\.cookbook/) { print "file is not a path in the task folder: " $7; bad = 1 } } END { exit bad }' "$log" > "$W/lines.bad" || fail "$(head -3 "$W/lines.bad")"
 # The task map resolves the ids on this machine, and the logs are pushed.
-has "$ROOT/overlays/tasks.txt" '\.cookbook/dishes/rename-parse$'
+has "$JSTACK_DATA/overlays/tasks.txt" '\.cookbook/dishes/rename-parse$'
 pushed review-log.md "$obs"

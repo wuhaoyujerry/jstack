@@ -19,11 +19,11 @@ here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "${SRC:-$here/../..}" && pwd)"
 RUNS="${RUNS:-3}"
 # The main agent is one of these two, so every case runs on both. A machine with another provider name or another main-agent model
-# maps it in overlays/model-map.txt, one "<provider or id> <replacement>" per line: `openai-codex openai` renames a provider, and
+# maps it in overlays/model-map.txt of its data folder, one "<provider or id> <replacement>" per line: `openai-codex openai` renames a provider, and
 # `anthropic/claude-fable-5-2 anthropic/claude-opus-5-5` replaces a model. The map changes these defaults only, never a given MODELS.
 if [ -z "${MODELS:-}" ]; then
   MODELS="openai-codex/gpt-6.2-sol:medium anthropic/claude-fable-5-2:medium"
-  map="${MODEL_MAP:-$here/../../overlays/model-map.txt}"
+  map="${MODEL_MAP:-${JSTACK_DATA:-$HOME/.config/jstack}/overlays/model-map.txt}"
   if [ -f "$map" ]; then
     while read -r from to; do
       [ -n "$to" ] || continue
@@ -54,15 +54,15 @@ run_one() { # <case> <model>; prints "pass" or "FAIL <workdir>"
   local MODEL="$2"
   local case_dir="$here/cases/$1" W
   W="$(mktemp -d "${TMPDIR:-/tmp}/jstack-bt-$1-XXXXXX")"
-  export MODEL W ROOT="$W/jstack" REPO="$W/repo" OUT="$W/out.txt" ORCA_LOG="$W/orca.log"
+  export MODEL W ROOT="$W/jstack" REPO="$W/repo" OUT="$W/out.txt" ORCA_LOG="$W/orca.log" JSTACK_DATA="$W/data"
 
-  # A copy of the skills: the agent's logs and edits land here, never in the real checkout, overlays or logs.
-  # Its logs/ is a clone of an empty remote in the run dir, so a push of the logs stays there.
-  mkdir -p "$ROOT" "$REPO" "$W/bin"
+  # A copy of the skills and a data folder of the run: the agent's edits and logs land there, never in the real checkout, overlays
+  # or logs. The logs/ of the data folder is a clone of an empty remote in the run dir, so a push of the logs stays there.
+  mkdir -p "$ROOT" "$REPO" "$W/bin" "$JSTACK_DATA"
   cp -R "$repo_root/skills" "$repo_root/SCENARIOS.md" "$repo_root/SOURCES.md" "$ROOT/"
   (cd "$ROOT" && git init -q && printf '/overlays/\n/logs/\n' > .gitignore && printf '.cookbook/\n' > .git/info/exclude && git add -A && git_q commit -qm base)
-  git init -q --bare "$W/logs.git" && git clone -q "$W/logs.git" "$ROOT/logs" 2>/dev/null
-  (cd "$ROOT/logs" && git config user.name test && git config user.email test@example.invalid && git config commit.gpgsign false)
+  git init -q --bare "$W/logs.git" && git clone -q "$W/logs.git" "$JSTACK_DATA/logs" 2>/dev/null
+  (cd "$JSTACK_DATA/logs" && git config user.name test && git config user.email test@example.invalid && git config commit.gpgsign false)
   (cd "$REPO" && git init -q && printf '.cookbook/\n' > .git/info/exclude)
 
   # Workers and other sessions are out of scope: a stub records each attempt to start one, through orca or pi.
@@ -124,7 +124,7 @@ S
 
   (cd "$REPO" && bash "$case_dir/setup.sh") > "$W/setup.log" 2>&1 || { echo "FAIL $W (setup)"; return; }
   # The logs that setup wrote are the pushed state: the agent's lines are the only new ones.
-  (cd "$ROOT/logs" && git add -A . && if ! git diff --cached --quiet; then git commit -qm fixture && git push -q -u origin HEAD; fi) >> "$W/setup.log" 2>&1
+  (cd "$JSTACK_DATA/logs" && git add -A . && if ! git diff --cached --quiet; then git commit -qm fixture && git push -q -u origin HEAD; fi) >> "$W/setup.log" 2>&1
 
   local cwd="$REPO"
   if grep -q 'skills/improve/SKILL.md' "$case_dir/prompt.txt" && [ ! -e "$case_dir/from-repo" ]; then cwd="$ROOT"; fi

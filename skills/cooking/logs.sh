@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-# The shared workflow logs: `logs/` beside `skills/`, a clone of a private Git repo that every device pushes to.
-# A log line names a repo and a task by id. The task map, overlays/tasks.txt, resolves the ids on the device that ran the task.
-# Usage: logs.sh ids <slug>   in the task's repo: pulls the logs, records the task in the map, prints "repo=<id> task=<id>"
+# The shared workflow logs: `logs/` in the data folder, a clone of a private Git repo that every device pushes to.
+# The data folder holds this device's files, outside every skills checkout: $JSTACK_DATA, or ~/.config/jstack with none set.
+# A log line names a repo and a task by id. The task map, overlays/tasks.txt there, resolves the ids on the device that ran the task.
+# Usage: logs.sh data         prints the data folder
+#        logs.sh ids <slug>   in the task's repo: pulls the logs, records the task in the map, prints "repo=<id> task=<id>"
 #        logs.sh pull         pulls the logs
 #        logs.sh tags         prints each tag of the review log once: "<tag> | <category> | <lines> | <first event>"
 #        logs.sh fact <tag> <file>  in the task's repo: saves the file as a page of the project's memory in ai-memory, and prints
@@ -13,9 +15,8 @@
 # Exit: 1 a line holds a private name (publish); 2 the logs are not pushed.
 set -euo pipefail
 
-here="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-home="$(cd "$here/../.." && pwd)"
-logs="$home/logs"; map="$home/overlays/tasks.txt"
+data="${JSTACK_DATA:-$HOME/.config/jstack}"
+logs="$data/logs"; map="$data/overlays/tasks.txt"
 
 hash8() { printf %s "$1" | shasum -a 256 | cut -c1-8; }
 
@@ -31,7 +32,7 @@ repo_ids() {
   key="$(repo_key "$top")"; repo="$(hash8 "$key")"
 }
 
-# logs/ sits inside the skills checkout, which ignores it: only its own .git makes it the clone.
+# Only its own .git makes logs/ the clone: a Git repo that holds the data folder does not.
 is_clone() { [ -e "$logs/.git" ]; }
 has_upstream() { git -C "$logs" rev-parse -q --verify '@{u}' >/dev/null 2>&1; }
 
@@ -46,6 +47,9 @@ pull() {
 }
 
 case "${1:-}" in
+data)
+  echo "$data"
+  ;;
 ids)
   slug="${2:?usage: logs.sh ids <slug>}"
   # The cookbook is in the main checkout, also when the task ran in a linked worktree.
@@ -176,6 +180,6 @@ publish)
   echo "logs: pushed"
   ;;
 *)
-  sed -n '2,13p' "${BASH_SOURCE[0]}" >&2; exit 64
+  sed -n '2,15p' "${BASH_SOURCE[0]}" >&2; exit 64
   ;;
 esac

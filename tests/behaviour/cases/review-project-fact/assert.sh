@@ -1,6 +1,6 @@
 . "$(dirname "$0")/../../lib.sh"
 agent_ended
-log="$ROOT/logs/review-log.md"; mem="$W/memory"
+log="$JSTACK_DATA/logs/review-log.md"; mem="$W/memory"
 new="$(grep -vxFf "$W/log.before" "$log")"
 [ -n "$new" ] || fail "review wrote no observation"
 field() { awk -F' [|] ' -v n="$1" '{ print $n }'; }

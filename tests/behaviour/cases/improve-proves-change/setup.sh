@@ -1,12 +1,12 @@
 # One workflow tag in two dishes of two repos: its change edits skills/. The skills copy gets a stand-in for the behaviour
 # runner, which records each call and whether skills/ was edited yet: a case fails before the edit and passes after.
 # prompt2.txt gives the judge's report and the approval.
-mkdir -p "$ROOT/logs" "$ROOT/tests/behaviour/cases/improve-threshold"
-cat > "$ROOT/logs/review-log.md" <<'L'
+mkdir -p "$JSTACK_DATA/logs" "$ROOT/tests/behaviour/cases/improve-threshold"
+cat > "$JSTACK_DATA/logs/review-log.md" <<'L'
 2026-10-02 | shop-api | add-export | workflow | brief-too-long | the brief repeated the ask in three sections | .cookbook/add-export/brief.md | open
 2026-10-20 | billing | fix-rounding | workflow | brief-too-long | the brief restated the ask under every heading | .cookbook/fix-rounding/brief.md | open
 L
-: > "$ROOT/logs/sizing-log.md"
+: > "$JSTACK_DATA/logs/sizing-log.md"
 cat > "$ROOT/tests/behaviour/run.sh" <<S
 #!/bin/sh
 # Usage: run.sh <case> ...   Env: RUNS per case and model (default 3).
@@ -19,7 +19,7 @@ done
 S
 chmod +x "$ROOT/tests/behaviour/run.sh"
 c="$ROOT/tests/behaviour/cases/improve-threshold"
-printf 'mkdir -p "$ROOT/logs"\necho "<one observation line>" > "$ROOT/logs/review-log.md"\n' > "$c/setup.sh"
+printf 'mkdir -p "$JSTACK_DATA/logs"\necho "<one observation line>" > "$JSTACK_DATA/logs/review-log.md"\n' > "$c/setup.sh"
 printf 'Read {{ROOT}}/skills/improve/SKILL.md and follow it. Ask: /improve\n' > "$c/prompt.txt"
 printf '# Runs in the fixture repo after the agent ends; exits non-zero when the expected result is missing.\ngit -C "$ROOT" diff --quiet\n' > "$c/assert.sh"
 (cd "$ROOT" && git add -A && git_q commit -qm 'add the behaviour runner')

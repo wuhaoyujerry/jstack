@@ -32,7 +32,7 @@ cooking is a rewrite, not a fork. Each phase keeps mechanisms from the skills be
 | `phases/review.md` | `retro` (Matt Pocock) | Finding categories, as observation categories; session logs as a source, cut to the user's messages in the dish's sessions | Any session as input, implementation-versus-review reference, file guide |
 | `../improve/SKILL.md` | `retro` (Matt Pocock) | Checks before written rules, the user approves each change | `writing-for-agents` call |
 | `../writing-for-agents/` | `writing-for-agents` (Matt Pocock) | `SKILL.md` and `SKILL-MECHANICS.md`, verbatim, with the MIT license | `agents/openai.yaml` (Codex UI metadata) |
-| `overlays/work.md` (private, repo-root relative) | Jerry's lessons in `~/Desktop/knowledge/lessons/` | Three-state checks, runtime evidence for removal, counting by a known-good list | The cases behind each lesson |
+| `overlays/work.md` (private, in the data folder) | Jerry's lessons in `~/Desktop/knowledge/lessons/` | Three-state checks, runtime evidence for removal, counting by a known-good list | The cases behind each lesson |
 
 Not carried over: the 24 pstack principle skills and the playbook library. Four principles are candidates for the evaluation: prove it works, sequence verifiable units, fix root causes, subtract before you add.
 

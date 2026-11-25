@@ -15,7 +15,7 @@ Every worker is a Pi agent. The role sets the model and effort. For each saute b
 
 The **author** is whose work the judge checks: the builder in taste, you in improve. Pick the judge row for the author's family. In improve, give the judge your own effort, `$PI_REASONING_LEVEL`, in place of the row's.
 
-Ids differ by machine. An overlay in `../../overlays/`, from this file's real directory, may replace them: apply it first.
+Ids differ by machine. An overlay in `overlays/` of the data folder, which `logs.sh data` prints, may replace them: apply it first.
 
 ## Start a worker
 

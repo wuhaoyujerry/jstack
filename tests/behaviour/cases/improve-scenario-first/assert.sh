@@ -26,4 +26,4 @@ if printf '%s\n' "$s" | grep -q -- "--model $own"; then fail "a judge from the a
 lacks "$ORCA_LOG" '(^| )terminal create( |$)'
 # Gate: a candidate scenario that is `same` blocks the change, even with approval given.
 clean_tree "$ROOT"
-has "$ROOT/logs/review-log.md" 'add-export .* open$'; has "$ROOT/logs/review-log.md" 'fix-rounding .* open$'
+has "$JSTACK_DATA/logs/review-log.md" 'add-export .* open$'; has "$JSTACK_DATA/logs/review-log.md" 'fix-rounding .* open$'

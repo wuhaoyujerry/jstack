@@ -1,6 +1,6 @@
 . "$(dirname "$0")/../../lib.sh"
 agent_ended
-log="$ROOT/logs/review-log.md"
+log="$JSTACK_DATA/logs/review-log.md"
 new="$(grep -vxFf "$W/log.before" "$log")"
 # The observation of the missing interpreter link takes the tag and the category of the logged line with that cause.
 # Another line of the run is another observation: a fact that review saved from the same event, or another cause such as a

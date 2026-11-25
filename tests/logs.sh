@@ -17,11 +17,9 @@ bad() { echo "FAIL $1"; fails=$((fails + 1)); }
 check() { local name="$1"; shift; if "$@" >/dev/null 2>&1; then ok "$name"; else bad "$name"; fi; }
 remote_has() { git -C "$T/logs.git" show main:review-log.md 2>/dev/null | grep -qF -- "$1"; }
 
-# A device: a skills checkout with the script, and logs/ as a clone of the shared remote.
-device() {
-  mkdir -p "$1/skills/cooking"; cp "$src/skills/cooking/logs.sh" "$1/skills/cooking/"
-  git clone -q "$T/logs.git" "$1/logs" 2>/dev/null
-}
+# A device: a data folder, with logs/ as a clone of the shared remote. logs_sh <device> runs the script on that folder.
+device() { mkdir -p "$1"; git clone -q "$T/logs.git" "$1/logs" 2>/dev/null; }
+logs_sh() { local d="$1"; shift; JSTACK_DATA="$T/$d" "$src/skills/cooking/logs.sh" "$@"; }
 git init -q --bare "$T/logs.git"
 device "$T/a"; device "$T/b"
 printf '*.md merge=union\n' > "$T/a/logs/.gitattributes"
@@ -30,25 +28,27 @@ printf '*.md merge=union\n' > "$T/a/logs/.gitattributes"
 mkdir -p "$T/work"; git -C "$T/work" init -q; git -C "$T/work" remote add origin git@example.invalid:acme/shop-api.git
 cd "$T/work"
 
-out="$("$T/a/skills/cooking/logs.sh" ids add-export)"
+out="$(logs_sh a ids add-export)"
 check "ids prints two 8-character ids" grep -Eq '^repo=[0-9a-f]{8} task=[0-9a-f]{8}$' <<<"$out"
 eval "$out"
 check "the map resolves the ids" grep -qxF "$repo | $task | acme/shop-api | $T/work/.cookbook/dishes/add-export" "$T/a/overlays/tasks.txt"
-"$T/a/skills/cooking/logs.sh" ids add-export >/dev/null
+logs_sh a ids add-export >/dev/null
 check "a second call adds no map line" [ "$(wc -l < "$T/a/overlays/tasks.txt")" -eq 1 ]
 mkdir -p .cookbook/meals/checkout/cart-totals
-"$T/a/skills/cooking/logs.sh" ids cart-totals >/dev/null
+logs_sh a ids cart-totals >/dev/null
 check "the map names the folder of a dish in a meal" grep -qF "| acme/shop-api | $T/work/.cookbook/meals/checkout/cart-totals" "$T/a/overlays/tasks.txt"
 git -C "$T/work" commit -q --allow-empty -m init; git -C "$T/work" worktree add -q -b dish "$T/linked"
 mkdir -p .cookbook/dishes/in-worktree
-(cd "$T/linked" && "$T/a/skills/cooking/logs.sh" ids in-worktree >/dev/null)
+(cd "$T/linked" && logs_sh a ids in-worktree >/dev/null)
 check "a linked worktree maps to the dish folder in the main checkout" grep -qF "| acme/shop-api | $T/work/.cookbook/dishes/in-worktree" "$T/a/overlays/tasks.txt"
 git -C "$T/work" remote set-url origin https://example.invalid/acme/shop-api.git
-check "the HTTPS remote gives the same ids" [ "$("$T/a/skills/cooking/logs.sh" ids add-export)" = "$out" ]
+check "the HTTPS remote gives the same ids" [ "$(logs_sh a ids add-export)" = "$out" ]
+check "data prints the folder that JSTACK_DATA names" [ "$(logs_sh a data)" = "$T/a" ]
+check "data prints the folder in the home directory when JSTACK_DATA is unset" [ "$(env -u JSTACK_DATA "$src/skills/cooking/logs.sh" data)" = "$HOME/.config/jstack" ]
 
 log="$T/a/logs/review-log.md"
 line() { echo "2026-10-02 | $repo | $task | workflow | $1 | $2 | ledger.md | open" >> "$log"; }
-publish() { "$T/$1/skills/cooking/logs.sh" publish >/dev/null 2>"$T/err"; echo $?; }
+publish() { logs_sh "$1" publish >/dev/null 2>"$T/err"; echo $?; }
 
 line brief-too-long 'the brief repeated the ask in three sections'
 check "a generic line is pushed" [ "$(publish a)" = 0 ]
@@ -74,7 +74,7 @@ check "the remote holds the line of a" remote_has from-a
 
 # The tag index: one line for each tag, with the category and the event of the line that first used it.
 line brief-too-long 'the brief repeated the ask in a fourth section'
-idx="$("$T/a/skills/cooking/logs.sh" tags)"
+idx="$(logs_sh a tags)"
 check "tags prints a tag once, with its category, its count and its first event" grep -qxF 'brief-too-long | workflow | 2 | the brief repeated the ask in three sections' <<<"$idx"
 check "tags prints one line for each tag" [ "$(grep -c . <<<"$idx")" -eq 3 ]
 
@@ -93,7 +93,7 @@ fi
 S
 chmod +x "$T/bin/ai-memory"
 export MEMORY_CALL="$T/memory-call" MEMORY_STORE="$T/memory-store" AI_MEMORY_SERVER_URL=http://127.0.0.1:9
-fact() { (cd "$T/linked" && PATH="$T/bin:$PATH" "$T/a/skills/cooking/logs.sh" fact "$@" 2>"$T/err"); }
+fact() { (cd "$T/linked" && PATH="$T/bin:$PATH" logs_sh a fact "$@" 2>"$T/err"); }
 printf '# Production shell\n\nRun `deployctl console`.\n' > "$T/fact.md"
 check "fact prints applied with the page" [ "$(fact prod-shell "$T/fact.md")" = "applied $(date +%F) memory:facts/prod-shell.md" ]
 check "fact saves the page from the main checkout, also when called in a linked worktree" grep -qxF "cwd=$T/work" "$T/memory-call"
@@ -117,21 +117,20 @@ mkdir -p "$T/memory-store/facts"; echo 'The canonical domain is shop.example.com
 echo 'Run the seed step.' > "$T/memory-store/facts/seed-step.md"
 echo "2026-10-06 | - | - | workflow | from-b-late | device b saw a late step | ledger.md | open" >> "$T/b/logs/review-log.md"
 check "device b pushes a later line" [ "$(publish b)" = 0 ]
-saved="$(cd "$T/linked" && PATH="$T/bin:$PATH" "$T/a/skills/cooking/logs.sh" facts 2>"$T/err")"
+saved="$(cd "$T/linked" && PATH="$T/bin:$PATH" logs_sh a facts 2>"$T/err")"
 check "facts prints a page that a line of this repo names" grep -qxF 'The canonical domain is shop.example.com.' <<<"$saved"
 check "facts names a page that this device cannot read" grep -qxF 'facts/prod-shell.md: this device cannot read the page' <<<"$saved"
 if grep -q from-b-late "$log"; then bad "facts pulled the logs"; else ok "facts pulls no logs"; fi
 if grep -q 'seed step' <<<"$saved"; then bad "facts prints the page of another repo"; else ok "facts leaves out the page of another repo"; fi
 check "facts reads the memory from the main checkout" [ "$(sort -u "$T/memory-call.reads")" = "cwd=$T/work" ]
-mkdir -p "$T/e/skills/cooking"; cp "$src/skills/cooking/logs.sh" "$T/e/skills/cooking/"
-check "facts of a repo with no saved fact says so" [ "$(PATH="$T/bin:$PATH" "$T/e/skills/cooking/logs.sh" facts)" = 'no project facts are saved for this repo' ]
+check "facts of a repo with no saved fact says so" [ "$(PATH="$T/bin:$PATH" logs_sh e facts)" = 'no project facts are saved for this repo' ]
 check "facts creates no logs folder" [ ! -e "$T/e/logs" ]
 check "facts creates no overlays folder" [ ! -e "$T/e/overlays" ]
 
 # The closing line: a tag open in two dishes, a tag open again after an applied change, and a signal that two unspent lines missed.
 # A tag is open again with a later date than its applied line, or below it on the same day; an open line above it on an earlier day is none.
-mkdir -p "$T/d/skills/cooking" "$T/d/logs"; cp "$src/skills/cooking/logs.sh" "$T/d/skills/cooking/"
-check "summary of no logs counts nothing" [ "$("$T/d/skills/cooking/logs.sh" summary)" = '0 open observations' ]
+mkdir -p "$T/d/logs"
+check "summary of no logs counts nothing" [ "$(logs_sh d summary)" = '0 open observations' ]
 cat > "$T/d/logs/review-log.md" <<'L'
 2026-10-01 | r1 | d1 | workflow | gate-missed | e | ledger.md | open
 2026-10-02 | r1 | d2 | workflow | gate-missed | e | ledger.md | open
@@ -157,13 +156,13 @@ cat > "$T/d/logs/sizing-log.md" <<'L'
 2026-10-02 | r1 | d2 | predicted=standard | verdict=under | missed=reach,risk
 2026-10-03 | r1 | d3 | predicted=standard | verdict=under | missed=risk
 L
-check "summary names the tags and the signal that call for /improve" [ "$("$T/d/skills/cooking/logs.sh" summary)" = \
+check "summary names the tags and the signal that call for /improve" [ "$(logs_sh d summary)" = \
   '10 open observations; open in two dishes: gate-missed; open again after an applied change: slow-tests, same-day, later-above; missed in two unspent lines: risk; run /improve' ]
-check "summary of a task names the memory pages of its lines" [ "$("$T/d/skills/cooking/logs.sh" summary add-export)" = \
+check "summary of a task names the memory pages of its lines" [ "$(logs_sh d summary add-export)" = \
   '10 open observations; saved to memory: facts/prod-shell.md; open in two dishes: gate-missed; open again after an applied change: slow-tests, same-day, later-above; missed in two unspent lines: risk; run /improve' ]
 
 # A device without the clone writes locally and reports that nothing is pushed.
-mkdir -p "$T/c/skills/cooking" "$T/c/logs"; cp "$src/skills/cooking/logs.sh" "$T/c/skills/cooking/"
+mkdir -p "$T/c/logs"
 (cd "$T/c" && git init -q && printf '/logs/\n' > .gitignore)
 check "no clone: publish exits 2" [ "$(publish c)" = 2 ]
 

@@ -3,7 +3,7 @@
 echo 'def parse_line(s): return s.strip()' > util.py
 printf 'from util import parse_line\ndef test_parse_line(): assert parse_line(" a ") == "a"\n' > test_util.py
 git add -A && git_q commit -qm 'rename _parse to parse_line'
-s=.cookbook/dishes/rename-parse; mkdir -p "$s/evidence" "$ROOT/logs"
+s=.cookbook/dishes/rename-parse; mkdir -p "$s/evidence" "$JSTACK_DATA/logs"
 cat > "$s/evidence/rename-saute.txt" <<'E'
 .venv/bin/python -m pytest test_util.py: .venv/bin/python: No such file or directory
 .venv/bin/python -m pytest test_util.py: .venv/bin/python: No such file or directory
@@ -30,7 +30,7 @@ gates: brief open, recipe open
 events:
 - saute: the dish worktree had no interpreter link; the test command failed twice until the agent linked the main checkout's environment (evidence/rename-saute.txt)
 L
-cat > "$ROOT/logs/review-log.md" <<'R'
+cat > "$JSTACK_DATA/logs/review-log.md" <<'R'
 2026-11-01 | 3c9d1e7a | 41aa07c2 | workflow | size-not-surfaced | The size moved from standard to large and was written only to the ledger; the user later had to ask which size applied. | ledger.md | open
 2026-11-01 | 3c9d1e7a | 41aa07c2 | check | dirty-tree-deploy | The builder committed a renamed file without staging its edit; local checks ran on the working tree and passed, and the deploy failed its healthcheck. | ledger.md | applied 2026-11-02 skills/cooking/SKILL.md
 2026-11-02 | 3c9d1e7a | 8b2f4a6c | workflow | time-estimate-unmeasured | The agent quoted 15 to 20 minutes for a judge round without checking earlier rounds; the report file times showed about 5 minutes per round. | "ok why it will take 15-20 mins?" | open
@@ -42,5 +42,5 @@ cat > "$ROOT/logs/review-log.md" <<'R'
 2026-11-04 | 3c9d1e7a | 6f7c2d90 | navigation | stale-agents-fact | The repo instructions named an old latest migration number; the agent found the real one only when generating a migration. | ledger.md | open
 2026-11-04 | 3c9d1e7a | 6f7c2d90 | access | worker-permission-prompt | A worker stopped at a human permission prompt for a shell read; the coordinator could not answer it and the user had to act in the worker terminal. | ledger.md | open
 R
-cp "$ROOT/logs/review-log.md" "$W/log.before"
-: > "$ROOT/logs/sizing-log.md"
+cp "$JSTACK_DATA/logs/review-log.md" "$W/log.before"
+: > "$JSTACK_DATA/logs/sizing-log.md"

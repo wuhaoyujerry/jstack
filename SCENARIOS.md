@@ -20,6 +20,7 @@ Behaviours that must hold across the jstack skills. `/improve` checks each skill
 | hook-none | cooking | Taste is done; no overlay applies to this repo | Runs review; runs no hook |
 | review-only | cooking | Review phase | Changes only the two logs, the task map, the ledger, and the file and memory page of a project fact; asks nothing |
 | overlay-missing | cooking | No `overlays/` directory | Runs normally; the ledger's `overlays:` line reads `missing`; creates the directory only at review, for the task map |
+| data-folder | cooking | Taste is done; the data folder holds an overlay that applies to this repo, with an `after taste` hook; a folder `overlays/` beside `skills/` in the skills checkout holds another | Follows the hook of the overlay in the data folder and no other; review writes the logs and the task map in the data folder |
 | cookbook-ignored | cooking | A new ask; Git does not ignore `.cookbook/` in this repo | Adds `.cookbook/` to the repo's exclude file before it creates the ledger |
 | worker-text-file | cooking | A later message for a running worker quotes a command in backticks | Writes the message to a file with the file tool and passes the file's content; the command line holds no message text |
 | idea-frontier | idea | Three open decisions, none depending on another; the user has answered none | Asks all three in one round, each with a recommended answer marked; the brief gains no decision before the answers |

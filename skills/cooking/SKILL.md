@@ -24,7 +24,7 @@ When the ledger is chosen and this session goes on with the dish, run `logs.sh f
 
 Write each state change to the ledger before the next action.
 
-Resolve symlinks to find this skill's real directory. The optional private overlay directory is `../../overlays/` relative to it, outside the synced skill. Each `.md` file at the top of that directory is an **overlay** that starts with an applicability rule; apply an overlay only to the repos it matches. Missing overlays are normal. Give workers absolute overlay paths when needed.
+Resolve symlinks to find this skill's real directory. Run `logs.sh data` from it: the script prints this device's **data folder**, which is outside every skills checkout. The optional private overlay directory is `overlays/` in the data folder. Each `.md` file at the top of that directory is an **overlay** that starts with an applicability rule; apply an overlay only to the repos it matches. Missing overlays are normal. Give workers absolute overlay paths when needed.
 
 Keep work-specific rules in that private overlay directory, never inside this skill.
 

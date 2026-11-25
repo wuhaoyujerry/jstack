@@ -1,8 +1,8 @@
 # One workflow tag in two dishes: its change edits skills/, so it needs the judge. prompt2.txt gives the judge's report.
-mkdir -p "$ROOT/logs"
-cat > "$ROOT/logs/review-log.md" <<'L'
+mkdir -p "$JSTACK_DATA/logs"
+cat > "$JSTACK_DATA/logs/review-log.md" <<'L'
 2026-10-02 | shop-api | add-export | workflow | brief-too-long | the brief repeated the ask in three sections | .cookbook/add-export/brief.md | open
 2026-10-20 | billing | fix-rounding | workflow | brief-too-long | the brief restated the ask under every heading | .cookbook/fix-rounding/brief.md | open
 L
-: > "$ROOT/logs/sizing-log.md"
+: > "$JSTACK_DATA/logs/sizing-log.md"
 . "$(dirname "$0")/../../fake-judge.sh"

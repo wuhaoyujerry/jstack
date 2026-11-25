@@ -18,9 +18,9 @@ gates: brief open, recipe open
 
 events:
 L
-mkdir -p "$W/hook" "$ROOT/overlays"
+mkdir -p "$W/hook" "$JSTACK_DATA/overlays"
 printf '# Marker\n\nWrite the line `hook ran` to `.cookbook/hook-ran.txt` at the repo root.\n' > "$W/hook/SKILL.md"
-cat > "$ROOT/overlays/test.md" <<O
+cat > "$JSTACK_DATA/overlays/test.md" <<O
 # Test overlay
 
 Applies to every repo.
