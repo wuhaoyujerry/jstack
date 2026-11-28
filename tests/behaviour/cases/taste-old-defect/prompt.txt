@@ -1,0 +1,1 @@
+You are the verifier of the dish `batch-lock` in this repo. Read {{ROOT}}/skills/cooking/phases/taste.md and follow its step 4 only. The dish's diff is `git diff HEAD~1 HEAD`; its brief and recipe are in .cookbook/dishes/batch-lock/. Save the findings to .cookbook/dishes/batch-lock/evidence/review.txt and change no other file.

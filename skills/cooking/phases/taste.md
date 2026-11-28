@@ -41,13 +41,18 @@ When a check fails, suspect the method of observation before the system.
 
 The verifier then reads the diff and the code it touches: the tests, and every caller of a changed function or signature. It looks for a defect that no check covers, in this order: correct, safe, holds under load, tested, fast, lean. It finds the expected load in the repo and states which load it assumed.
 
-A **finding** names its case: this input or situation gives this wrong result. No case, no finding. A finding is `must-fix` when it is a security hole, data loss, a break at the expected load, or a bug that normal use of the product meets; every other finding is a `suggestion`. Save the findings to `<dish>/evidence/review.txt`.
+A **finding** names its case: this input or situation gives this wrong result. No case, no finding. A finding is a defect of the dish: the diff creates it or opens the path to it, and the recipe does not list its case under `Out of scope`. A finding is `must-fix` when it is a security hole, data loss, a break at the expected load, or a bug that normal use of the product meets; every other finding is a `suggestion`. Save the findings to `<dish>/evidence/review.txt`.
 
-A case is **rare** when normal use meets it seldom or never: it needs a hand-made record, a one-off import of bad data, or timing that the expected load does not reach. Before the verifier writes a finding, it decides this from evidence: the count of the case in the real data it can read, set beside the expected load, or the path that leads to the case. A count of zero proves nothing for a case that only the dish's new code can create: there the path decides. A rare case is a finding only as a security hole, data loss or a break at the expected load. Any other rare case gets one line under `Rare, not reported:` at the end of `review.txt`, with that evidence, and it is closed: `taste.md` and the user get the findings only.
+A case is **rare** when normal use meets it seldom or never: it needs a hand-made record, a one-off import of bad data, steps that users seldom take in that order, or timing that the expected load seldom reaches. The verifier decides this from evidence before it writes a finding, and each finding carries that evidence in a `Met:` line: how often the expected load meets the case. Where the real data it can read could hold the case, the evidence is the count of the case there. Where only the dish's new code can create the case, a count of zero proves nothing and the path decides: the line says how often normal use takes each step of the path, or how often the load puts the events of a timing case in one window. A rare case is a finding only as a security hole or data loss.
+
+Two headings at the end of `review.txt` hold what is no finding, one line each with its evidence:
+
+- `Rare, not reported:` a rare case that is no security hole and no data loss. It is closed: `taste.md` and the user get the findings only.
+- `Before the dish:` any other defect that the code held before the diff, on a path the diff did not open. The user decides it (step 6).
 
 ## 5. Read the raw output
 
-Read each evidence file yourself; the verifier's summary only points to it. Write `<dish>/taste.md`, with the findings below the table:
+Read each evidence file yourself; the verifier's summary only points to it. Hold each `must-fix` against step 4: one that its rules put under a heading moves there in `review.txt`. Then write `<dish>/taste.md`, with the findings and the `Before the dish:` lines below the table:
 
 ```markdown
 | check | state | evidence | reason |
@@ -58,6 +63,7 @@ Read each evidence file yourself; the verifier's summary only points to it. Writ
 - **fail** or **must-fix**: return the unit to saute. It counts as a failure of that unit. Record the event.
 - **Second return**: when the events already hold a return from taste, ask the user before you return anything. Show each `fail` and `must-fix` as its case; for each they choose to fix it, accept it by name, revert its unit or move it to a new dish. Record the choices in the events and in `taste.md`; one they accept, revert or move is closed. Return to saute only what they chose to fix.
 - **suggestion**: the user decides.
+- **Before the dish**: show the user each line as its case. One they want fixed becomes a new dish; this dish builds no fix for it.
 - **not-run**: show the user the command. They approve the run, or accept the gap by name.
 - Taste is done when no `fail` or `must-fix` is open, and each `not-run` is run or accepted.
 
